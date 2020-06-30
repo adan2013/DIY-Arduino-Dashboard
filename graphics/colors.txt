@@ -1,3 +1,2 @@
 background #312b2d
 white icon and text #f0eff4
-leds #b0abaf
