@@ -5,14 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArduinoDashboardInterpreter"
         mc:Ignorable="d"
-        Title="Arduino Dashboard Interpreter" Height="380" Width="800" ResizeMode="NoResize">
+        Title="Arduino Dashboard Interpreter" Height="480" Width="850" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Width="360" Height="120" >
@@ -32,22 +34,22 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <Button Grid.Column="0" Grid.Row="2" Margin="1" Name="led0">0</Button>
-            <Button Grid.Column="0" Grid.Row="1" Margin="1" Name="led1">1</Button>
-            <Button Grid.Column="0" Grid.Row="0" Margin="1" Name="led2">2</Button>
-            <Button Grid.Column="1" Grid.Row="0" Margin="1" Name="led3">3</Button>
-            <Button Grid.Column="2" Grid.Row="0" Margin="1" Name="led4">4</Button>
-            <Button Grid.Column="2" Grid.Row="1" Margin="1" Name="led5">5</Button>
-            <Button Grid.Column="2" Grid.Row="2" Margin="1" Name="led6">6</Button>
-            <Button Grid.Column="3" Grid.Row="0" Margin="1" Name="led7">7</Button>
-            <Button Grid.Column="5" Grid.Row="0" Margin="1" Name="led8">8</Button>
-            <Button Grid.Column="6" Grid.Row="2" Margin="1" Name="led9">9</Button>
-            <Button Grid.Column="6" Grid.Row="1" Margin="1" Name="led10">10</Button>
-            <Button Grid.Column="6" Grid.Row="0" Margin="1" Name="led11">11</Button>
-            <Button Grid.Column="7" Grid.Row="0" Margin="1" Name="led12">12</Button>
-            <Button Grid.Column="8" Grid.Row="0" Margin="1" Name="led13">13</Button>
-            <Button Grid.Column="8" Grid.Row="1" Margin="1" Name="led14">14</Button>
-            <Button Grid.Column="8" Grid.Row="2" Margin="1" Name="led15">15</Button>
+            <Button Grid.Column="0" Grid.Row="2" Margin="1" Name="Led0" Click="LedButton_Click">0</Button>
+            <Button Grid.Column="0" Grid.Row="1" Margin="1" Name="Led1" Click="LedButton_Click">1</Button>
+            <Button Grid.Column="0" Grid.Row="0" Margin="1" Name="Led2" Click="LedButton_Click">2</Button>
+            <Button Grid.Column="1" Grid.Row="0" Margin="1" Name="Led3" Click="LedButton_Click">3</Button>
+            <Button Grid.Column="2" Grid.Row="0" Margin="1" Name="Led4" Click="LedButton_Click">4</Button>
+            <Button Grid.Column="2" Grid.Row="1" Margin="1" Name="Led5" Click="LedButton_Click">5</Button>
+            <Button Grid.Column="2" Grid.Row="2" Margin="1" Name="Led6" Click="LedButton_Click">6</Button>
+            <Button Grid.Column="3" Grid.Row="0" Margin="1" Name="Led7" Click="LedButton_Click">7</Button>
+            <Button Grid.Column="5" Grid.Row="0" Margin="1" Name="Led8" Click="LedButton_Click">8</Button>
+            <Button Grid.Column="6" Grid.Row="2" Margin="1" Name="Led9" Click="LedButton_Click">9</Button>
+            <Button Grid.Column="6" Grid.Row="1" Margin="1" Name="Led10" Click="LedButton_Click">10</Button>
+            <Button Grid.Column="6" Grid.Row="0" Margin="1" Name="Led11" Click="LedButton_Click">11</Button>
+            <Button Grid.Column="7" Grid.Row="0" Margin="1" Name="Led12" Click="LedButton_Click">12</Button>
+            <Button Grid.Column="8" Grid.Row="0" Margin="1" Name="Led13" Click="LedButton_Click">13</Button>
+            <Button Grid.Column="8" Grid.Row="1" Margin="1" Name="Led14" Click="LedButton_Click">14</Button>
+            <Button Grid.Column="8" Grid.Row="2" Margin="1" Name="Led15" Click="LedButton_Click">15</Button>
             <Grid Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
@@ -55,10 +57,10 @@
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0" FontSize="9" Margin="1" Name="backlightWB">WHITE BIG</Button>
-                <Button Grid.Row="1" FontSize="9" Margin="1" Name="backlightWS">WHITE SMALL</Button>
-                <Button Grid.Row="2" FontSize="9" Margin="1" Name="backlightRB">RED BIG</Button>
-                <Button Grid.Row="3" FontSize="9" Margin="1" Name="backlightRS">RED SMALL</Button>
+                <Button Grid.Row="0" FontSize="9" Margin="1" Name="BacklightWB" Click="BacklightButton_Click">WHITE BIG</Button>
+                <Button Grid.Row="1" FontSize="9" Margin="1" Name="BacklightWS" Click="BacklightButton_Click">WHITE SMALL</Button>
+                <Button Grid.Row="2" FontSize="9" Margin="1" Name="BacklightRB" Click="BacklightButton_Click">RED BIG</Button>
+                <Button Grid.Row="3" FontSize="9" Margin="1" Name="BacklightRS" Click="BacklightButton_Click">RED SMALL</Button>
             </Grid>
         </Grid>
         <Grid Grid.Column="1" Grid.Row="0">
@@ -73,37 +75,65 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="10">
                 <Label HorizontalAlignment="Center">Speed</Label>
-                <Slider Minimum="0" Maximum="100" Name="GaugeA"/>
+                <Slider Minimum="0" Maximum="100" Margin="10 0"  Name="GaugeA" ValueChanged="Gauge_ValueChanged"/>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="10">
                 <Label HorizontalAlignment="Center">Fuel</Label>
-                <Slider Minimum="0" Maximum="100" Name="GaugeB"/>
+                <Slider Minimum="0" Maximum="100" Margin="10 0" Name="GaugeB" ValueChanged="Gauge_ValueChanged"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Margin="10">
                 <Label HorizontalAlignment="Center">Air</Label>
-                <Slider Minimum="0" Maximum="100" Name="GaugeC"/>
+                <Slider Minimum="0" Maximum="100" Margin="10 0" Name="GaugeC" ValueChanged="Gauge_ValueChanged"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Margin="10">
                 <Label HorizontalAlignment="Center">Engine</Label>
-                <Slider Minimum="0" Maximum="100" Name="GaugeD"/>
+                <Slider Minimum="0" Maximum="100" Margin="10 0" Name="GaugeD" ValueChanged="Gauge_ValueChanged"/>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="5" Width="120" Height="20" Name="GaugeHome">HOME POSITION</Button>
-                <Button Margin="5" Width="120" Height="20" Name="GaugeMax">MAX POSITION</Button>
+                <Button Margin="2 0" Width="120" Height="20" Name="GaugeHome" Click="GaugeHome_Click">HOME POSITION</Button>
+                <Button Margin="2 0" Width="120" Height="20" Name="GaugeMax" Click="GaugeMax_Click">MAX POSITION</Button>
             </StackPanel>
         </Grid>
         <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
             <Label Margin="5" HorizontalAlignment="Center" Name="LcdStatus">Backlight: OFF | Screen id: 0</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="5" Width="80" Height="30" Name="LcdNavLeft">LEFT</Button>
-                <Button Margin="5" Width="80" Height="30" Name="LcdNavOk">OK</Button>
-                <Button Margin="5" Width="80" Height="30" Name="LcdNavRight">RIGHT</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdNavLeft">LEFT</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdNavOk">OK</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdNavRight">RIGHT</Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="5" Width="80" Height="30" Name="LcdLed">LED</Button>
-                <Button Margin="5" Width="80" Height="30" Name="LcdClear">CLEAR</Button>
-                <Button Margin="5" Width="80" Height="30" Name="LcdRefresh">REFRESH</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdLed" Click="BacklightButton_Click">LED</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdClear">CLEAR</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdRefresh">REFRESH</Button>
             </StackPanel>
         </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+            <Label HorizontalAlignment="Center">Program</Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="2" Width="80" Height="30" Name="ProgHome" Click="ProgramButton_Click">HOME</Button>
+                <Button Margin="2" Width="80" Height="30" Name="ProgManual" Click="ProgramButton_Click" Background="LightBlue">MANUAL</Button>
+                <Button Margin="2" Width="80" Height="30" Name="ProgTest" Click="ProgramButton_Click">TEST</Button>
+                <Button Margin="2" Width="80" Height="30" Name="ProgTelemetry" Click="ProgramButton_Click">TELEMETRY</Button>
+            </StackPanel>
+            <Label HorizontalAlignment="Center">Options</Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="2" Width="80" Height="30" Name="OptionDiffLockSwitch">DIFF SWITCH</Button>
+                <Button Margin="2" Width="80" Height="30" Name="OptionSound">SOUND</Button>
+                <Button Margin="2" Width="80" Height="30" Name="OptionBacklightControl">BL CONTROL</Button>
+                <Button Margin="2" Width="80" Height="30" Name="OptionKeyboard">KEYBOARD</Button>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center">
+            <Label HorizontalAlignment="Center">Keyboard shortcuts</Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="2" Width="150" Height="20" Name="KeybDiffLock">DIFF LOCK (NONE)</Button>
+                <Button Margin="2" Width="150" Height="20" Name="KeybLeft">LEFT (NONE)</Button>
+                <Button Margin="2" Width="150" Height="20" Name="KeybOk">OK (NONE)</Button>
+                <Button Margin="2" Width="150" Height="20" Name="KeybRight">RIGHT (NONE)</Button>
+            </StackPanel>
+        </StackPanel>
+        <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom" HorizontalAlignment="Center" FontWeight="Bold">
+            DIY guide and more information about this Arduino project can be found here - www.REDARK.pl
+        </Label>
     </Grid>
 </Window>
