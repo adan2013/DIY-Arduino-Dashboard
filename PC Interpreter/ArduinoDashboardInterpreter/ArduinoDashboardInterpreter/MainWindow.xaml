@@ -117,10 +117,9 @@
             </StackPanel>
             <Label HorizontalAlignment="Center">Options</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="80" Height="30" Name="OptionDiffLockSwitch">DIFF SWITCH</Button>
-                <Button Margin="2" Width="80" Height="30" Name="OptionSound">SOUND</Button>
-                <Button Margin="2" Width="80" Height="30" Name="OptionBacklightControl">BL CONTROL</Button>
-                <Button Margin="2" Width="80" Height="30" Name="OptionKeyboard">KEYBOARD</Button>
+                <Button Margin="2" Width="80" Height="30" Name="OptionDiffLockSwitch" Click="OptionDiffLockSwitch_Click">DIFF SWITCH</Button>
+                <Button Margin="2" Width="80" Height="30" Name="OptionSound" Background="LightBlue" Click="OptionSound_Click">SOUND</Button>
+                <Button Margin="2" Width="80" Height="30" Name="OptionKeyboard" Background="LightBlue" Click="OptionKeyboard_Click">KEYBOARD</Button>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center">

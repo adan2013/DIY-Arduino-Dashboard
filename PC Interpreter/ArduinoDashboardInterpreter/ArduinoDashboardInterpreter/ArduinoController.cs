@@ -26,6 +26,10 @@ namespace ArduinoDashboardInterpreter
         public delegate void ProgramChangedDelegate(ProgramType newProgram);
         public event ProgramChangedDelegate ProgramChanged;
 
+        public bool OptionDiffLock = false;
+        public bool OptionSound = true;
+        public bool OptionKeyboard = true;
+
         #region "LED"
 
         public enum LedType

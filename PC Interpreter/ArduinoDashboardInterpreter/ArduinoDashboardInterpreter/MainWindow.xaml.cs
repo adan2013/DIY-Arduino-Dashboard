@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace ArduinoDashboardInterpreter
     public partial class MainWindow : Window
     {
         ArduinoController arduino;
+        Settings settings;
 
         public MainWindow()
         {
@@ -31,7 +33,33 @@ namespace ArduinoDashboardInterpreter
             arduino.BacklightStateChanged += BacklightButtonColor;
             arduino.GaugePositionChanged += GaugeSliderUpdate;
             arduino.ProgramChanged += ProgramButtonColor;
+
+            string settingsPath = System.AppDomain.CurrentDomain.BaseDirectory + "settings.adi";
+            if (System.IO.File.Exists(settingsPath))
+            {
+                settings = Serialization.DeserializeObject(settingsPath);
+                if (settings is null) settings = new Settings();
+                settings.StartListening();
+            }
+            else
+            {
+                settings = new Settings();
+                settings.StartListening();
+                Serialization.SerializeObject(ref settings, settingsPath);
+            }
+            settings.ShortcutsUpdated += UpdateShortcutButtons;
+            settings.ShortcutsUpdated += SaveSettingsToFile;
+            settings.KeyPressed += ShortcutPressed;
+            //settings.AddShortcut(new KeyboardShortcut(KeyboardShortcut.TargetType.Left, System.Windows.Forms.Keys.F, KeyModifiers.Shift));
+            UpdateShortcutButtons();
         }
+
+        private void SaveSettingsToFile()
+        {
+            string settingsPath = System.AppDomain.CurrentDomain.BaseDirectory + "settings.adi";
+            Serialization.SerializeObject(ref settings, settingsPath);
+        }
+
 
         #region "LED"
 
@@ -196,6 +224,43 @@ namespace ArduinoDashboardInterpreter
                 case "ProgTest": arduino.SetNewProgram(ArduinoController.ProgramType.Test); break;
                 case "ProgTelemetry": arduino.SetNewProgram(ArduinoController.ProgramType.Telemetry); break;
             }
+        }
+        #endregion
+
+        #region "OPTIONS"
+        
+        private void OptionDiffLockSwitch_Click(object sender, RoutedEventArgs e)
+        {
+            arduino.OptionDiffLock = !arduino.OptionDiffLock;
+            ((Button)sender).Background = arduino.OptionDiffLock ? Brushes.LightBlue : Brushes.White;
+        }
+
+        private void OptionSound_Click(object sender, RoutedEventArgs e)
+        {
+            arduino.OptionSound = !arduino.OptionSound;
+            ((Button)sender).Background = arduino.OptionSound ? Brushes.LightBlue : Brushes.White;
+        }
+
+        private void OptionKeyboard_Click(object sender, RoutedEventArgs e)
+        {
+            arduino.OptionKeyboard = !arduino.OptionKeyboard;
+            ((Button)sender).Background = arduino.OptionKeyboard ? Brushes.LightBlue : Brushes.White;
+        }
+        #endregion
+
+        #region "SHORTCUTS"
+
+        private void UpdateShortcutButtons()
+        {
+            KeybDiffLock.Content = "DIFF LOCK (" + settings.GetShortcutString(KeyboardShortcut.TargetType.DiffLock) + ")";
+            KeybLeft.Content = "LEFT (" + settings.GetShortcutString(KeyboardShortcut.TargetType.Left) + ")";
+            KeybOk.Content = "OK (" + settings.GetShortcutString(KeyboardShortcut.TargetType.Ok) + ")";
+            KeybRight.Content = "RIGHT (" + settings.GetShortcutString(KeyboardShortcut.TargetType.Right) + ")";
+        }
+
+        private void ShortcutPressed(KeyboardShortcut shortcut)
+        {
+            MessageBox.Show(shortcut.ShortcutKey.ToString() + " " + shortcut.ShortcutModifiers.ToString());
         }
         #endregion
     }
