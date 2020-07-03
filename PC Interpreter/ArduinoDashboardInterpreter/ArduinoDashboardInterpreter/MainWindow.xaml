@@ -125,10 +125,10 @@
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center">
             <Label HorizontalAlignment="Center">Keyboard shortcuts</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="150" Height="20" Name="KeybDiffLock">DIFF LOCK (NONE)</Button>
-                <Button Margin="2" Width="150" Height="20" Name="KeybLeft">LEFT (NONE)</Button>
-                <Button Margin="2" Width="150" Height="20" Name="KeybOk">OK (NONE)</Button>
-                <Button Margin="2" Width="150" Height="20" Name="KeybRight">RIGHT (NONE)</Button>
+                <Button Margin="2" Width="150" Height="20" Name="KeybDiffLock" Click="KeyboardShortcut_Click">DIFF LOCK (NONE)</Button>
+                <Button Margin="2" Width="150" Height="20" Name="KeybLeft" Click="KeyboardShortcut_Click">LEFT (NONE)</Button>
+                <Button Margin="2" Width="150" Height="20" Name="KeybOk" Click="KeyboardShortcut_Click">OK (NONE)</Button>
+                <Button Margin="2" Width="150" Height="20" Name="KeybRight" Click="KeyboardShortcut_Click">RIGHT (NONE)</Button>
             </StackPanel>
         </StackPanel>
         <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom" HorizontalAlignment="Center" FontWeight="Bold">

@@ -43,7 +43,7 @@ namespace ArduinoDashboardInterpreter
                 }
                 return obj;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("Deserialization error!");
                 return null;

@@ -19,6 +19,7 @@ namespace ArduinoDashboardInterpreter
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    
     public partial class MainWindow : Window
     {
         ArduinoController arduino;
@@ -45,12 +46,10 @@ namespace ArduinoDashboardInterpreter
             {
                 settings = new Settings();
                 settings.StartListening();
-                Serialization.SerializeObject(ref settings, settingsPath);
             }
             settings.ShortcutsUpdated += UpdateShortcutButtons;
             settings.ShortcutsUpdated += SaveSettingsToFile;
             settings.KeyPressed += ShortcutPressed;
-            //settings.AddShortcut(new KeyboardShortcut(KeyboardShortcut.TargetType.Left, System.Windows.Forms.Keys.F, KeyModifiers.Shift));
             UpdateShortcutButtons();
         }
 
@@ -59,8 +58,7 @@ namespace ArduinoDashboardInterpreter
             string settingsPath = System.AppDomain.CurrentDomain.BaseDirectory + "settings.adi";
             Serialization.SerializeObject(ref settings, settingsPath);
         }
-
-
+        
         #region "LED"
 
         private void LedButtonColor(ArduinoController.LedType id, ArduinoController.LedState state)
@@ -260,7 +258,35 @@ namespace ArduinoDashboardInterpreter
 
         private void ShortcutPressed(KeyboardShortcut shortcut)
         {
-            MessageBox.Show(shortcut.ShortcutKey.ToString() + " " + shortcut.ShortcutModifiers.ToString());
+            Debug.WriteLine("HOTKEY!!!!!!!!!!!!"); //TODO hotkey
+        }
+        private void KeyboardShortcut_Click(object sender, RoutedEventArgs e)
+        {
+            KeyboardShortcut.TargetType target = 0;
+            switch(((Button)sender).Name)
+            {
+                case "KeybDiffLock": target = KeyboardShortcut.TargetType.DiffLock; break;
+                case "KeybLeft": target = KeyboardShortcut.TargetType.Left; break;
+                case "KeybOk": target = KeyboardShortcut.TargetType.Ok; break;
+                case "KeybRight": target = KeyboardShortcut.TargetType.Right; break;
+            }
+            WaitForKey modalWindow = new WaitForKey();
+            modalWindow.Owner = this;
+            if((bool)modalWindow.ShowDialog())
+            {
+                settings.AddShortcut(new KeyboardShortcut(target, modalWindow.DetectedKey, 0));
+            }
+            else
+            {
+                if(settings.GetShortcutString(target) != "none")
+                {
+                    if (MessageBox.Show("Delete this shortcut?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        settings.DeleteShortcut(target);
+                    }
+                }
+            }
+
         }
         #endregion
     }

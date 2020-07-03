@@ -58,6 +58,9 @@
     </ApplicationDefinition>
     <Compile Include="Serialization.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="WaitForKey.xaml.cs">
+      <DependentUpon>WaitForKey.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -73,6 +76,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WaitForKey.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

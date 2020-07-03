@@ -10,11 +10,13 @@ namespace ArduinoDashboardInterpreter
     class Settings
     {
         List<KeyboardShortcut> shortcuts = new List<KeyboardShortcut>();
-
+        
         public delegate void ShortcutsUpdatedDelegate();
+        [field: NonSerialized]
         public event ShortcutsUpdatedDelegate ShortcutsUpdated;
 
         public delegate void KeyPressedDelegate(KeyboardShortcut shortcut);
+        [field: NonSerialized]
         public event KeyPressedDelegate KeyPressed;
 
         public void StartListening()
