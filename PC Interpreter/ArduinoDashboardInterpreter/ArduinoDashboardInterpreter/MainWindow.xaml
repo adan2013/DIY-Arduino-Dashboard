@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArduinoDashboardInterpreter"
         mc:Ignorable="d"
-        Title="Arduino Dashboard Interpreter" Height="480" Width="850" ResizeMode="NoResize">
+        Title="Arduino Dashboard Interpreter" Height="540" Width="850" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -14,6 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="6*"/>
             <RowDefinition Height="6*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
@@ -95,7 +96,14 @@
             </StackPanel>
         </Grid>
         <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
-            <Label Margin="5" HorizontalAlignment="Center" Name="LcdStatus">Backlight: OFF | Screen id: 0</Label>
+            <Label HorizontalAlignment="Center">Program</Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="2" Width="80" Height="30" Name="ProgHome" Click="ProgramButton_Click">HOME</Button>
+                <Button Margin="2" Width="80" Height="30" Name="ProgManual" Click="ProgramButton_Click" Background="LightBlue">MANUAL</Button>
+                <Button Margin="2" Width="80" Height="30" Name="ProgTest" Click="ProgramButton_Click">TEST</Button>
+                <Button Margin="2" Width="80" Height="30" Name="ProgTelemetry" Click="ProgramButton_Click">TELEMETRY</Button>
+            </StackPanel>
+            <Label Margin="5" HorizontalAlignment="Center">LCD screen</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Margin="2" Width="80" Height="30" Name="LcdNavLeft">LEFT</Button>
                 <Button Margin="2" Width="80" Height="30" Name="LcdNavOk">OK</Button>
@@ -108,18 +116,20 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
-            <Label HorizontalAlignment="Center">Program</Label>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="80" Height="30" Name="ProgHome" Click="ProgramButton_Click">HOME</Button>
-                <Button Margin="2" Width="80" Height="30" Name="ProgManual" Click="ProgramButton_Click" Background="LightBlue">MANUAL</Button>
-                <Button Margin="2" Width="80" Height="30" Name="ProgTest" Click="ProgramButton_Click">TEST</Button>
-                <Button Margin="2" Width="80" Height="30" Name="ProgTelemetry" Click="ProgramButton_Click">TELEMETRY</Button>
-            </StackPanel>
             <Label HorizontalAlignment="Center">Options</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="80" Height="30" Name="OptionDiffLockSwitch" Click="OptionDiffLockSwitch_Click">DIFF SWITCH</Button>
-                <Button Margin="2" Width="80" Height="30" Name="OptionSound" Background="LightBlue" Click="OptionSound_Click">SOUND</Button>
-                <Button Margin="2" Width="80" Height="30" Name="OptionKeyboard" Background="LightBlue" Click="OptionKeyboard_Click">KEYBOARD</Button>
+                <Button Margin="2" Width="120" Height="30" Name="Option0" Click="OptionButton_Click">KEYBOARD</Button>
+                <Button Margin="2" Width="120" Height="30" Name="Option1" Click="OptionButton_Click">SOUND</Button>
+                <Button Margin="2" Width="120" Height="30" Name="Option2" Click="OptionButton_Click">DIFF LOCK</Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="2" Width="120" Height="30" Name="Option3" Click="OptionButton_Click">CLOCK 24H</Button>
+                <Button Margin="2" Width="120" Height="30" Name="Option4" Click="OptionButton_Click">REAL TIME CLOCK</Button>
+                <Button Margin="2" Width="120" Height="30" Name="Option5" Click="OptionButton_Click">ECO SHIFT</Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="2" Width="120" Height="30" Name="Option6" Click="OptionButton_Click">WARN SPEED LIMIT</Button>
+                <Button Margin="2" Width="120" Height="30" Name="Option7" Click="OptionButton_Click">SCREEN AUTO SW</Button>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center">
@@ -131,7 +141,17 @@
                 <Button Margin="2" Width="150" Height="20" Name="KeybRight" Click="KeyboardShortcut_Click">RIGHT (NONE)</Button>
             </StackPanel>
         </StackPanel>
-        <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom" HorizontalAlignment="Center" FontWeight="Bold">
+        <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Center">
+            <Label HorizontalAlignment="Center">Connection</Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ComboBox Margin="2" Width="120" Height="20" Name="ConnPortList"/>
+                <Button Margin="2" Width="120" Height="20" Name="ConnConnect">CONNECT</Button>
+                <Button Margin="2" Width="120" Height="20" Name="ConnDisconnect">DISCONNECT</Button>
+                <Button Margin="2" Width="120" Height="20" Name="ConnComMonitor">COM MONITOR</Button>
+                <Button Margin="2" Width="120" Height="20" Name="ConnRegMonitor">REG MONITOR</Button>
+            </StackPanel>
+        </StackPanel>
+        <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom" HorizontalAlignment="Center" FontWeight="Bold">
             DIY guide and more information about this Arduino project can be found here - www.REDARK.pl
         </Label>
     </Grid>

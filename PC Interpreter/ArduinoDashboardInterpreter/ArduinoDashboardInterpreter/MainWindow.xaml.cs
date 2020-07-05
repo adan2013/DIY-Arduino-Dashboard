@@ -34,7 +34,11 @@ namespace ArduinoDashboardInterpreter
             arduino.BacklightStateChanged += BacklightButtonColor;
             arduino.GaugePositionChanged += GaugeSliderUpdate;
             arduino.ProgramChanged += ProgramButtonColor;
+            LoadSettingsFromFile();
+        }
 
+        private void LoadSettingsFromFile()
+        {
             string settingsPath = System.AppDomain.CurrentDomain.BaseDirectory + "settings.adi";
             if (System.IO.File.Exists(settingsPath))
             {
@@ -48,8 +52,10 @@ namespace ArduinoDashboardInterpreter
                 settings.StartListening();
             }
             settings.ShortcutsUpdated += UpdateShortcutButtons;
-            settings.ShortcutsUpdated += SaveSettingsToFile;
             settings.KeyPressed += ShortcutPressed;
+            settings.ShortcutsUpdated += SaveSettingsToFile;
+            settings.OptionsUpdated += SaveSettingsToFile;
+            UpdateOptionButtons();
             UpdateShortcutButtons();
         }
 
@@ -227,23 +233,44 @@ namespace ArduinoDashboardInterpreter
 
         #region "OPTIONS"
         
-        private void OptionDiffLockSwitch_Click(object sender, RoutedEventArgs e)
+        private void UpdateOptionButtons()
         {
-            arduino.OptionDiffLock = !arduino.OptionDiffLock;
-            ((Button)sender).Background = arduino.OptionDiffLock ? Brushes.LightBlue : Brushes.White;
+            Brush offColor = Brushes.White;
+            Brush onColor = Brushes.LightBlue;
+            Option0.Background = settings.GetOptionValue((Settings.OptionType)0) ? onColor : offColor;
+            Option1.Background = settings.GetOptionValue((Settings.OptionType)1) ? onColor : offColor;
+            Option2.Background = settings.GetOptionValue((Settings.OptionType)2) ? onColor : offColor;
+            Option3.Background = settings.GetOptionValue((Settings.OptionType)3) ? onColor : offColor;
+            Option4.Background = settings.GetOptionValue((Settings.OptionType)4) ? onColor : offColor;
+            Option5.Background = settings.GetOptionValue((Settings.OptionType)5) ? onColor : offColor;
+            Option6.Background = settings.GetOptionValue((Settings.OptionType)6) ? onColor : offColor;
+            Option7.Background = settings.GetOptionValue((Settings.OptionType)7) ? onColor : offColor;
         }
 
-        private void OptionSound_Click(object sender, RoutedEventArgs e)
+        private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
-            arduino.OptionSound = !arduino.OptionSound;
-            ((Button)sender).Background = arduino.OptionSound ? Brushes.LightBlue : Brushes.White;
+            int optionId = int.Parse(((Button)sender).Name.Substring(6));
+            bool newValue = settings.ToggleOption((Settings.OptionType)optionId);
+            ((Button)sender).Background = newValue ? Brushes.LightBlue : Brushes.White;
         }
 
-        private void OptionKeyboard_Click(object sender, RoutedEventArgs e)
-        {
-            arduino.OptionKeyboard = !arduino.OptionKeyboard;
-            ((Button)sender).Background = arduino.OptionKeyboard ? Brushes.LightBlue : Brushes.White;
-        }
+        //private void OptionDiffLockSwitch_Click(object sender, RoutedEventArgs e)
+        //{
+        //    arduino.OptionDiffLock = !arduino.OptionDiffLock;
+        //    ((Button)sender).Background = arduino.OptionDiffLock ? Brushes.LightBlue : Brushes.White;
+        //}
+
+        //private void OptionSound_Click(object sender, RoutedEventArgs e)
+        //{
+        //    arduino.OptionSound = !arduino.OptionSound;
+        //    ((Button)sender).Background = arduino.OptionSound ? Brushes.LightBlue : Brushes.White;
+        //}
+
+        //private void OptionKeyboard_Click(object sender, RoutedEventArgs e)
+        //{
+        //    arduino.OptionKeyboard = !arduino.OptionKeyboard;
+        //    ((Button)sender).Background = arduino.OptionKeyboard ? Brushes.LightBlue : Brushes.White;
+        //}
         #endregion
 
         #region "SHORTCUTS"

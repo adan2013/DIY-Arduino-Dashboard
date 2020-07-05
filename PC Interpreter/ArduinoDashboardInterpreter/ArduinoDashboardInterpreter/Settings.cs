@@ -9,8 +9,15 @@ namespace ArduinoDashboardInterpreter
     [Serializable()]
     class Settings
     {
+        public Settings()
+        {
+            SetDefaultOptions();
+        }
+
+        #region "SHORTCUTS"
+
         List<KeyboardShortcut> shortcuts = new List<KeyboardShortcut>();
-        
+
         public delegate void ShortcutsUpdatedDelegate();
         [field: NonSerialized]
         public event ShortcutsUpdatedDelegate ShortcutsUpdated;
@@ -55,19 +62,73 @@ namespace ArduinoDashboardInterpreter
 
         public string GetShortcutString(KeyboardShortcut.TargetType target)
         {
-            foreach(KeyboardShortcut item in shortcuts)
+            foreach (KeyboardShortcut item in shortcuts)
             {
-                if(item.Target == target) return item.ToString();
+                if (item.Target == target) return item.ToString();
             }
             return "none";
         }
 
         private void HotKeyPressed(object sender, HotKeyEventArgs e)
         {
-            foreach(KeyboardShortcut item in shortcuts)
+            foreach (KeyboardShortcut item in shortcuts)
             {
                 if (item.ShortcutKey == e.Key && item.ShortcutModifiers == e.Modifiers) KeyPressed?.Invoke(item);
             }
         }
+        #endregion
+
+        #region "OPTIONS"
+
+        List<OptionType> options = new List<OptionType>();
+
+        public delegate void OptionsUpdatedDelegate();
+        [field: NonSerialized]
+        public event OptionsUpdatedDelegate OptionsUpdated;
+
+        public enum OptionType
+        {
+            KeyboardListener,
+            Sound,
+            DiffLock,
+            Clock24h,
+            RealTimeClock,
+            EcoShift,
+            WarningSpeedLimit,
+            AssistantAutoSwitch
+        }
+
+        public void SetDefaultOptions()
+        {
+            options.Clear();
+            options.Add(OptionType.KeyboardListener);
+            options.Add(OptionType.Sound);
+            options.Add(OptionType.Clock24h);
+            options.Add(OptionType.EcoShift);
+            options.Add(OptionType.WarningSpeedLimit);
+            options.Add(OptionType.AssistantAutoSwitch);
+            OptionsUpdated?.Invoke();
+        }
+
+        public bool ToggleOption(OptionType option)
+        {
+            bool current = GetOptionValue(option);
+            if(current)
+            {
+                options.Remove(option);
+            }
+            else
+            {
+                options.Add(option);
+            }
+            OptionsUpdated?.Invoke();
+            return !current;
+        }
+
+        public bool GetOptionValue(OptionType option)
+        {
+            return options.Contains(option);
+        }
+        #endregion
     }
 }
