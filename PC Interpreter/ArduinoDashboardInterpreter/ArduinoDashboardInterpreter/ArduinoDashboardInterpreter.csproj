@@ -56,11 +56,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ComConnector.cs" />
+    <Compile Include="ComMonitor.xaml.cs">
+      <DependentUpon>ComMonitor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RegMonitor.xaml.cs">
+      <DependentUpon>RegMonitor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Serialization.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="WaitForKey.xaml.cs">
       <DependentUpon>WaitForKey.xaml</DependentUpon>
     </Compile>
+    <Page Include="ComMonitor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -76,6 +87,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RegMonitor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WaitForKey.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

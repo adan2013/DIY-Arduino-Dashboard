@@ -22,13 +22,19 @@ namespace ArduinoDashboardInterpreter
     
     public partial class MainWindow : Window
     {
+        ComConnector serial;
         ArduinoController arduino;
         Settings settings;
 
+        ComMonitor ComMonitorWindow;
+        RegMonitor RegMonitorWindow;
+        
         public MainWindow()
         {
             InitializeComponent();
 
+            serial = new ComConnector();
+            RefreshPortList();
             arduino = new ArduinoController();
             arduino.LedStateChanged += LedButtonColor;
             arduino.BacklightStateChanged += BacklightButtonColor;
@@ -253,24 +259,6 @@ namespace ArduinoDashboardInterpreter
             bool newValue = settings.ToggleOption((Settings.OptionType)optionId);
             ((Button)sender).Background = newValue ? Brushes.LightBlue : Brushes.White;
         }
-
-        //private void OptionDiffLockSwitch_Click(object sender, RoutedEventArgs e)
-        //{
-        //    arduino.OptionDiffLock = !arduino.OptionDiffLock;
-        //    ((Button)sender).Background = arduino.OptionDiffLock ? Brushes.LightBlue : Brushes.White;
-        //}
-
-        //private void OptionSound_Click(object sender, RoutedEventArgs e)
-        //{
-        //    arduino.OptionSound = !arduino.OptionSound;
-        //    ((Button)sender).Background = arduino.OptionSound ? Brushes.LightBlue : Brushes.White;
-        //}
-
-        //private void OptionKeyboard_Click(object sender, RoutedEventArgs e)
-        //{
-        //    arduino.OptionKeyboard = !arduino.OptionKeyboard;
-        //    ((Button)sender).Background = arduino.OptionKeyboard ? Brushes.LightBlue : Brushes.White;
-        //}
         #endregion
 
         #region "SHORTCUTS"
@@ -314,6 +302,68 @@ namespace ArduinoDashboardInterpreter
                 }
             }
 
+        }
+        #endregion
+
+        #region "CONNECTION"
+
+        private void ConnScan_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshPortList();
+        }
+
+        private void ConnConnect_Click(object sender, RoutedEventArgs e)
+        {
+            if(ConnPortList.SelectedItem != null)
+            {
+                string port = ConnPortList.SelectedItem.ToString();
+                if(serial.Connect(port))
+                {
+                    ComMonitorWindow?.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Connection error!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Select serial port name first!");
+            }
+        }
+
+        private void ConnDisconnect_Click(object sender, RoutedEventArgs e)
+        {
+            if (!serial.Disconnect()) MessageBox.Show("Disconnection error!");
+        }
+
+        private void ConnComMonitor_Click(object sender, RoutedEventArgs e)
+        {
+            if(serial != null && serial.IsConnected())
+            {
+                ComMonitorWindow?.Close();
+                ComMonitorWindow = new ComMonitor(serial);
+                ComMonitorWindow.Show();
+            }
+            else
+            {
+                MessageBox.Show("Connection closed!");
+            }
+        }
+
+        private void ConnRegMonitor_Click(object sender, RoutedEventArgs e)
+        {
+            RegMonitorWindow?.Close();
+            RegMonitorWindow = new RegMonitor();
+            RegMonitorWindow.Show();
+        }
+
+        private void RefreshPortList()
+        {
+            ConnPortList.Items.Clear();
+            string[] list = ComConnector.GetPortList();
+            foreach (string item in list) ConnPortList.Items.Add(item);
+            if (ConnPortList.Items.Count == 1) ConnPortList.SelectedIndex = 0;
         }
         #endregion
     }

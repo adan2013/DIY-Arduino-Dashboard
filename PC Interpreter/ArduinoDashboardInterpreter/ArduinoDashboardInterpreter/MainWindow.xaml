@@ -144,11 +144,12 @@
         <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Center">
             <Label HorizontalAlignment="Center">Connection</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <ComboBox Margin="2" Width="120" Height="20" Name="ConnPortList"/>
-                <Button Margin="2" Width="120" Height="20" Name="ConnConnect">CONNECT</Button>
-                <Button Margin="2" Width="120" Height="20" Name="ConnDisconnect">DISCONNECT</Button>
-                <Button Margin="2" Width="120" Height="20" Name="ConnComMonitor">COM MONITOR</Button>
-                <Button Margin="2" Width="120" Height="20" Name="ConnRegMonitor">REG MONITOR</Button>
+                <ComboBox Margin="2" Width="100" Height="20" Name="ConnPortList"/>
+                <Button Margin="2" Width="120" Height="20" Name="ConnScan" Click="ConnScan_Click">SCAN</Button>
+                <Button Margin="2" Width="120" Height="20" Name="ConnConnect" Click="ConnConnect_Click">CONNECT</Button>
+                <Button Margin="2" Width="120" Height="20" Name="ConnDisconnect" Click="ConnDisconnect_Click">DISCONNECT</Button>
+                <Button Margin="2" Width="120" Height="20" Name="ConnComMonitor" Click="ConnComMonitor_Click">COM MONITOR</Button>
+                <Button Margin="2" Width="120" Height="20" Name="ConnRegMonitor" Click="ConnRegMonitor_Click">REG MONITOR</Button>
             </StackPanel>
         </StackPanel>
         <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom" HorizontalAlignment="Center" FontWeight="Bold">
