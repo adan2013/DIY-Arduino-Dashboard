@@ -61,6 +61,7 @@ namespace ArduinoDashboardInterpreter
             settings.KeyPressed += ShortcutPressed;
             settings.ShortcutsUpdated += SaveSettingsToFile;
             settings.OptionsUpdated += SaveSettingsToFile;
+            settings.OptionsUpdated += UpdateOptionButtons;
             UpdateOptionButtons();
             UpdateShortcutButtons();
         }
@@ -256,8 +257,7 @@ namespace ArduinoDashboardInterpreter
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
             int optionId = int.Parse(((Button)sender).Name.Substring(6));
-            bool newValue = settings.ToggleOption((Settings.OptionType)optionId);
-            ((Button)sender).Background = newValue ? Brushes.LightBlue : Brushes.White;
+            settings.ToggleOption((Settings.OptionType)optionId);
         }
         #endregion
 
@@ -273,8 +273,23 @@ namespace ArduinoDashboardInterpreter
 
         private void ShortcutPressed(KeyboardShortcut shortcut)
         {
-            Debug.WriteLine("HOTKEY!!!!!!!!!!!!"); //TODO hotkey
+            switch(shortcut.Target)
+            {
+                case KeyboardShortcut.TargetType.DiffLock:
+                    new System.Threading.Thread(() => Dispatcher.Invoke(new Action(() => settings.ToggleOption(Settings.OptionType.DiffLock)))).Start();
+                    break;
+                case KeyboardShortcut.TargetType.Left:
+                    arduino.Screen.LeftButton();
+                    break;
+                case KeyboardShortcut.TargetType.Ok:
+                    arduino.Screen.OkButton();
+                    break;
+                case KeyboardShortcut.TargetType.Right:
+                    arduino.Screen.RightButton();
+                    break;
+            }
         }
+
         private void KeyboardShortcut_Click(object sender, RoutedEventArgs e)
         {
             KeyboardShortcut.TargetType target = 0;
@@ -364,6 +379,24 @@ namespace ArduinoDashboardInterpreter
             string[] list = ComConnector.GetPortList();
             foreach (string item in list) ConnPortList.Items.Add(item);
             if (ConnPortList.Items.Count == 1) ConnPortList.SelectedIndex = 0;
+        }
+        #endregion
+
+        #region "SCREEN"
+
+        private void LcdNavLeft_Click(object sender, RoutedEventArgs e)
+        {
+            arduino.Screen.LeftButton();
+        }
+
+        private void LcdNavOk_Click(object sender, RoutedEventArgs e)
+        {
+            arduino.Screen.OkButton();
+        }
+
+        private void LcdNavRight_Click(object sender, RoutedEventArgs e)
+        {
+            arduino.Screen.RightButton();
         }
         #endregion
     }

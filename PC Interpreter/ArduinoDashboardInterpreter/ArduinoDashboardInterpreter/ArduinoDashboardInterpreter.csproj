@@ -63,6 +63,8 @@
     <Compile Include="RegMonitor.xaml.cs">
       <DependentUpon>RegMonitor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ScreenController.cs" />
+    <Compile Include="ScreenControllers\ClearBlackController.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="WaitForKey.xaml.cs">

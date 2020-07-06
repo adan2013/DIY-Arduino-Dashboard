@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArduinoDashboardInterpreter.ScreenControllers;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -25,6 +26,18 @@ namespace ArduinoDashboardInterpreter
         ProgramType CurrentProgram = ProgramType.Manual;
         public delegate void ProgramChangedDelegate(ProgramType newProgram);
         public event ProgramChangedDelegate ProgramChanged;
+
+        public ScreenController Screen;
+        ScreenController.ScreenType CurrentScreen;
+        string[] RegistryA = new string[5];
+        string[] RegistryB = new string[5];
+        string[] RegistryC = new string[5];
+
+        public ArduinoController()
+        {
+            Screen = new ClearBlackController(this);
+            CurrentScreen = ScreenController.ScreenType.ClearBlack;
+        }
 
         #region "LED"
 
@@ -93,10 +106,7 @@ namespace ArduinoDashboardInterpreter
             }
         }
 
-        public LedState GetLedState(LedType id)
-        {
-            return LedController[(int)id];
-        }
+        public LedState GetLedState(LedType id) => LedController[(int)id];
 
         public void SetLedState(LedType id, LedState state)
         {
@@ -108,10 +118,7 @@ namespace ArduinoDashboardInterpreter
 
         #region "BACKLIGHT"
 
-        public LedState GetBacklightState(BacklightType id)
-        {
-            return BacklightController[(int)id];
-        }
+        public LedState GetBacklightState(BacklightType id) => BacklightController[(int)id];
 
         public void SetBacklightState(BacklightType id, LedState state)
         {
@@ -131,10 +138,7 @@ namespace ArduinoDashboardInterpreter
             Engine
         }
 
-        public Double GetGaugePosition(GaugeType id)
-        {
-            return GaugePositions[(int)id];
-        }
+        public Double GetGaugePosition(GaugeType id) => GaugePositions[(int)id];
 
         public void SetGaugePosition(GaugeType id, Double value)
         {
@@ -167,6 +171,60 @@ namespace ArduinoDashboardInterpreter
             CurrentProgram = newProgram;
             if (oldProgram != CurrentProgram) ProgramChanged?.Invoke(newProgram);
         }
+        #endregion
+
+        #region "SCREEN"
+
+        public enum RegistryType
+        {
+            RegistryA,
+            RegistryB,
+            RegistryC
+        }
+
+        public bool ChangeRegistryValue(RegistryType reg, int cellID, string value)
+        {
+            if(cellID >= 0 && cellID < 5)
+            {
+                string current = "";
+                switch(reg)
+                {
+                    case RegistryType.RegistryA:
+                        current = RegistryA[cellID];
+                        RegistryA[cellID] = value;
+                        break;
+                    case RegistryType.RegistryB:
+                        current = RegistryB[cellID];
+                        RegistryB[cellID] = value;
+                        break;
+                    case RegistryType.RegistryC:
+                        current = RegistryC[cellID];
+                        RegistryC[cellID] = value;
+                        break;
+                }
+                return current != value;
+            }
+            return false;
+        }
+
+        public string[] GetRegisterA() => RegistryA;
+
+        public string[] GetRegisterB() => RegistryB;
+
+        public string[] GetRegisterC() => RegistryC;
+
+        public bool SwitchScreen(ScreenController.ScreenType newScreen)
+        {
+            ScreenController.ScreenType current = CurrentScreen;
+            switch(newScreen)
+            {
+                case ScreenController.ScreenType.ClearBlack: Screen = new ClearBlackController(this); break;
+            }
+            CurrentScreen = newScreen;
+            return current != newScreen;
+        }
+
+        public ScreenController.ScreenType GetCurrentScreenType() => CurrentScreen;
         #endregion
     }
 }
