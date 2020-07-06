@@ -383,7 +383,7 @@ namespace ArduinoDashboardInterpreter
         private void ConnRegMonitor_Click(object sender, RoutedEventArgs e)
         {
             RegMonitorWindow?.Close();
-            RegMonitorWindow = new RegMonitor();
+            RegMonitorWindow = new RegMonitor(arduino);
             RegMonitorWindow.Show();
         }
 

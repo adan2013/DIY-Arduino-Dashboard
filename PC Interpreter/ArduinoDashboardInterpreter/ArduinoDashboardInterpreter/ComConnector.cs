@@ -23,6 +23,9 @@ namespace ArduinoDashboardInterpreter
 
         SerialPort port;
 
+        public delegate void DataSendedDelegate(string content);
+        public event DataSendedDelegate DataSended;
+
         #region "PORT"
 
         public bool Connect(string portName)
@@ -65,6 +68,7 @@ namespace ArduinoDashboardInterpreter
             if(IsConnected())
             {
                 port.WriteLine(content);
+                DataSended?.Invoke(content);
                 return true;
             }
             return false;

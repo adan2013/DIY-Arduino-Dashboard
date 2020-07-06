@@ -19,10 +19,29 @@ namespace ArduinoDashboardInterpreter
     /// </summary>
     public partial class RegMonitor : Window
     {
-        public RegMonitor()
+        ArduinoController arduino;
+
+        public RegMonitor(ArduinoController arduino)
         {
             InitializeComponent();
-            MonitorConsole.Text = "A1:\nA2:\nA3:\nA4:\nA5:\n\nB1:\nB2:\nB3:\nB4:\nB5:\n\nC1:\nC2:\nC3:\nC4:\nC5:";
+            this.arduino = arduino;
+            this.arduino.LcdDataChanged += Arduino_LcdDataChanged;
+            Arduino_LcdDataChanged(0, new string[5], new string[5], new string[5]);
+        }
+
+        private void Arduino_LcdDataChanged(ScreenController.ScreenType id, string[] regA, string[] regB, string[] regC)
+        {
+            MonitorConsole.Text = "SCREEN ID: " + (int)id + "\n" + PrintRegistry("A", regA) + "\n" + PrintRegistry("B", regB) + "\n" + PrintRegistry("C", regC);
+        }
+
+        private string PrintRegistry(string letter, string[] values)
+        {
+            string result = "";
+            for(int i = 0; i < values.Length; i++)
+            {
+                result += "\n" + letter + i + ": " + values[i];
+            }
+            return result;
         }
     }
 }

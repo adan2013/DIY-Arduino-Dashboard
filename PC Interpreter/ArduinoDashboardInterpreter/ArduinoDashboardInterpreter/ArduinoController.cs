@@ -28,6 +28,8 @@ namespace ArduinoDashboardInterpreter
         string[] RegistryA = new string[5];
         string[] RegistryB = new string[5];
         string[] RegistryC = new string[5];
+        public delegate void LcdDataChangedDelegate(ScreenController.ScreenType id, string[] regA, string[] regB, string[] regC);
+        public event LcdDataChangedDelegate LcdDataChanged;
 
         public bool LedModified = false;
         public bool BacklightModified = false;
@@ -221,6 +223,7 @@ namespace ArduinoDashboardInterpreter
                         case RegistryType.RegistryB: RegistryBModified = true; break;
                         case RegistryType.RegistryC: RegistryCModified = true; break;
                     }
+                    LcdDataChanged?.Invoke(CurrentScreen, RegistryA, RegistryB, RegistryC);
                     return true;
                 }
             }
@@ -244,6 +247,7 @@ namespace ArduinoDashboardInterpreter
             if(current != newScreen)
             {
                 ScreenTypeModified = true;
+                LcdDataChanged?.Invoke(CurrentScreen, RegistryA, RegistryB, RegistryC);
                 return true;
             }
             return false;
