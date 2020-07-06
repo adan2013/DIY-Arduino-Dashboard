@@ -90,27 +90,31 @@ namespace ArduinoDashboardInterpreter
         
         #region "LED"
 
-        private void LedButtonColor(ArduinoController.LedType id, ArduinoController.LedState state)
+        private void LedButtonColor()
         {
-            Brush color = state == ArduinoController.LedState.Off ? Brushes.White : ArduinoController.GetLedColor(id);
-            switch ((int)id)
+            ArduinoController.LedState[] state = arduino.GetLedFullState();
+            for(int i = 0; i < state.Length; i++)
             {
-                case 0: Led0.Background = color; break;
-                case 1: Led1.Background = color; break;
-                case 2: Led2.Background = color; break;
-                case 3: Led3.Background = color; break;
-                case 4: Led4.Background = color; break;
-                case 5: Led5.Background = color; break;
-                case 6: Led6.Background = color; break;
-                case 7: Led7.Background = color; break;
-                case 8: Led8.Background = color; break;
-                case 9: Led9.Background = color; break;
-                case 10: Led10.Background = color; break;
-                case 11: Led11.Background = color; break;
-                case 12: Led12.Background = color; break;
-                case 13: Led13.Background = color; break;
-                case 14: Led14.Background = color; break;
-                case 15: Led15.Background = color; break;
+                Brush color = state[i] == ArduinoController.LedState.Off ? Brushes.White : ArduinoController.GetLedColor((ArduinoController.LedType)i);
+                switch(i)
+                {
+                    case 0: Led0.Background = color; break;
+                    case 1: Led1.Background = color; break;
+                    case 2: Led2.Background = color; break;
+                    case 3: Led3.Background = color; break;
+                    case 4: Led4.Background = color; break;
+                    case 5: Led5.Background = color; break;
+                    case 6: Led6.Background = color; break;
+                    case 7: Led7.Background = color; break;
+                    case 8: Led8.Background = color; break;
+                    case 9: Led9.Background = color; break;
+                    case 10: Led10.Background = color; break;
+                    case 11: Led11.Background = color; break;
+                    case 12: Led12.Background = color; break;
+                    case 13: Led13.Background = color; break;
+                    case 14: Led14.Background = color; break;
+                    case 15: Led15.Background = color; break;
+                }
             }
         }
 
@@ -132,16 +136,20 @@ namespace ArduinoDashboardInterpreter
 
         #region "BACKLIGHT"
 
-        private void BacklightButtonColor(ArduinoController.BacklightType id, ArduinoController.LedState state)
+        private void BacklightButtonColor()
         {
-            Brush color = state == ArduinoController.LedState.Off ? Brushes.White : Brushes.LightBlue;
-            switch (id)
+            ArduinoController.LedState[] state = arduino.GetBacklightFullState();
+            for (int i = 0; i < state.Length; i++)
             {
-                case ArduinoController.BacklightType.WhiteBig: BacklightWB.Background = color; break;
-                case ArduinoController.BacklightType.WhiteSmall: BacklightWS.Background = color; break;
-                case ArduinoController.BacklightType.RedBig: BacklightRB.Background = color; break;
-                case ArduinoController.BacklightType.RedSmall: BacklightRS.Background = color; break;
-                case ArduinoController.BacklightType.LcdLed: LcdLed.Background = color; break;
+                Brush color = state[i] == ArduinoController.LedState.Off ? Brushes.White : Brushes.LightBlue;
+                switch (i)
+                {
+                    case 0: BacklightWB.Background = color; break;
+                    case 1: BacklightWS.Background = color; break;
+                    case 2: BacklightRB.Background = color; break;
+                    case 3: BacklightRS.Background = color; break;
+                    case 4: LcdLed.Background = color; break;
+                }
             }
         }
 
@@ -173,6 +181,16 @@ namespace ArduinoDashboardInterpreter
 
         bool ignoreSliderUpdate = false;
 
+        private void GaugeSliderUpdate()
+        {
+            ignoreSliderUpdate = true;
+            GaugeA.Value = arduino.GetGaugeState(ArduinoController.GaugeType.Speed);
+            GaugeB.Value = arduino.GetGaugeState(ArduinoController.GaugeType.Fuel);
+            GaugeC.Value = arduino.GetGaugeState(ArduinoController.GaugeType.Air);
+            GaugeD.Value = arduino.GetGaugeState(ArduinoController.GaugeType.Engine);
+            ignoreSliderUpdate = false;
+        }
+
         private void Gauge_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if(!ignoreSliderUpdate)
@@ -187,19 +205,6 @@ namespace ArduinoDashboardInterpreter
                 }
                 arduino.SetGaugePosition(id, e.NewValue);
             }
-        }
-
-        private void GaugeSliderUpdate(ArduinoController.GaugeType id, double value)
-        {
-            ignoreSliderUpdate = true;
-            switch (id)
-            {
-                case ArduinoController.GaugeType.Speed: GaugeA.Value = value; break;
-                case ArduinoController.GaugeType.Fuel: GaugeB.Value = value; break;
-                case ArduinoController.GaugeType.Air: GaugeC.Value = value; break;
-                case ArduinoController.GaugeType.Engine: GaugeD.Value = value; break;
-            }
-            ignoreSliderUpdate = false;
         }
 
         private void GaugeHome_Click(object sender, RoutedEventArgs e)
