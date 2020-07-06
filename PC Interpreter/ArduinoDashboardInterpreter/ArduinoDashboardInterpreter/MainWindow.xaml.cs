@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ArduinoDashboardInterpreter
 {
@@ -27,6 +28,7 @@ namespace ArduinoDashboardInterpreter
         ArduinoController arduino;
         Settings settings;
         ProgramLoop program;
+        DispatcherTimer loopTimer;
 
         ComMonitor ComMonitorWindow;
         RegMonitor RegMonitorWindow;
@@ -51,6 +53,10 @@ namespace ArduinoDashboardInterpreter
             arduino.GaugePositionChanged += GaugeSliderUpdate;
             LoadSettingsFromFile();
             SetNewProgram(ProgramType.Manual);
+            loopTimer = new DispatcherTimer();
+            loopTimer.Interval = new TimeSpan(100);
+            loopTimer.Tick += LoopTimer_Tick;
+            loopTimer.Start();
         }
 
         private void LoadSettingsFromFile()
@@ -218,6 +224,8 @@ namespace ArduinoDashboardInterpreter
         #endregion
 
         #region "PROGRAM"
+
+        private void LoopTimer_Tick(object sender, EventArgs e) => program?.Loop(serial, arduino, settings);
 
         public void SetNewProgram(ProgramType newProgram)
         {

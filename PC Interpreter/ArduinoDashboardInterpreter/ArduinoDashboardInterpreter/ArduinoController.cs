@@ -116,6 +116,8 @@ namespace ArduinoDashboardInterpreter
 
         public LedState GetLedState(LedType id) => LedController[(int)id];
 
+        public LedState[] GetLedFullState() => LedController;
+
         public bool SetLedState(LedType id, LedState state)
         {
             LedState currentState = LedController[(int)id];
@@ -143,6 +145,8 @@ namespace ArduinoDashboardInterpreter
 
         public LedState GetBacklightState(BacklightType id) => BacklightController[(int)id];
 
+        public LedState[] GetBacklightFullState() => BacklightController;
+
         public bool SetBacklightState(BacklightType id, LedState state)
         {
             LedState currentState = BacklightController[(int)id];
@@ -167,7 +171,9 @@ namespace ArduinoDashboardInterpreter
             Engine
         }
 
-        public Double GetGaugePosition(GaugeType id) => GaugePositions[(int)id];
+        public Double GetGaugeState(GaugeType id) => GaugePositions[(int)id];
+
+        public Double[] GetGaugeFullState() => GaugePositions;
 
         public bool SetGaugePosition(GaugeType id, Double value)
         {
@@ -230,11 +236,11 @@ namespace ArduinoDashboardInterpreter
             return false;
         }
 
-        public string[] GetRegisterA() => RegistryA;
+        public string[] GetRegistryA() => RegistryA;
 
-        public string[] GetRegisterB() => RegistryB;
+        public string[] GetRegistryB() => RegistryB;
 
-        public string[] GetRegisterC() => RegistryC;
+        public string[] GetRegistryC() => RegistryC;
 
         public bool SwitchScreen(ScreenController.ScreenType newScreen)
         {
