@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArduinoDashboardInterpreter.ProgramLoops;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -28,7 +29,17 @@ namespace ArduinoDashboardInterpreter
 
         ComMonitor ComMonitorWindow;
         RegMonitor RegMonitorWindow;
-        
+
+        ProgramLoop program;
+
+        public enum ProgramType
+        {
+            Home,
+            Manual,
+            Test,
+            Telemetry
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -39,8 +50,8 @@ namespace ArduinoDashboardInterpreter
             arduino.LedStateChanged += LedButtonColor;
             arduino.BacklightStateChanged += BacklightButtonColor;
             arduino.GaugePositionChanged += GaugeSliderUpdate;
-            arduino.ProgramChanged += ProgramButtonColor;
             LoadSettingsFromFile();
+            SetNewProgram(ProgramType.Manual);
         }
 
         private void LoadSettingsFromFile()
@@ -209,31 +220,35 @@ namespace ArduinoDashboardInterpreter
 
         #region "PROGRAM"
 
-        private void ProgramButtonColor(ArduinoController.ProgramType newProgram)
+        public void SetNewProgram(ProgramType newProgram)
         {
+            switch(newProgram)
+            {
+                case ProgramType.Home: program = new HomeLoop(); break;
+                case ProgramType.Manual: program = new ManualLoop(); break;
+                case ProgramType.Test: program = new TestLoop(); break;
+                case ProgramType.Telemetry: program = new TelemetryLoop(); break;
+            }
             Brush offColor = Brushes.White;
             Brush onColor = Brushes.LightBlue;
             ProgHome.Background = offColor;
             ProgManual.Background = offColor;
             ProgTest.Background = offColor;
             ProgTelemetry.Background = offColor;
-            switch (newProgram)
-            {
-                case ArduinoController.ProgramType.Home: ProgHome.Background = onColor; break;
-                case ArduinoController.ProgramType.Manual: ProgManual.Background = onColor; break;
-                case ArduinoController.ProgramType.Test: ProgTest.Background = onColor; break;
-                case ArduinoController.ProgramType.Telemetry: ProgTelemetry.Background = onColor; break;
-            }
+            if (program is HomeLoop) ProgHome.Background = onColor;
+            if (program is ManualLoop) ProgManual.Background = onColor;
+            if (program is TestLoop) ProgTest.Background = onColor;
+            if (program is TelemetryLoop) ProgTelemetry.Background = onColor;
         }
 
         private void ProgramButton_Click(object sender, RoutedEventArgs e)
         {
             switch(((Button)sender).Name)
             {
-                case "ProgHome": arduino.SetNewProgram(ArduinoController.ProgramType.Home); break;
-                case "ProgManual": arduino.SetNewProgram(ArduinoController.ProgramType.Manual); break;
-                case "ProgTest": arduino.SetNewProgram(ArduinoController.ProgramType.Test); break;
-                case "ProgTelemetry": arduino.SetNewProgram(ArduinoController.ProgramType.Telemetry); break;
+                case "ProgHome": SetNewProgram(ProgramType.Home); break;
+                case "ProgManual": SetNewProgram(ProgramType.Manual); break;
+                case "ProgTest": SetNewProgram(ProgramType.Test); break;
+                case "ProgTelemetry": SetNewProgram(ProgramType.Telemetry); break;
             }
         }
         #endregion

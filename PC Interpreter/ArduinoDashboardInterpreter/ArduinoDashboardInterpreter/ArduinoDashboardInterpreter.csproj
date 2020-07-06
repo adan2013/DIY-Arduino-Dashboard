@@ -60,6 +60,11 @@
     <Compile Include="ComMonitor.xaml.cs">
       <DependentUpon>ComMonitor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProgramLoop.cs" />
+    <Compile Include="ProgramLoops\HomeLoop.cs" />
+    <Compile Include="ProgramLoops\ManualLoop.cs" />
+    <Compile Include="ProgramLoops\TelemetryLoop.cs" />
+    <Compile Include="ProgramLoops\TestLoop.cs" />
     <Compile Include="RegMonitor.xaml.cs">
       <DependentUpon>RegMonitor.xaml</DependentUpon>
     </Compile>

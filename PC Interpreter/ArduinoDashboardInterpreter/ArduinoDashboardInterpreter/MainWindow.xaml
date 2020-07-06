@@ -99,7 +99,7 @@
             <Label HorizontalAlignment="Center">Program</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Margin="2" Width="80" Height="30" Name="ProgHome" Click="ProgramButton_Click">HOME</Button>
-                <Button Margin="2" Width="80" Height="30" Name="ProgManual" Click="ProgramButton_Click" Background="LightBlue">MANUAL</Button>
+                <Button Margin="2" Width="80" Height="30" Name="ProgManual" Click="ProgramButton_Click">MANUAL</Button>
                 <Button Margin="2" Width="80" Height="30" Name="ProgTest" Click="ProgramButton_Click">TEST</Button>
                 <Button Margin="2" Width="80" Height="30" Name="ProgTelemetry" Click="ProgramButton_Click">TELEMETRY</Button>
             </StackPanel>

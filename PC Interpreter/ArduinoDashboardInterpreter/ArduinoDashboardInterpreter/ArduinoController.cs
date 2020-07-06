@@ -23,10 +23,6 @@ namespace ArduinoDashboardInterpreter
         public delegate void GaugePositionChangedDelegate(GaugeType id, Double value);
         public event GaugePositionChangedDelegate GaugePositionChanged;
 
-        ProgramType CurrentProgram = ProgramType.Manual;
-        public delegate void ProgramChangedDelegate(ProgramType newProgram);
-        public event ProgramChangedDelegate ProgramChanged;
-
         public ScreenController Screen;
         ScreenController.ScreenType CurrentScreen;
         string[] RegistryA = new string[5];
@@ -147,29 +143,6 @@ namespace ArduinoDashboardInterpreter
             if (value > 100) value = 100;
             GaugePositions[(int)id] = value;
             if (currentValue != value) GaugePositionChanged?.Invoke(id, value);
-        }
-        #endregion
-
-        #region "PROGRAM"
-
-        public enum ProgramType
-        {
-            Home,
-            Manual,
-            Test,
-            Telemetry
-        }
-
-        public ProgramType GetCurrentProgram()
-        {
-            return CurrentProgram;
-        }
-
-        public void SetNewProgram(ProgramType newProgram)
-        {
-            ProgramType oldProgram = CurrentProgram;
-            CurrentProgram = newProgram;
-            if (oldProgram != CurrentProgram) ProgramChanged?.Invoke(newProgram);
         }
         #endregion
 
