@@ -103,16 +103,18 @@
                 <Button Margin="2" Width="80" Height="30" Name="ProgTest" Click="ProgramButton_Click">TEST</Button>
                 <Button Margin="2" Width="80" Height="30" Name="ProgTelemetry" Click="ProgramButton_Click">TELEMETRY</Button>
             </StackPanel>
-            <Label Margin="5" HorizontalAlignment="Center">LCD screen</Label>
+            <Label Margin="5" HorizontalAlignment="Center">Screen and sound</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="2" Width="80" Height="30" Name="LcdLed" Click="BacklightButton_Click">LED</Button>
                 <Button Margin="2" Width="80" Height="30" Name="LcdNavLeft" Click="LcdNavLeft_Click">LEFT</Button>
                 <Button Margin="2" Width="80" Height="30" Name="LcdNavOk" Click="LcdNavOk_Click">OK</Button>
                 <Button Margin="2" Width="80" Height="30" Name="LcdNavRight" Click="LcdNavRight_Click">RIGHT</Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="80" Height="30" Name="LcdLed" Click="BacklightButton_Click">LED</Button>
-                <Button Margin="2" Width="80" Height="30" Name="LcdClear">CLEAR</Button>
-                <Button Margin="2" Width="80" Height="30" Name="LcdRefresh">REFRESH</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdClear" Click="LcdClear_Click">CLEAR</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdPrint" Click="LcdPrint_Click">PRINT</Button>
+                <Button Margin="2" Width="80" Height="30" Name="LcdUpdate" Click="LcdUpdate_Click">UPDATE</Button>
+                <Button Margin="2" Width="80" Height="30" Name="SoundBeep" Click="SoundBeep_Click">BEEP</Button>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">

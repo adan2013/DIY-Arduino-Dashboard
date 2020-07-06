@@ -409,22 +409,21 @@ namespace ArduinoDashboardInterpreter
         }
         #endregion
 
-        #region "SCREEN"
+        #region "SCREEN AND SOUND"
 
-        private void LcdNavLeft_Click(object sender, RoutedEventArgs e)
-        {
-            arduino.Screen.LeftButton();
-        }
+        private void LcdNavLeft_Click(object sender, RoutedEventArgs e) => arduino.Screen.LeftButton();
 
-        private void LcdNavOk_Click(object sender, RoutedEventArgs e)
-        {
-            arduino.Screen.OkButton();
-        }
+        private void LcdNavOk_Click(object sender, RoutedEventArgs e) => arduino.Screen.OkButton();
 
-        private void LcdNavRight_Click(object sender, RoutedEventArgs e)
-        {
-            arduino.Screen.RightButton();
-        }
+        private void LcdNavRight_Click(object sender, RoutedEventArgs e) => arduino.Screen.RightButton();
+
+        private void LcdClear_Click(object sender, RoutedEventArgs e) => serial.SendClearLcdCommand();
+
+        private void LcdPrint_Click(object sender, RoutedEventArgs e) => serial.SendPrintLcdCommand(arduino.GetCurrentScreenType());
+
+        private void LcdUpdate_Click(object sender, RoutedEventArgs e) => serial.SendUpdateLcdCommand();
+
+        private void SoundBeep_Click(object sender, RoutedEventArgs e) => serial.SendBeepCommand();
         #endregion
     }
 }
