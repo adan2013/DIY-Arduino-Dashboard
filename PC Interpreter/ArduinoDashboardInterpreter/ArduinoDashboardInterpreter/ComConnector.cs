@@ -9,7 +9,21 @@ namespace ArduinoDashboardInterpreter
 {
     public class ComConnector
     {
+        const string VALUE_SEPARATOR = "@";
+        const string LED_UPDATE_COMMAND = "LED";
+        const string BACKLIGHT_UPDATE_COMMAND = "BKL";
+        const string GAUGE_UPDATE_COMMAND = "GAU";
+        const string REG_A_UPDATE_COMMAND = "REA";
+        const string REG_B_UPDATE_COMMAND = "REB";
+        const string REG_C_UPDATE_COMMAND = "REC";
+        const string LCD_CLEAR_COMMAND = "CLS";
+        const string LCD_PRINT_COMMAND = "PRT";
+        const string LCD_UPDATE_COMMAND = "UPD";
+        const string BEEP_COMMAND = "BEP";
+
         SerialPort port;
+
+        #region "PORT"
 
         public bool Connect(string portName)
         {
@@ -19,7 +33,8 @@ namespace ArduinoDashboardInterpreter
                 port = new SerialPort(portName, 9600, Parity.Odd, 7, StopBits.One);
                 port.Open();
                 return port.IsOpen;
-            }catch { return false; }
+            }
+            catch { return false; }
         }
 
         public bool Disconnect()
@@ -30,24 +45,74 @@ namespace ArduinoDashboardInterpreter
                 {
                     port.Close();
                     return !port.IsOpen;
-                } catch { return false; }
+                }
+                catch { return false; }
             }
             return true;
         }
 
-        public bool IsConnected()
+        public bool IsConnected() => port != null && port.IsOpen;
+
+        public static string[] GetPortList() => SerialPort.GetPortNames();
+
+        public SerialPort GetSerialPortObject() => port;
+        #endregion
+
+        #region "CONNECTION"
+
+        private bool SendData(string content)
         {
-            return port != null && port.IsOpen;
+            if(IsConnected())
+            {
+                port.WriteLine(content);
+                return true;
+            }
+            return false;
         }
 
-        public static string[] GetPortList()
+        public bool SendLedUpdate(ArduinoController.LedState[] ledConfig)
         {
-            return SerialPort.GetPortNames();
+            string content = LED_UPDATE_COMMAND;
+            foreach (ArduinoController.LedState led in ledConfig) content += (int)led;
+            return SendData(content);
         }
 
-        public SerialPort GetSerialPortObject()
+        public bool SendBacklightUpdate(ArduinoController.LedState[] backlightConfig)
         {
-            return port;
+            string content = BACKLIGHT_UPDATE_COMMAND;
+            foreach (ArduinoController.LedState bl in backlightConfig) content += (int)bl;
+            return SendData(content);
         }
+
+        public bool SendGaugeUpdate(Double[] gaugeConfig)
+        {
+            string content = GAUGE_UPDATE_COMMAND;
+            foreach (Double gauge in gaugeConfig) content += (int)gauge + VALUE_SEPARATOR;
+            content = content.Substring(0, content.Length - 1);
+            return SendData(content);
+        }
+
+        public bool SendRegistryUpdate(ArduinoController.RegistryType type, string[] values)
+        {
+            string content = "";
+            switch(type)
+            {
+                case ArduinoController.RegistryType.RegistryA: content = REG_A_UPDATE_COMMAND; break;
+                case ArduinoController.RegistryType.RegistryB: content = REG_B_UPDATE_COMMAND; break;
+                case ArduinoController.RegistryType.RegistryC: content = REG_C_UPDATE_COMMAND; break;
+            }
+            foreach (string value in values) content += value + VALUE_SEPARATOR;
+            content = content.Substring(0, content.Length - 1);
+            return SendData(content);
+        }
+
+        public bool SendClearLcdCommand() => SendData(LCD_CLEAR_COMMAND);
+
+        public bool SendPrintLcdCommand(ScreenController.ScreenType screen) => SendData(LCD_PRINT_COMMAND + (int)screen);
+
+        public bool SendUpdateLcdCommand() => SendData(LCD_UPDATE_COMMAND);
+
+        public bool SendBeepCommand() => SendData(BEEP_COMMAND);
+        #endregion
     }
 }

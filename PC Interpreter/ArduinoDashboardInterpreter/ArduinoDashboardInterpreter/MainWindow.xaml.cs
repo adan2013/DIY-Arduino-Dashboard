@@ -26,11 +26,10 @@ namespace ArduinoDashboardInterpreter
         ComConnector serial;
         ArduinoController arduino;
         Settings settings;
+        ProgramLoop program;
 
         ComMonitor ComMonitorWindow;
         RegMonitor RegMonitorWindow;
-
-        ProgramLoop program;
 
         public enum ProgramType
         {
@@ -224,10 +223,10 @@ namespace ArduinoDashboardInterpreter
         {
             switch(newProgram)
             {
-                case ProgramType.Home: program = new HomeLoop(); break;
-                case ProgramType.Manual: program = new ManualLoop(); break;
-                case ProgramType.Test: program = new TestLoop(); break;
-                case ProgramType.Telemetry: program = new TelemetryLoop(); break;
+                case ProgramType.Home: program = new HomeLoop(serial, arduino, settings); break;
+                case ProgramType.Manual: program = new ManualLoop(serial, arduino, settings); break;
+                case ProgramType.Test: program = new TestLoop(serial, arduino, settings); break;
+                case ProgramType.Telemetry: program = new TelemetryLoop(serial, arduino, settings); break;
             }
             Brush offColor = Brushes.White;
             Brush onColor = Brushes.LightBlue;

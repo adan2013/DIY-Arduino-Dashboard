@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ArduinoDashboardInterpreter
 {
-    class ScreenController
+    public class ScreenController
     {
         public enum ScreenType
         {

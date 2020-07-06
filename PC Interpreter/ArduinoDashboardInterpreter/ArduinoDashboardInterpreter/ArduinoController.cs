@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace ArduinoDashboardInterpreter
 {
-    class ArduinoController
+    public class ArduinoController
     {
         LedState[] LedController = new LedState[16];
         public delegate void LedStateChangedDelegate(LedType id, LedState state);
@@ -29,10 +29,29 @@ namespace ArduinoDashboardInterpreter
         string[] RegistryB = new string[5];
         string[] RegistryC = new string[5];
 
+        public bool LedModified = false;
+        public bool BacklightModified = false;
+        public bool GaugeModified = false;
+        public bool RegistryAModified = false;
+        public bool RegistryBModified = false;
+        public bool RegistryCModified = false;
+        public bool ScreenTypeModified = false;
+
         public ArduinoController()
         {
             Screen = new ClearBlackController(this);
             CurrentScreen = ScreenController.ScreenType.ClearBlack;
+        }
+
+        public void MarkChangesAsUpdated()
+        {
+            LedModified = false;
+            BacklightModified = false;
+            GaugeModified = false;
+            RegistryAModified = false;
+            RegistryBModified = false;
+            RegistryCModified = false;
+            ScreenTypeModified = false;
         }
 
         #region "LED"
@@ -55,15 +74,6 @@ namespace ArduinoDashboardInterpreter
             Battery,
             Oil,
             Retarder
-        }
-
-        public enum BacklightType
-        {
-            WhiteBig,
-            WhiteSmall,
-            RedBig,
-            RedSmall,
-            LcdLed
         }
 
         public enum LedState
@@ -104,23 +114,44 @@ namespace ArduinoDashboardInterpreter
 
         public LedState GetLedState(LedType id) => LedController[(int)id];
 
-        public void SetLedState(LedType id, LedState state)
+        public bool SetLedState(LedType id, LedState state)
         {
             LedState currentState = LedController[(int)id];
             LedController[(int)id] = state;
-            if (currentState != state) LedStateChanged?.Invoke(id, state);
+            if(currentState != state)
+            {
+                LedModified = true;
+                LedStateChanged?.Invoke(id, state);
+                return true;
+            }
+            return false;
         }
         #endregion
 
         #region "BACKLIGHT"
 
+        public enum BacklightType
+        {
+            WhiteBig,
+            WhiteSmall,
+            RedBig,
+            RedSmall,
+            LcdLed
+        }
+
         public LedState GetBacklightState(BacklightType id) => BacklightController[(int)id];
 
-        public void SetBacklightState(BacklightType id, LedState state)
+        public bool SetBacklightState(BacklightType id, LedState state)
         {
             LedState currentState = BacklightController[(int)id];
             BacklightController[(int)id] = state;
-            if (currentState != state) BacklightStateChanged?.Invoke(id, state);
+            if(currentState != state)
+            {
+                BacklightModified = true;
+                BacklightStateChanged?.Invoke(id, state);
+                return true;
+            }
+            return false;
         }
         #endregion
 
@@ -136,13 +167,20 @@ namespace ArduinoDashboardInterpreter
 
         public Double GetGaugePosition(GaugeType id) => GaugePositions[(int)id];
 
-        public void SetGaugePosition(GaugeType id, Double value)
+        public bool SetGaugePosition(GaugeType id, Double value)
         {
             Double currentValue = GaugePositions[(int)id];
+            value = Math.Round(value);
             if (value < 0) value = 0;
             if (value > 100) value = 100;
             GaugePositions[(int)id] = value;
-            if (currentValue != value) GaugePositionChanged?.Invoke(id, value);
+            if(currentValue != value)
+            {
+                GaugeModified = true;
+                GaugePositionChanged?.Invoke(id, value);
+                return true;
+            }
+            return false;
         }
         #endregion
 
@@ -175,7 +213,16 @@ namespace ArduinoDashboardInterpreter
                         RegistryC[cellID] = value;
                         break;
                 }
-                return current != value;
+                if(current != value)
+                {
+                    switch(reg)
+                    {
+                        case RegistryType.RegistryA: RegistryAModified = true; break;
+                        case RegistryType.RegistryB: RegistryBModified = true; break;
+                        case RegistryType.RegistryC: RegistryCModified = true; break;
+                    }
+                    return true;
+                }
             }
             return false;
         }
@@ -194,7 +241,12 @@ namespace ArduinoDashboardInterpreter
                 case ScreenController.ScreenType.ClearBlack: Screen = new ClearBlackController(this); break;
             }
             CurrentScreen = newScreen;
-            return current != newScreen;
+            if(current != newScreen)
+            {
+                ScreenTypeModified = true;
+                return true;
+            }
+            return false;
         }
 
         public ScreenController.ScreenType GetCurrentScreenType() => CurrentScreen;

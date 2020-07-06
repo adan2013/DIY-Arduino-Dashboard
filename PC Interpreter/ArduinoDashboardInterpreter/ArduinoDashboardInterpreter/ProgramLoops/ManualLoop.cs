@@ -8,5 +8,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 {
     class ManualLoop : ProgramLoop
     {
+
+        public ManualLoop(ComConnector serial, ArduinoController arduino, Settings settings) : base(serial, arduino, settings) { }
     }
 }

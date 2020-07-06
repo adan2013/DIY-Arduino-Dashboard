@@ -8,5 +8,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 {
     class TelemetryLoop : ProgramLoop
     {
+
+        public TelemetryLoop(ComConnector serial, ArduinoController arduino, Settings settings) : base(serial, arduino, settings) { }
     }
 }
