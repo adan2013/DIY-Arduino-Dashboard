@@ -417,9 +417,17 @@ namespace ArduinoDashboardInterpreter
 
         private void LcdNavRight_Click(object sender, RoutedEventArgs e) => arduino.Screen.RightButton();
 
-        private void LcdClear_Click(object sender, RoutedEventArgs e) => serial.SendClearLcdCommand();
+        private void LcdClear_Click(object sender, RoutedEventArgs e) => arduino.Screen.SwitchScreen(ScreenController.ScreenType.ClearBlack);
 
-        private void LcdPrint_Click(object sender, RoutedEventArgs e) => serial.SendPrintLcdCommand(arduino.Screen.ScreenId);
+        private void LcdPrint_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeScreenType ChangeScreenTypeWindow = new ChangeScreenType();
+            ChangeScreenTypeWindow.Owner = this;
+            if((bool)ChangeScreenTypeWindow.ShowDialog())
+            {
+                arduino.Screen.SwitchScreen(ChangeScreenTypeWindow.SelectedType);
+            }
+        }
 
         private void LcdUpdate_Click(object sender, RoutedEventArgs e) => serial.SendUpdateLcdCommand();
 

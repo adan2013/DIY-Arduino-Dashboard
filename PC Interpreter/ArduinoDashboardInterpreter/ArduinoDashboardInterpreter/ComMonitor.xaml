@@ -19,7 +19,7 @@
         <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             COM PORT MONITOR
         </Label>
-        <TextBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="10 5" VerticalScrollBarVisibility="Visible" Name="MonitorConsole" TextChanged="MonitorConsole_TextChanged"/>
+        <TextBox FontFamily="Consolas" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="10 5" VerticalScrollBarVisibility="Visible" Name="MonitorConsole" TextChanged="MonitorConsole_TextChanged"/>
         <CheckBox Grid.Column="0" Grid.Row="2" Margin="20 0" VerticalAlignment="Center" Name="AutoscrollChkBox" IsChecked="True">Autoscroll</CheckBox>
         <Button Grid.Column="1" Grid.Row="2" Margin="20 0" Width="140" HorizontalAlignment="Right" VerticalAlignment="Center" Click="ClearLog_Click">Clear log</Button>
     </Grid>

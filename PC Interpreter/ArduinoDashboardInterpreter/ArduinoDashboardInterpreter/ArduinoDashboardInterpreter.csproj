@@ -56,6 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ChangeScreenType.xaml.cs">
+      <DependentUpon>ChangeScreenType.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ComConnector.cs" />
     <Compile Include="ComMonitor.xaml.cs">
       <DependentUpon>ComMonitor.xaml</DependentUpon>
@@ -74,6 +77,10 @@
     <Compile Include="WaitForKey.xaml.cs">
       <DependentUpon>WaitForKey.xaml</DependentUpon>
     </Compile>
+    <Page Include="ChangeScreenType.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ComMonitor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

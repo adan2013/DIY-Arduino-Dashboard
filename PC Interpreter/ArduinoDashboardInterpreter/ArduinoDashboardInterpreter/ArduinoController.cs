@@ -265,6 +265,7 @@ namespace ArduinoDashboardInterpreter
         private void Screen_ScreenIdChanged(ScreenController.ScreenType newScreen)
         {
             ScreenIdModified = true;
+            LcdDataChanged?.Invoke(Screen.ScreenId, RegistryA, RegistryB, RegistryC);
         }
 
         public void SetDefaultLcdState()
@@ -276,6 +277,7 @@ namespace ArduinoDashboardInterpreter
             RegistryBModified = true;
             RegistryCModified = true;
             ScreenIdModified = true;
+            LcdDataChanged?.Invoke(Screen.ScreenId, RegistryA, RegistryB, RegistryC);
         }
         #endregion
     }
