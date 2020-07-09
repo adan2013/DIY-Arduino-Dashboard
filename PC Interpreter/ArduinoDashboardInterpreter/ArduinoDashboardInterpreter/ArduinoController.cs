@@ -39,9 +39,9 @@ namespace ArduinoDashboardInterpreter
 
         public ArduinoController()
         {
-            SetDefaultLcdState();
             Screen = new ScreenController(this);
             Screen.ScreenIdChanged += Screen_ScreenIdChanged;
+            SetDefaultLcdState();
         }
 
         public void MarkChangesAsUpdated()
@@ -276,8 +276,7 @@ namespace ArduinoDashboardInterpreter
             RegistryAModified = true;
             RegistryBModified = true;
             RegistryCModified = true;
-            ScreenIdModified = true;
-            LcdDataChanged?.Invoke(Screen.ScreenId, RegistryA, RegistryB, RegistryC);
+            Screen.SwitchScreen(ScreenController.ScreenType.ClearBlack);
         }
         #endregion
     }
