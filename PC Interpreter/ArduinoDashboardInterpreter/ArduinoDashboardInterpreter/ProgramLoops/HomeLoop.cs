@@ -25,7 +25,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryA, arduino.GetRegistryA());
             serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryB, arduino.GetRegistryB());
             serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryC, arduino.GetRegistryC());
-            serial.SendPrintLcdCommand(arduino.GetCurrentScreenType());
+            serial.SendPrintLcdCommand(arduino.Screen.ScreenId);
             serial.SendUpdateLcdCommand();
             arduino.MarkChangesAsUpdated();
             base.Start(serial, arduino, settings);

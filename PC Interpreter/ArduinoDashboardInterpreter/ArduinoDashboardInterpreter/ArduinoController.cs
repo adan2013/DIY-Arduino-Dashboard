@@ -1,5 +1,4 @@
-﻿using ArduinoDashboardInterpreter.ScreenControllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -24,7 +23,6 @@ namespace ArduinoDashboardInterpreter
         public event GaugePositionChangedDelegate GaugePositionChanged;
 
         public ScreenController Screen;
-        ScreenController.ScreenType CurrentScreen;
         string[] RegistryA;
         string[] RegistryB;
         string[] RegistryC;
@@ -37,11 +35,13 @@ namespace ArduinoDashboardInterpreter
         public bool RegistryAModified = false;
         public bool RegistryBModified = false;
         public bool RegistryCModified = false;
-        public bool ScreenTypeModified = false;
+        public bool ScreenIdModified = false;
 
         public ArduinoController()
         {
             SetDefaultLcdState();
+            Screen = new ScreenController(this);
+            Screen.ScreenIdChanged += Screen_ScreenIdChanged;
         }
 
         public void MarkChangesAsUpdated()
@@ -52,7 +52,7 @@ namespace ArduinoDashboardInterpreter
             RegistryAModified = false;
             RegistryBModified = false;
             RegistryCModified = false;
-            ScreenTypeModified = false;
+            ScreenIdModified = false;
         }
 
         #region "LED"
@@ -249,7 +249,7 @@ namespace ArduinoDashboardInterpreter
                         case RegistryType.RegistryB: RegistryBModified = true; break;
                         case RegistryType.RegistryC: RegistryCModified = true; break;
                     }
-                    LcdDataChanged?.Invoke(CurrentScreen, RegistryA, RegistryB, RegistryC);
+                    LcdDataChanged?.Invoke(Screen.ScreenId, RegistryA, RegistryB, RegistryC);
                     return true;
                 }
             }
@@ -262,21 +262,9 @@ namespace ArduinoDashboardInterpreter
 
         public string[] GetRegistryC() => RegistryC;
 
-        public bool SwitchScreen(ScreenController.ScreenType newScreen)
+        private void Screen_ScreenIdChanged(ScreenController.ScreenType newScreen)
         {
-            ScreenController.ScreenType current = CurrentScreen;
-            switch(newScreen)
-            {
-                case ScreenController.ScreenType.ClearBlack: Screen = new ClearBlackController(this); break;
-            }
-            CurrentScreen = newScreen;
-            if(current != newScreen)
-            {
-                ScreenTypeModified = true;
-                LcdDataChanged?.Invoke(CurrentScreen, RegistryA, RegistryB, RegistryC);
-                return true;
-            }
-            return false;
+            ScreenIdModified = true;
         }
 
         public void SetDefaultLcdState()
@@ -284,15 +272,11 @@ namespace ArduinoDashboardInterpreter
             RegistryA = new string[5];
             RegistryB = new string[5];
             RegistryC = new string[5];
-            Screen = new ClearBlackController(this);
-            CurrentScreen = ScreenController.ScreenType.ClearBlack;
             RegistryAModified = true;
             RegistryBModified = true;
             RegistryCModified = true;
-            ScreenTypeModified = true;
+            ScreenIdModified = true;
         }
-
-        public ScreenController.ScreenType GetCurrentScreenType() => CurrentScreen;
         #endregion
     }
 }

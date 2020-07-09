@@ -419,7 +419,7 @@ namespace ArduinoDashboardInterpreter
 
         private void LcdClear_Click(object sender, RoutedEventArgs e) => serial.SendClearLcdCommand();
 
-        private void LcdPrint_Click(object sender, RoutedEventArgs e) => serial.SendPrintLcdCommand(arduino.GetCurrentScreenType());
+        private void LcdPrint_Click(object sender, RoutedEventArgs e) => serial.SendPrintLcdCommand(arduino.Screen.ScreenId);
 
         private void LcdUpdate_Click(object sender, RoutedEventArgs e) => serial.SendUpdateLcdCommand();
 
