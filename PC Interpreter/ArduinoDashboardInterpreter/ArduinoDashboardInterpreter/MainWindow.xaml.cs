@@ -78,7 +78,10 @@ namespace ArduinoDashboardInterpreter
             settings.ShortcutsUpdated += SaveSettingsToFile;
             settings.OptionsUpdated += SaveSettingsToFile;
             settings.OptionsUpdated += UpdateOptionButtons;
+            settings.CustomizationUpdated += SaveSettingsToFile;
+            settings.CustomizationUpdated += UpdateCustomizationButtons;
             UpdateOptionButtons();
+            UpdateCustomizationButtons();
             UpdateShortcutButtons();
         }
 
@@ -278,7 +281,6 @@ namespace ArduinoDashboardInterpreter
             Option4.Background = settings.GetOptionValue((Settings.OptionType)4) ? onColor : offColor;
             Option5.Background = settings.GetOptionValue((Settings.OptionType)5) ? onColor : offColor;
             Option6.Background = settings.GetOptionValue((Settings.OptionType)6) ? onColor : offColor;
-            Option7.Background = settings.GetOptionValue((Settings.OptionType)7) ? onColor : offColor;
         }
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
@@ -286,6 +288,22 @@ namespace ArduinoDashboardInterpreter
             int optionId = int.Parse(((Button)sender).Name.Substring(6));
             settings.ToggleOption((Settings.OptionType)optionId);
         }
+        #endregion
+
+        #region "CUSTOMIZATION"
+
+        private void UpdateCustomizationButtons()
+        {
+            CustomizationInitImage.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "INIT IMAGE:\n" + settings.GetInitialImage() };
+            CustomizationAssistantType1.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 1:\n" + settings.GetAssistantType1() };
+            CustomizationAssistantType2.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 2:\n" + settings.GetAssistantType2() };
+        }
+
+        private void CustomizationInitImage_Click(object sender, RoutedEventArgs e) => settings.SwitchInitialImage(1);
+
+        private void CustomizationAssistantType1_Click(object sender, RoutedEventArgs e) => settings.SwitchAssistantType1(1);
+
+        private void CustomizationAssistantType2_Click(object sender, RoutedEventArgs e) => settings.SwitchAssistantType2(1);
         #endregion
 
         #region "SHORTCUTS"

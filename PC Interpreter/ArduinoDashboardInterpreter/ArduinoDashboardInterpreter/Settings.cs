@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Navigation;
 
 namespace ArduinoDashboardInterpreter
 {
@@ -12,6 +14,7 @@ namespace ArduinoDashboardInterpreter
         public Settings()
         {
             SetDefaultOptions();
+            SetDefaultCustomization();
         }
 
         #region "SHORTCUTS"
@@ -94,8 +97,7 @@ namespace ArduinoDashboardInterpreter
             Clock24h,
             RealTimeClock,
             EcoShift,
-            SpeedLimitWarning,
-            AssistantAutoSwitch
+            SpeedLimitWarning
         }
 
         public void SetDefaultOptions()
@@ -106,7 +108,6 @@ namespace ArduinoDashboardInterpreter
             options.Add(OptionType.Clock24h);
             options.Add(OptionType.EcoShift);
             options.Add(OptionType.SpeedLimitWarning);
-            options.Add(OptionType.AssistantAutoSwitch);
             OptionsUpdated?.Invoke();
         }
 
@@ -129,6 +130,68 @@ namespace ArduinoDashboardInterpreter
         {
             return options.Contains(option);
         }
+        #endregion
+
+        #region "CUSTOMIZATION"
+
+        ScreenController.InitialImageType initialImage;
+        ScreenController.AssistantValueType assistantType1;
+        ScreenController.AssistantValueType assistantType2;
+
+        public delegate void CustomizationUpdatedDelegate();
+        [field: NonSerialized]
+        public event CustomizationUpdatedDelegate CustomizationUpdated;
+
+        public enum CustomizationType
+        {
+            InitialImage,
+            AssistantType1,
+            AssistantType2
+        }
+
+        public void SetDefaultCustomization()
+        {
+            initialImage = ScreenController.InitialImageType.Redark;
+            assistantType1 = ScreenController.AssistantValueType.Off;
+            assistantType2 = ScreenController.AssistantValueType.Off;
+            CustomizationUpdated?.Invoke();
+        }
+
+        public void SwitchInitialImage(int difference)
+        {
+            int maxLength = Enum.GetNames(typeof(ScreenController.InitialImageType)).Length;
+            int newValue = (int)initialImage + difference;
+            if (newValue < 0) newValue = maxLength - 1;
+            if (newValue >= maxLength) newValue = 0;
+            initialImage = (ScreenController.InitialImageType)newValue;
+            CustomizationUpdated?.Invoke();
+        }
+
+        public void SwitchAssistantType1(int difference)
+        {
+            int maxLength = Enum.GetNames(typeof(ScreenController.AssistantValueType)).Length;
+            int newValue = (int)assistantType1 + difference;
+            if (newValue < 0) newValue = maxLength - 1;
+            if (newValue >= maxLength) newValue = 0;
+            assistantType1 = (ScreenController.AssistantValueType)newValue;
+            CustomizationUpdated?.Invoke();
+        }
+
+        public void SwitchAssistantType2(int difference)
+        {
+            int maxLength = Enum.GetNames(typeof(ScreenController.AssistantValueType)).Length;
+            int newValue = (int)assistantType2 + difference;
+            if (newValue < 0) newValue = maxLength - 1;
+            if (newValue >= maxLength) newValue = 0;
+            assistantType2 = (ScreenController.AssistantValueType)newValue;
+            CustomizationUpdated?.Invoke();
+        }
+
+        public ScreenController.InitialImageType GetInitialImage() => initialImage;
+
+        public ScreenController.AssistantValueType GetAssistantType1() => assistantType1;
+
+        public ScreenController.AssistantValueType GetAssistantType2() => assistantType2;
         #endregion
     }
 }

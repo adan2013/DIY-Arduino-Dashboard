@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArduinoDashboardInterpreter"
         mc:Ignorable="d"
-        Title="Arduino Dashboard Interpreter" Height="540" Width="850" ResizeMode="NoResize">
+        Title="Arduino Dashboard Interpreter" Height="560" Width="850" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -98,40 +98,47 @@
         <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
             <Label HorizontalAlignment="Center">Program</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="80" Height="30" Name="ProgHome" Click="ProgramButton_Click">HOME</Button>
-                <Button Margin="2" Width="80" Height="30" Name="ProgManual" Click="ProgramButton_Click">MANUAL</Button>
-                <Button Margin="2" Width="80" Height="30" Name="ProgTest" Click="ProgramButton_Click">TEST</Button>
-                <Button Margin="2" Width="80" Height="30" Name="ProgTelemetry" Click="ProgramButton_Click">TELEMETRY</Button>
+                <Button Margin="2" Width="80" Height="20" Name="ProgHome" Click="ProgramButton_Click">HOME</Button>
+                <Button Margin="2" Width="80" Height="20" Name="ProgManual" Click="ProgramButton_Click">MANUAL</Button>
+                <Button Margin="2" Width="80" Height="20" Name="ProgTest" Click="ProgramButton_Click">TEST</Button>
+                <Button Margin="2" Width="80" Height="20" Name="ProgTelemetry" Click="ProgramButton_Click">TELEMETRY</Button>
             </StackPanel>
             <Label Margin="5" HorizontalAlignment="Center">Screen and sound</Label>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="80" Height="30" Name="LcdLed" Click="BacklightButton_Click">LED</Button>
-                <Button Margin="2" Width="80" Height="30" Name="LcdNavLeft" Click="LcdNavLeft_Click">LEFT</Button>
-                <Button Margin="2" Width="80" Height="30" Name="LcdNavOk" Click="LcdNavOk_Click">OK</Button>
-                <Button Margin="2" Width="80" Height="30" Name="LcdNavRight" Click="LcdNavRight_Click">RIGHT</Button>
+                <Button Margin="2" Width="80" Height="20" Name="LcdLed" Click="BacklightButton_Click">LED</Button>
+                <Button Margin="2" Width="80" Height="20" Name="LcdNavLeft" Click="LcdNavLeft_Click">LEFT</Button>
+                <Button Margin="2" Width="80" Height="20" Name="LcdNavOk" Click="LcdNavOk_Click">OK</Button>
+                <Button Margin="2" Width="80" Height="20" Name="LcdNavRight" Click="LcdNavRight_Click">RIGHT</Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="80" Height="30" Name="LcdClear" Click="LcdClear_Click">CLEAR</Button>
-                <Button Margin="2" Width="80" Height="30" Name="LcdPrint" Click="LcdPrint_Click">PRINT</Button>
-                <Button Margin="2" Width="80" Height="30" Name="LcdUpdate" Click="LcdUpdate_Click">UPDATE</Button>
-                <Button Margin="2" Width="80" Height="30" Name="SoundBeep" Click="SoundBeep_Click">BEEP</Button>
+                <Button Margin="2" Width="80" Height="20" Name="LcdClear" Click="LcdClear_Click">CLEAR</Button>
+                <Button Margin="2" Width="80" Height="20" Name="LcdPrint" Click="LcdPrint_Click">PRINT</Button>
+                <Button Margin="2" Width="80" Height="20" Name="LcdUpdate" Click="LcdUpdate_Click">UPDATE</Button>
+                <Button Margin="2" Width="80" Height="20" Name="SoundBeep" Click="SoundBeep_Click">BEEP</Button>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
-            <Label HorizontalAlignment="Center">Options</Label>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="120" Height="30" Name="Option0" Click="OptionButton_Click">KEYBOARD</Button>
-                <Button Margin="2" Width="120" Height="30" Name="Option1" Click="OptionButton_Click">SOUND</Button>
-                <Button Margin="2" Width="120" Height="30" Name="Option2" Click="OptionButton_Click">DIFF LOCK</Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="120" Height="30" Name="Option3" Click="OptionButton_Click">CLOCK 24H</Button>
-                <Button Margin="2" Width="120" Height="30" Name="Option4" Click="OptionButton_Click">REAL TIME CLOCK</Button>
-                <Button Margin="2" Width="120" Height="30" Name="Option5" Click="OptionButton_Click">ECO SHIFT</Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="120" Height="30" Name="Option6" Click="OptionButton_Click">SPEED LIMIT WARN</Button>
-                <Button Margin="2" Width="120" Height="30" Name="Option7" Click="OptionButton_Click">SCREEN AUTO SW</Button>
+            <StackPanel>
+                <Label HorizontalAlignment="Center">Options</Label>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Margin="2" Width="120" Height="20" Name="Option0" Click="OptionButton_Click">KEYBOARD</Button>
+                    <Button Margin="2" Width="120" Height="20" Name="Option1" Click="OptionButton_Click">SOUND</Button>
+                    <Button Margin="2" Width="120" Height="20" Name="Option2" Click="OptionButton_Click">DIFF LOCK</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Margin="2" Width="120" Height="20" Name="Option3" Click="OptionButton_Click">CLOCK 24H</Button>
+                    <Button Margin="2" Width="120" Height="20" Name="Option4" Click="OptionButton_Click">REAL TIME CLOCK</Button>
+                    <Button Margin="2" Width="120" Height="20" Name="Option5" Click="OptionButton_Click">ECO SHIFT</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Margin="2" Width="120" Height="20" Name="Option6" Click="OptionButton_Click">SPEED LIMIT WARN</Button>
+                </StackPanel>
+                <Label HorizontalAlignment="Center">Customization</Label>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationInitImage" Click="CustomizationInitImage_Click" HorizontalContentAlignment="Center">INIT IMAGE</Button>
+                    <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType1" Click="CustomizationAssistantType1_Click" HorizontalContentAlignment="Center">ASSISTANT 1</Button>
+                    <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType2" Click="CustomizationAssistantType2_Click" HorizontalContentAlignment="Center">ASSISTANT 2</Button>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center">
