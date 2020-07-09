@@ -29,7 +29,6 @@ namespace ArduinoDashboardInterpreter
 
         private void LoadValuesToList()
         {
-            ScreenController.ScreenType max = Enum.GetValues(typeof(ScreenController.ScreenType)).Cast<ScreenController.ScreenType>().Last();
             foreach (ScreenController.ScreenType type in (ScreenController.ScreenType[])Enum.GetValues(typeof(ScreenController.ScreenType)))
             {
                 TypeList.Items.Add(type);

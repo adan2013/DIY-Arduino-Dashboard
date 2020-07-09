@@ -13,6 +13,8 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 
         public override void Loop(ComConnector serial, ArduinoController arduino, Settings settings)
         {
+            //LCD
+            arduino.Screen.Loop();
             //SENDING
             if (arduino.LedModified) serial.SendLedUpdate(arduino.GetLedFullState());
             if (arduino.BacklightModified) serial.SendBacklightUpdate(arduino.GetBacklightFullState());

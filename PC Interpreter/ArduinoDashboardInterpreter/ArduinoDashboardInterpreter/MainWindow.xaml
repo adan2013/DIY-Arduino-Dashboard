@@ -130,7 +130,7 @@
                 <Button Margin="2" Width="120" Height="30" Name="Option5" Click="OptionButton_Click">ECO SHIFT</Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="2" Width="120" Height="30" Name="Option6" Click="OptionButton_Click">WARN SPEED LIMIT</Button>
+                <Button Margin="2" Width="120" Height="30" Name="Option6" Click="OptionButton_Click">SPEED LIMIT WARN</Button>
                 <Button Margin="2" Width="120" Height="30" Name="Option7" Click="OptionButton_Click">SCREEN AUTO SW</Button>
             </StackPanel>
         </StackPanel>

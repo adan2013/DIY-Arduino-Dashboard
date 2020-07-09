@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace ArduinoDashboardInterpreter
 {
     [Serializable()]
-    class KeyboardShortcut
+    public class KeyboardShortcut
     {
         public readonly TargetType Target;
         public readonly Keys ShortcutKey;

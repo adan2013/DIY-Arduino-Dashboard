@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ArduinoDashboardInterpreter
 {
@@ -20,9 +21,9 @@ namespace ArduinoDashboardInterpreter
             Fuel,
             Truck,
             Trailer,
-            Menu,
-            Settings,
-            CompConfigurator,
+            MainMenu,
+            SettingsMenu,
+            Customization,
             Acceleration
         }
 
@@ -67,6 +68,30 @@ namespace ArduinoDashboardInterpreter
         {
             Off
         }
+
+        public enum MenuType
+        {
+            MainMenu,
+            SettingsMenu
+        }
+
+        public enum MainMenuItems
+        {
+            Back,
+            Settings,
+            Customization,
+            Acceleration
+        }
+
+        public enum SettingsMenuItems
+        {
+            Back,
+            Sound,
+            Clock24h,
+            RealTimeClock,
+            EcoShift,
+            SpeedLimitWarning
+        }
         #endregion
 
         public delegate void ScreenIdChangedDelegate(ScreenType newScreen);
@@ -75,10 +100,11 @@ namespace ArduinoDashboardInterpreter
         public ScreenType? PrevScreenId { get; private set; }
         public ScreenType ScreenId { get; private set; }
         ArduinoController arduino;
+        Settings settings;
 
         //REGISTER A
         public string gear = "";
-        public string ecoshift = "OK";
+        public string ecoShift = "OK";
         public string clock = "12:00";
         public int ccSpeed = 0;
 
@@ -116,10 +142,8 @@ namespace ArduinoDashboardInterpreter
         public string trailerName = "";
         public string trailerMass = "0 kg";
         public string trailerAttached = "0";
-        public int menuScreenPart = 0;
         public int menuCursorPosition = 0;
         public string menuCheckboxs = "";
-        public int accelerationState = 0;
         public int currentSpeed = 0;
         public int accelerationTargetSpeed = 0;
         public string accelerationTimer = "00:00";
@@ -128,19 +152,21 @@ namespace ArduinoDashboardInterpreter
         public CompactAlertType alertId = CompactAlertType.Off;
         public int retarderCurrent = 0;
         public int retarderMax = 0;
-        public int odometer = 0;
+        public string odometer = "0 km";
         public int speedLimit = 0;
         
-        public ScreenController(ArduinoController arduino)
+        public ScreenController(ArduinoController arduino, Settings settings)
         {
             this.arduino = arduino;
+            this.settings = settings;
             SwitchScreen(ScreenType.ClearBlack);
         }
 
-        public bool SwitchScreen(ScreenType newScreen)
+        public bool SwitchScreen(ScreenType newScreen, int initialCursorPosition = 0)
         {
             if(ScreenId != newScreen)
             {
+                menuCursorPosition = initialCursorPosition;
                 ScreenId = newScreen;
                 ScreenIdChanged?.Invoke(newScreen);
                 Start();
@@ -178,6 +204,10 @@ namespace ArduinoDashboardInterpreter
 
         public void Loop()
         {
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 0, gear);
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 1, ecoShift);
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 2, clock);
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 3, ccSpeed.ToString());
             switch (ScreenId)
             {
                 case ScreenType.Testing:
@@ -231,28 +261,37 @@ namespace ArduinoDashboardInterpreter
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, trailerMass);
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 4, trailerAttached);
                     break;
-                case ScreenType.Menu:
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuScreenPart.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, menuCursorPosition.ToString());
+                case ScreenType.MainMenu:
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
                     break;
-                case ScreenType.Settings:
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuScreenPart.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, menuCursorPosition.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, menuCheckboxs);
+                case ScreenType.SettingsMenu:
+                    menuCheckboxs
+                        = (settings.GetOptionValue(Settings.OptionType.Sound) ? "1" : "0")
+                        + (settings.GetOptionValue(Settings.OptionType.Clock24h) ? "1" : "0")
+                        + (settings.GetOptionValue(Settings.OptionType.RealTimeClock) ? "1" : "0")
+                        + (settings.GetOptionValue(Settings.OptionType.EcoShift) ? "1" : "0")
+                        + (settings.GetOptionValue(Settings.OptionType.SpeedLimitWarning) ? "1" : "0");
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, menuCheckboxs);
                     break;
-                case ScreenType.CompConfigurator:
+                case ScreenType.Customization:
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, ((int)initImageType).ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, ((int)assistantType1).ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, ((int)assistantType2).ToString());
                     break;
                 case ScreenType.Acceleration:
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, accelerationState.ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, currentSpeed.ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, accelerationTargetSpeed.ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, accelerationTimer);
                     break;
             }
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 0, ((int)alertId).ToString());
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 1, retarderCurrent.ToString());
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 2, retarderMax.ToString());
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 3, odometer);
+            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 4, speedLimit.ToString());
         }
         
         public void LeftButton()
@@ -266,6 +305,8 @@ namespace ArduinoDashboardInterpreter
                 case ScreenType.Fuel: SwitchScreen(ScreenType.Engine); break;
                 case ScreenType.Truck: SwitchScreen(ScreenType.Fuel); break;
                 case ScreenType.Trailer: SwitchScreen(ScreenType.Truck); break;
+                case ScreenType.MainMenu: MoveMenuCursor(-1, MenuType.MainMenu); break;
+                case ScreenType.SettingsMenu: MoveMenuCursor(-1, MenuType.SettingsMenu); break;
             }
         }
 
@@ -281,7 +322,27 @@ namespace ArduinoDashboardInterpreter
                 case ScreenType.Truck:
                 case ScreenType.Trailer:
                     SaveCurrentScreen();
-                    SwitchScreen(ScreenType.Menu);
+                    SwitchScreen(ScreenType.MainMenu);
+                    break;
+                case ScreenType.MainMenu:
+                    switch((MainMenuItems)menuCursorPosition)
+                    {
+                        case MainMenuItems.Back: RestorePrevScreen(); break;
+                        case MainMenuItems.Settings: SwitchScreen(ScreenType.SettingsMenu); break;
+                        case MainMenuItems.Customization: SwitchScreen(ScreenType.Customization); break;
+                        case MainMenuItems.Acceleration: SwitchScreen(ScreenType.Acceleration); break;
+                    }
+                    break;
+                case ScreenType.SettingsMenu:
+                    switch((SettingsMenuItems)menuCursorPosition)
+                    {
+                        case SettingsMenuItems.Back: SwitchScreen(ScreenType.MainMenu, (int)MainMenuItems.Settings); break;
+                        case SettingsMenuItems.Sound: settings.ToggleOption(Settings.OptionType.Sound); break;
+                        case SettingsMenuItems.Clock24h: settings.ToggleOption(Settings.OptionType.Clock24h); break;
+                        case SettingsMenuItems.RealTimeClock: settings.ToggleOption(Settings.OptionType.RealTimeClock); break;
+                        case SettingsMenuItems.EcoShift: settings.ToggleOption(Settings.OptionType.EcoShift); break;
+                        case SettingsMenuItems.SpeedLimitWarning: settings.ToggleOption(Settings.OptionType.SpeedLimitWarning); break;
+                    }
                     break;
             }
         }
@@ -297,6 +358,8 @@ namespace ArduinoDashboardInterpreter
                 case ScreenType.Fuel: SwitchScreen(ScreenType.Truck); break;
                 case ScreenType.Truck: SwitchScreen(ScreenType.Trailer); break;
                 case ScreenType.Trailer: SwitchScreen(ScreenType.Assistant); break;
+                case ScreenType.MainMenu: MoveMenuCursor(1, MenuType.MainMenu); break;
+                case ScreenType.SettingsMenu: MoveMenuCursor(1, MenuType.SettingsMenu); break;
             }
         }
 
@@ -319,6 +382,20 @@ namespace ArduinoDashboardInterpreter
                 case AssistantValueType.CurrentSpeed: return currentSpeed.ToString();
                 default: return "";
             }
+        }
+
+        public void MoveMenuCursor(int difference, MenuType menuType)
+        {
+            int maxLength = 0;
+            switch(menuType)
+            {
+                case MenuType.MainMenu: maxLength = Enum.GetNames(typeof(MainMenuItems)).Length; break;
+                case MenuType.SettingsMenu: maxLength = Enum.GetNames(typeof(SettingsMenuItems)).Length; break;
+            }
+            int newPosition = menuCursorPosition += difference;
+            if (newPosition < 0) newPosition = maxLength - 1;
+            if (newPosition >= maxLength) newPosition = 0;
+            menuCursorPosition = newPosition;
         }
     }
 }

@@ -45,13 +45,13 @@ namespace ArduinoDashboardInterpreter
         {
             InitializeComponent();
 
+            LoadSettingsFromFile();
             serial = new ComConnector();
             RefreshPortList();
-            arduino = new ArduinoController();
+            arduino = new ArduinoController(settings);
             arduino.LedStateChanged += LedButtonColor;
             arduino.BacklightStateChanged += BacklightButtonColor;
             arduino.GaugePositionChanged += GaugeSliderUpdate;
-            LoadSettingsFromFile();
             SetNewProgram(ProgramType.Manual);
             loopTimer = new DispatcherTimer();
             loopTimer.Interval = new TimeSpan(100);

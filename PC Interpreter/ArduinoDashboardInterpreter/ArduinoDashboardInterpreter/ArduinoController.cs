@@ -37,9 +37,9 @@ namespace ArduinoDashboardInterpreter
         public bool RegistryCModified = false;
         public bool ScreenIdModified = false;
 
-        public ArduinoController()
+        public ArduinoController(Settings settingsManager)
         {
-            Screen = new ScreenController(this);
+            Screen = new ScreenController(this, settingsManager);
             Screen.ScreenIdChanged += Screen_ScreenIdChanged;
             SetDefaultLcdState();
         }

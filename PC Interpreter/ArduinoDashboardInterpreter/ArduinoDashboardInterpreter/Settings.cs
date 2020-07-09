@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ArduinoDashboardInterpreter
 {
     [Serializable()]
-    class Settings
+    public class Settings
     {
         public Settings()
         {
@@ -94,7 +94,7 @@ namespace ArduinoDashboardInterpreter
             Clock24h,
             RealTimeClock,
             EcoShift,
-            WarningSpeedLimit,
+            SpeedLimitWarning,
             AssistantAutoSwitch
         }
 
@@ -105,7 +105,7 @@ namespace ArduinoDashboardInterpreter
             options.Add(OptionType.Sound);
             options.Add(OptionType.Clock24h);
             options.Add(OptionType.EcoShift);
-            options.Add(OptionType.WarningSpeedLimit);
+            options.Add(OptionType.SpeedLimitWarning);
             options.Add(OptionType.AssistantAutoSwitch);
             OptionsUpdated?.Invoke();
         }
