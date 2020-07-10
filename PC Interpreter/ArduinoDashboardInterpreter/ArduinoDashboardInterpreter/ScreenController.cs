@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,6 +93,22 @@ namespace ArduinoDashboardInterpreter
             EcoShift,
             SpeedLimitWarning
         }
+
+        public enum CustomizationMenuItems
+        {
+            InitImage,
+            AssistantType1,
+            AssistantType2
+        }
+
+        public enum AccelerationScreenState
+        {
+            SpeedSelection,
+            WaitingForStop,
+            WaitingForStart,
+            SpeedMeasurement,
+            TimeDisplay
+        }
         #endregion
 
         public delegate void ScreenIdChangedDelegate(ScreenType newScreen);
@@ -110,12 +127,7 @@ namespace ArduinoDashboardInterpreter
 
         //REGISTER B
         public int testColor = 0;
-        public InitialImageType initImageType = 0;
         public AssistantAlertType assistantAlertId = AssistantAlertType.Normal;
-        public AssistantValueType assistantType1 = AssistantValueType.Off;
-        public string assistantValue1 = "";
-        public AssistantValueType assistantType2 = AssistantValueType.Off;
-        public string assistantValue2 = "";
         public string navTime = "0 min";
         public string navDistance = "0 km";
         public string restTime = "0 min";
@@ -146,7 +158,8 @@ namespace ArduinoDashboardInterpreter
         public string menuCheckboxs = "";
         public int currentSpeed = 0;
         public int accelerationTargetSpeed = 0;
-        public string accelerationTimer = "00:00";
+        public Stopwatch accelerationTimer;
+        public string accelerationTimerText = "00:00";
 
         //REGISTER C
         public CompactAlertType alertId = CompactAlertType.Off;
@@ -195,10 +208,13 @@ namespace ArduinoDashboardInterpreter
 
         public void Start()
         {
-            //switch (ScreenId)
-            //{
-                
-            //}
+            switch (ScreenId)
+            {
+                case ScreenType.Acceleration:
+                    accelerationTargetSpeed = 80;
+                    accelerationTimer = new Stopwatch();
+                    break;
+            }
             Loop();
         }
 
@@ -214,14 +230,14 @@ namespace ArduinoDashboardInterpreter
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, testColor.ToString());
                     break;
                 case ScreenType.InitialImage:
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, initImageType.ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, ((int)settings.GetInitialImage()).ToString());
                     break;
                 case ScreenType.Assistant:
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, ((int)assistantAlertId).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, ((int)assistantType1).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, assistantValue1);
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, ((int)assistantType2).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 4, assistantValue2);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, ((int)settings.GetAssistantType1()).ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, GetAssistantValueByType(settings.GetAssistantType1()));
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, ((int)settings.GetAssistantType2()).ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 4, GetAssistantValueByType(settings.GetAssistantType2()));
                     break;
                 case ScreenType.Navigation:
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, navTime);
@@ -276,15 +292,37 @@ namespace ArduinoDashboardInterpreter
                     break;
                 case ScreenType.Customization:
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, ((int)initImageType).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, ((int)assistantType1).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, ((int)assistantType2).ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, ((int)settings.GetInitialImage()).ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, ((int)settings.GetAssistantType1()).ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, ((int)settings.GetAssistantType2()).ToString());
                     break;
                 case ScreenType.Acceleration:
+                    switch ((AccelerationScreenState)menuCursorPosition)
+                    {
+                        case AccelerationScreenState.WaitingForStop:
+                            if (currentSpeed == 0) menuCursorPosition = (int)AccelerationScreenState.WaitingForStart;
+                            break;
+                        case AccelerationScreenState.WaitingForStart:
+                            if (currentSpeed > 0)
+                            {
+                                menuCursorPosition = (int)AccelerationScreenState.SpeedMeasurement;
+                                accelerationTimer.Start();
+                            }
+                            break;
+                        case AccelerationScreenState.SpeedMeasurement:
+                            if(accelerationTargetSpeed <= currentSpeed)
+                            {
+                                menuCursorPosition = (int)AccelerationScreenState.TimeDisplay;
+                                accelerationTimer.Stop();
+                            }
+                            TimeSpan timeDiff = accelerationTimer.Elapsed;
+                            accelerationTimerText = timeDiff.Minutes + ":" + timeDiff.Seconds + ":" + timeDiff.Milliseconds;
+                            break;
+                    }
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, currentSpeed.ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, accelerationTargetSpeed.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, accelerationTimer);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, accelerationTimerText);
                     break;
             }
             arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 0, ((int)alertId).ToString());
@@ -307,6 +345,21 @@ namespace ArduinoDashboardInterpreter
                 case ScreenType.Trailer: SwitchScreen(ScreenType.Truck); break;
                 case ScreenType.MainMenu: MoveMenuCursor(-1, MenuType.MainMenu); break;
                 case ScreenType.SettingsMenu: MoveMenuCursor(-1, MenuType.SettingsMenu); break;
+                case ScreenType.Customization:
+                    switch((CustomizationMenuItems)menuCursorPosition)
+                    {
+                        case CustomizationMenuItems.InitImage: settings.SwitchInitialImage(-1); break;
+                        case CustomizationMenuItems.AssistantType1: settings.SwitchAssistantType1(-1); break;
+                        case CustomizationMenuItems.AssistantType2: settings.SwitchAssistantType2(-1); break;
+                    }
+                    break;
+                case ScreenType.Acceleration:
+                    if((AccelerationScreenState)menuCursorPosition == AccelerationScreenState.SpeedSelection)
+                    {
+                        accelerationTargetSpeed -= 5;
+                        if (accelerationTargetSpeed < 40) accelerationTargetSpeed = 40;
+                    }
+                    break;
             }
         }
 
@@ -344,6 +397,24 @@ namespace ArduinoDashboardInterpreter
                         case SettingsMenuItems.SpeedLimitWarning: settings.ToggleOption(Settings.OptionType.SpeedLimitWarning); break;
                     }
                     break;
+                case ScreenType.Customization:
+                    switch((CustomizationMenuItems)menuCursorPosition)
+                    {
+                        case CustomizationMenuItems.InitImage: menuCursorPosition = (int)CustomizationMenuItems.AssistantType1; break;
+                        case CustomizationMenuItems.AssistantType1: menuCursorPosition = (int)CustomizationMenuItems.AssistantType2; break;
+                        case CustomizationMenuItems.AssistantType2: SwitchScreen(ScreenType.MainMenu, (int)MainMenuItems.Customization); break;
+                    }
+                    break;
+                case ScreenType.Acceleration:
+                    if ((AccelerationScreenState)menuCursorPosition == AccelerationScreenState.SpeedSelection)
+                    {
+                        menuCursorPosition = (int)(currentSpeed == 0 ? AccelerationScreenState.WaitingForStart : AccelerationScreenState.WaitingForStop);
+                    }
+                    else
+                    {
+                        SwitchScreen(ScreenType.MainMenu, (int)MainMenuItems.Acceleration);
+                    }
+                    break;
             }
         }
 
@@ -360,6 +431,21 @@ namespace ArduinoDashboardInterpreter
                 case ScreenType.Trailer: SwitchScreen(ScreenType.Assistant); break;
                 case ScreenType.MainMenu: MoveMenuCursor(1, MenuType.MainMenu); break;
                 case ScreenType.SettingsMenu: MoveMenuCursor(1, MenuType.SettingsMenu); break;
+                case ScreenType.Customization:
+                    switch ((CustomizationMenuItems)menuCursorPosition)
+                    {
+                        case CustomizationMenuItems.InitImage: settings.SwitchInitialImage(1); break;
+                        case CustomizationMenuItems.AssistantType1: settings.SwitchAssistantType1(1); break;
+                        case CustomizationMenuItems.AssistantType2: settings.SwitchAssistantType2(1); break;
+                    }
+                    break;
+                case ScreenType.Acceleration:
+                    if ((AccelerationScreenState)menuCursorPosition == AccelerationScreenState.SpeedSelection)
+                    {
+                        accelerationTargetSpeed += 5;
+                        if (accelerationTargetSpeed > 140) accelerationTargetSpeed = 140;
+                    }
+                    break;
             }
         }
 
