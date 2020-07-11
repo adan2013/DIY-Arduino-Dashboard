@@ -76,21 +76,21 @@ namespace ArduinoDashboardInterpreter
 
         public bool SendLedUpdate(ArduinoController.LedState[] ledConfig)
         {
-            string content = LED_UPDATE_COMMAND;
+            string content = LED_UPDATE_COMMAND + VALUE_SEPARATOR;
             foreach (ArduinoController.LedState led in ledConfig) content += (int)led;
             return SendData(content);
         }
 
         public bool SendBacklightUpdate(ArduinoController.LedState[] backlightConfig)
         {
-            string content = BACKLIGHT_UPDATE_COMMAND;
+            string content = BACKLIGHT_UPDATE_COMMAND + VALUE_SEPARATOR;
             foreach (ArduinoController.LedState bl in backlightConfig) content += (int)bl;
             return SendData(content);
         }
 
         public bool SendGaugeUpdate(Double[] gaugeConfig)
         {
-            string content = GAUGE_UPDATE_COMMAND;
+            string content = GAUGE_UPDATE_COMMAND + VALUE_SEPARATOR;
             foreach (Double gauge in gaugeConfig) content += (int)gauge + VALUE_SEPARATOR;
             content = content.Substring(0, content.Length - 1);
             return SendData(content);
@@ -105,6 +105,7 @@ namespace ArduinoDashboardInterpreter
                 case ArduinoController.RegistryType.RegistryB: content = REG_B_UPDATE_COMMAND; break;
                 case ArduinoController.RegistryType.RegistryC: content = REG_C_UPDATE_COMMAND; break;
             }
+            content += VALUE_SEPARATOR;
             foreach (string value in values) content += value + VALUE_SEPARATOR;
             content = content.Substring(0, content.Length - 1);
             return SendData(content);
@@ -112,7 +113,7 @@ namespace ArduinoDashboardInterpreter
 
         public bool SendClearLcdCommand() => SendData(LCD_CLEAR_COMMAND);
 
-        public bool SendPrintLcdCommand(ScreenController.ScreenType screen) => SendData(LCD_PRINT_COMMAND + (int)screen);
+        public bool SendPrintLcdCommand(ScreenController.ScreenType screen) => SendData(LCD_PRINT_COMMAND + VALUE_SEPARATOR + (int)screen);
 
         public bool SendUpdateLcdCommand() => SendData(LCD_UPDATE_COMMAND);
 
