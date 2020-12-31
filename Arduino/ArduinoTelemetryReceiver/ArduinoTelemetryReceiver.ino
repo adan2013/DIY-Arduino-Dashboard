@@ -38,19 +38,27 @@ void updateBacklight(String state){
   digitalWrite(BACKLIGHT_LCD, state.substring(4) == "0" ? HIGH : LOW);
 }
 
+void resetLeds() {
+  updateLed("0000000000000000");
+}
+
+void resetBacklights() {
+  updateBacklight("00000");
+}
+
 void setup() {
   Serial.begin(9600);
   //LED CONTROLLER
   ledController.begin();
   for(int i = 0; i < 16; i++) ledController.pinMode(i, OUTPUT);
-  updateLed("0000000000000000");
+  resetLeds();
   //BACKLIGHT
   pinMode(BACKLIGHT_WB, OUTPUT);
   pinMode(BACKLIGHT_WS, OUTPUT);
   pinMode(BACKLIGHT_RB, OUTPUT);
   pinMode(BACKLIGHT_RS, OUTPUT);
   pinMode(BACKLIGHT_LCD, OUTPUT);
-  updateBacklight("00000");
+  resetBacklights();
   //GAUGE
   gaugeMotorA.setSpeed(MOTOR_SPEED);
   gaugeMotorB.setSpeed(MOTOR_SPEED);
@@ -72,7 +80,7 @@ void loop() {
     updateLed(setup);
     delay(200);
   }
-  updateLed("0000000000000000");
+  resetLeds();
   delay(1000);
   updateBacklight("10000");
   delay(1000);
@@ -84,6 +92,6 @@ void loop() {
   delay(1000);
   updateBacklight("11111");
   delay(1000);
-  updateBacklight("00000");
+  resetBacklights();
   delay(1000);
 }
