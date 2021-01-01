@@ -49,16 +49,20 @@ void splitData(String input, int count, String *output) {
 }
 
 void updateLeds(String state) {
-  for(int i = 0; i < 16; i++) ledController.digitalWrite(i, state.substring(i, i+1) == "1" ? HIGH : LOW);
+  if(state.length() == 16) {
+    for(int i = 0; i < 16; i++) ledController.digitalWrite(i, state.substring(i, i+1) == "1" ? HIGH : LOW);
+  }
 }
 
 void updateBacklights(String state){
-  int blPower = map(analogRead(BACKLIGHT_POTENTIOMETER), 0, 1023, BACKLIGHT_MIN_DUTY, BACKLIGHT_MAX_DUTY);
-  analogWrite(BACKLIGHT_WB, state.substring(0, 1) == "1" ? blPower : 0);
-  analogWrite(BACKLIGHT_WS, state.substring(1, 2) == "1" ? blPower : 0);
-  digitalWrite(BACKLIGHT_RB, state.substring(2, 3) == "1" ? HIGH : LOW);
-  digitalWrite(BACKLIGHT_RS, state.substring(3, 4) == "1" ? HIGH : LOW);
-  digitalWrite(BACKLIGHT_LCD, state.substring(4, 5) == "0" ? HIGH : LOW);
+  if(state.length() == 5) {
+    int blPower = map(analogRead(BACKLIGHT_POTENTIOMETER), 0, 1023, BACKLIGHT_MIN_DUTY, BACKLIGHT_MAX_DUTY);
+    analogWrite(BACKLIGHT_WB, state.substring(0, 1) == "1" ? blPower : 0);
+    analogWrite(BACKLIGHT_WS, state.substring(1, 2) == "1" ? blPower : 0);
+    digitalWrite(BACKLIGHT_RB, state.substring(2, 3) == "1" ? HIGH : LOW);
+    digitalWrite(BACKLIGHT_RS, state.substring(3, 4) == "1" ? HIGH : LOW);
+    digitalWrite(BACKLIGHT_LCD, state.substring(4, 5) == "0" ? HIGH : LOW);
+  }
 }
 
 void updateGauges(String state) {
@@ -138,7 +142,10 @@ void loop() {
 void serialEvent() {
   while(Serial.available()) {
     char inChar = (char)Serial.read();
-    serialBuffer += inChar;
-    if(inChar == '\n') serialDataIsReady = true;
+    if(inChar == '\n') {
+      serialDataIsReady = true;
+    }else{
+      serialBuffer += inChar;
+    }
   }
 }

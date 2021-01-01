@@ -26,20 +26,12 @@ namespace ArduinoDashboardInterpreter
         {
             InitializeComponent();
             this.connector = connector;
-            this.connector.GetSerialPortObject().DataReceived += ComMonitor_DataReceived;
             this.connector.DataSended += Connector_DataSended;
         }
 
         private void Connector_DataSended(string content)
         {
-            MonitorConsole.Text += "PC >>> " + content + "\n";
-        }
-
-        private void ComMonitor_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
-        {
-            SerialPort port = (SerialPort)sender;
-            string incoming = port.ReadExisting();
-            MonitorConsole.Text += "PC <<< " + incoming + "\n";
+            MonitorConsole.Text += content + "\n";
         }
 
         private void ClearLog_Click(object sender, RoutedEventArgs e)

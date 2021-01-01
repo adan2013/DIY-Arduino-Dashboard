@@ -33,7 +33,7 @@ namespace ArduinoDashboardInterpreter
             try
             {
                 Disconnect();
-                port = new SerialPort(portName, 9600, Parity.Odd, 7, StopBits.One);
+                port = new SerialPort(portName, 9600);
                 port.Open();
                 return port.IsOpen;
             }
@@ -67,7 +67,7 @@ namespace ArduinoDashboardInterpreter
         {
             if(IsConnected())
             {
-                port.WriteLine(content);
+                port.Write(content + "\n");
                 DataSended?.Invoke(content);
                 return true;
             }
