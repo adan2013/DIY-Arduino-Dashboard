@@ -12,24 +12,44 @@
 #define BACKLIGHT_RS 9
 #define BACKLIGHT_LCD 8
 
-#define MOTOR_STEPS 720
-#define MOTOR_SPEED 30
+#define MOTOR_LATENCY 4
+#define MOTOR_BIG_STEPS 210
+#define MOTOR_BIG_SPEED 220
+#define MOTOR_SMALL_STEPS 210
+#define MOTOR_SMALL_SPEED 180
+
 #define MOTOR_A_1 38
 #define MOTOR_B_1 34
 #define MOTOR_C_1 30
 #define MOTOR_D_1 26
 
 Adafruit_MCP23017 ledController;
-Stepper gaugeMotorA(MOTOR_STEPS, MOTOR_A_1, MOTOR_A_1 + 1, MOTOR_A_1 + 2, MOTOR_A_1 + 3);
-Stepper gaugeMotorB(MOTOR_STEPS, MOTOR_B_1, MOTOR_B_1 + 1, MOTOR_B_1 + 2, MOTOR_B_1 + 3);
-Stepper gaugeMotorC(MOTOR_STEPS, MOTOR_C_1, MOTOR_C_1 + 1, MOTOR_C_1 + 2, MOTOR_C_1 + 3);
-Stepper gaugeMotorD(MOTOR_STEPS, MOTOR_D_1, MOTOR_D_1 + 1, MOTOR_D_1 + 2, MOTOR_D_1 + 3);
+Stepper gaugeMotorA(MOTOR_BIG_STEPS, MOTOR_A_1, MOTOR_A_1 + 1, MOTOR_A_1 + 2, MOTOR_A_1 + 3);
+Stepper gaugeMotorB(MOTOR_SMALL_STEPS, MOTOR_B_1, MOTOR_B_1 + 1, MOTOR_B_1 + 2, MOTOR_B_1 + 3);
+Stepper gaugeMotorC(MOTOR_SMALL_STEPS, MOTOR_C_1, MOTOR_C_1 + 1, MOTOR_C_1 + 2, MOTOR_C_1 + 3);
+Stepper gaugeMotorD(MOTOR_BIG_STEPS, MOTOR_D_1, MOTOR_D_1 + 1, MOTOR_D_1 + 2, MOTOR_D_1 + 3);
+int gaugeCurrentStep[4];
+int gaugeTargetStep[4];
 
-void updateLed(String state) {
+void splitData(String input, int count, String *output) {
+  int cursorPosition = 0;
+  int idx = 0;
+  for(int i = 0; i < input.length(); i++) {
+    if(input.substring(i, i + 1) == "@") {
+      output[idx] = input.substring(cursorPosition, i);
+      cursorPosition = i + 1;
+      idx++;
+      if(idx == count - 1) break;
+    }
+  }
+  output[count - 1] = input.substring(cursorPosition, input.length());
+}
+
+void updateLeds(String state) {
   for(int i = 0; i < 16; i++) ledController.digitalWrite(i, state.substring(i, i+1) == "1" ? HIGH : LOW);
 }
 
-void updateBacklight(String state){
+void updateBacklights(String state){
   int blPower = map(analogRead(BACKLIGHT_POTENTIOMETER), 0, 1023, BACKLIGHT_MIN_DUTY, BACKLIGHT_MAX_DUTY);
   analogWrite(BACKLIGHT_WB, state.substring(0, 1) == "1" ? blPower : 0);
   analogWrite(BACKLIGHT_WS, state.substring(1, 2) == "1" ? blPower : 0);
@@ -38,12 +58,34 @@ void updateBacklight(String state){
   digitalWrite(BACKLIGHT_LCD, state.substring(4) == "0" ? HIGH : LOW);
 }
 
+void updateGauges(String state) {
+  String values[4];
+  splitData(state, 4, values);
+  for(int i = 0; i < 4; i++) {
+    gaugeTargetStep[i] = values[i].toFloat() * (i == 0 || i == 3 ? MOTOR_BIG_STEPS : MOTOR_SMALL_STEPS) * 0.01;
+    if(abs(gaugeCurrentStep[i] - gaugeTargetStep[i]) >= MOTOR_LATENCY) {
+      int diff = gaugeCurrentStep[i] - gaugeTargetStep[i];
+      switch(i) {
+        case 0: gaugeMotorA.step(diff); break;
+        case 1: gaugeMotorB.step(diff); break;
+        case 2: gaugeMotorC.step(diff); break;
+        case 3: gaugeMotorD.step(diff); break;
+      }
+      gaugeCurrentStep[i] = gaugeTargetStep[i];
+    }
+  }
+}
+
 void resetLeds() {
-  updateLed("0000000000000000");
+  updateLeds("0000000000000000");
 }
 
 void resetBacklights() {
-  updateBacklight("00000");
+  updateBacklights("00000");
+}
+
+void resetGauges() {
+  updateGauges("0@0@0@0");
 }
 
 void setup() {
@@ -60,13 +102,15 @@ void setup() {
   pinMode(BACKLIGHT_LCD, OUTPUT);
   resetBacklights();
   //GAUGE
-  gaugeMotorA.setSpeed(MOTOR_SPEED);
-  gaugeMotorB.setSpeed(MOTOR_SPEED);
-  gaugeMotorC.setSpeed(MOTOR_SPEED);
-  gaugeMotorD.setSpeed(MOTOR_SPEED);
+  gaugeMotorA.setSpeed(MOTOR_BIG_SPEED);
+  gaugeMotorB.setSpeed(MOTOR_SMALL_SPEED);
+  gaugeMotorC.setSpeed(MOTOR_SMALL_SPEED);
+  gaugeMotorD.setSpeed(MOTOR_BIG_SPEED);
+  resetGauges();
 }
 
 void loop() {
+  updateGauges("255@0@0@0");
   String setup = "";
   for(int ledAnim = 0; ledAnim < 16; ledAnim++) {
     setup = "";
@@ -77,20 +121,21 @@ void loop() {
         setup += "0";
       }
     }
-    updateLed(setup);
+    updateLeds(setup);
     delay(200);
   }
   resetLeds();
+  updateGauges("0@0@0@0");
   delay(1000);
-  updateBacklight("10000");
+  updateBacklights("10000");
   delay(1000);
-  updateBacklight("11000");
+  updateBacklights("11000");
   delay(1000);
-  updateBacklight("11100");
+  updateBacklights("11100");
   delay(1000);
-  updateBacklight("11110");
+  updateBacklights("11110");
   delay(1000);
-  updateBacklight("11111");
+  updateBacklights("11111");
   delay(1000);
   resetBacklights();
   delay(1000);
