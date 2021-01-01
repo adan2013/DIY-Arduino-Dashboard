@@ -13,8 +13,9 @@
 #define BACKLIGHT_LCD 8
 
 #define MOTOR_LATENCY 4
-#define MOTOR_BIG_STEPS 210
-#define MOTOR_BIG_SPEED 220
+#define MOTOR_MAX_STEP 40
+#define MOTOR_BIG_STEPS 600
+#define MOTOR_BIG_SPEED 60
 #define MOTOR_SMALL_STEPS 210
 #define MOTOR_SMALL_SPEED 180
 
@@ -30,6 +31,9 @@ Stepper gaugeMotorC(MOTOR_SMALL_STEPS, MOTOR_C_1, MOTOR_C_1 + 1, MOTOR_C_1 + 2, 
 Stepper gaugeMotorD(MOTOR_BIG_STEPS, MOTOR_D_1, MOTOR_D_1 + 1, MOTOR_D_1 + 2, MOTOR_D_1 + 3);
 int gaugeCurrentStep[4];
 int gaugeTargetStep[4];
+
+bool left = true;
+unsigned long lastSwitch = 0;
 
 void splitData(String input, int count, String *output) {
   int cursorPosition = 0;
@@ -63,15 +67,28 @@ void updateGauges(String state) {
   splitData(state, 4, values);
   for(int i = 0; i < 4; i++) {
     gaugeTargetStep[i] = values[i].toFloat() * (i == 0 || i == 3 ? MOTOR_BIG_STEPS : MOTOR_SMALL_STEPS) * 0.01;
-    if(abs(gaugeCurrentStep[i] - gaugeTargetStep[i]) >= MOTOR_LATENCY) {
-      int diff = gaugeCurrentStep[i] - gaugeTargetStep[i];
+  }
+}
+
+void moveMotors() {
+  for(int i = 0; i < 4; i++) {
+    int diff = gaugeCurrentStep[i] - gaugeTargetStep[i];
+    if(abs(diff) >= MOTOR_LATENCY) {
+      diff = min(abs(diff), MOTOR_MAX_STEP) * (diff < 0 ? -1 : 1);
+      Serial.print("CURRENT: ");
+      Serial.print(gaugeCurrentStep[0]);
+      Serial.print(" TARGET: ");
+      Serial.print(gaugeTargetStep[0]);
+      Serial.print(" DIFF: ");
+      Serial.print(diff);
+      Serial.print("\n");
       switch(i) {
         case 0: gaugeMotorA.step(diff); break;
         case 1: gaugeMotorB.step(diff); break;
         case 2: gaugeMotorC.step(diff); break;
         case 3: gaugeMotorD.step(diff); break;
       }
-      gaugeCurrentStep[i] = gaugeTargetStep[i];
+      gaugeCurrentStep[i] = gaugeCurrentStep[i] - diff;
     }
   }
 }
@@ -107,36 +124,51 @@ void setup() {
   gaugeMotorC.setSpeed(MOTOR_SMALL_SPEED);
   gaugeMotorD.setSpeed(MOTOR_BIG_SPEED);
   resetGauges();
+
+
+  updateGauges("100@0@0@0");
+  lastSwitch = millis();
 }
 
 void loop() {
-  updateGauges("255@0@0@0");
-  String setup = "";
-  for(int ledAnim = 0; ledAnim < 16; ledAnim++) {
-    setup = "";
-    for(int i = 0; i < 16; i++) {
-      if(i == ledAnim || i == (15 - ledAnim)) {
-        setup += "1";
-      }else{
-        setup += "0";
-      }
-    }
-    updateLeds(setup);
-    delay(200);
+//  updateGauges("255@0@0@0");
+//  String setup = "";
+//  for(int ledAnim = 0; ledAnim < 16; ledAnim++) {
+//    setup = "";
+//    for(int i = 0; i < 16; i++) {
+//      if(i == ledAnim || i == (15 - ledAnim)) {
+//        setup += "1";
+//      }else{
+//        setup += "0";
+//      }
+//    }
+//    updateLeds(setup);
+//    delay(200);
+//  }
+//  resetLeds();
+//  updateGauges("0@0@0@0");
+//  delay(1000);
+//  updateBacklights("10000");
+//  delay(1000);
+//  updateBacklights("11000");
+//  delay(1000);
+//  updateBacklights("11100");
+//  delay(1000);
+//  updateBacklights("11110");
+//  delay(1000);
+//  updateBacklights("11111");
+//  delay(1000);
+//  resetBacklights();
+//  delay(1000);
+  if(millis() - lastSwitch > 300) {
+    lastSwitch = millis();
+    left = !left;
   }
-  resetLeds();
-  updateGauges("0@0@0@0");
-  delay(1000);
-  updateBacklights("10000");
-  delay(1000);
-  updateBacklights("11000");
-  delay(1000);
-  updateBacklights("11100");
-  delay(1000);
-  updateBacklights("11110");
-  delay(1000);
-  updateBacklights("11111");
-  delay(1000);
-  resetBacklights();
-  delay(1000);
+  if(left){
+    updateLeds("1111111100000000");
+  }else{
+    updateLeds("0000000011111111");
+  }
+  moveMotors();
+  if(gaugeCurrentStep[0] > 580) updateGauges("0@0@0@0");
 }
