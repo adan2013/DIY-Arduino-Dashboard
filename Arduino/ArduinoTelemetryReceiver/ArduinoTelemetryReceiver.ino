@@ -26,6 +26,8 @@
 
 String serialBuffer = "";
 boolean serialDataIsReady = false;
+String backlightState = "00000";
+int currentBacklightDuty = 0;
 Adafruit_MCP23017 ledController;
 Stepper gaugeMotorA(MOTOR_BIG_STEPS, MOTOR_A_1, MOTOR_A_1 + 1, MOTOR_A_1 + 2, MOTOR_A_1 + 3);
 Stepper gaugeMotorB(MOTOR_SMALL_STEPS, MOTOR_B_1, MOTOR_B_1 + 1, MOTOR_B_1 + 2, MOTOR_B_1 + 3);
@@ -56,12 +58,22 @@ void updateLeds(String state) {
 
 void updateBacklights(String state){
   if(state.length() == 5) {
+    backlightState = state;
     int blPower = map(analogRead(BACKLIGHT_POTENTIOMETER), 0, 1023, BACKLIGHT_MIN_DUTY, BACKLIGHT_MAX_DUTY);
     analogWrite(BACKLIGHT_WB, state.substring(0, 1) == "1" ? blPower : 0);
     analogWrite(BACKLIGHT_WS, state.substring(1, 2) == "1" ? blPower : 0);
     digitalWrite(BACKLIGHT_RB, state.substring(2, 3) == "1" ? HIGH : LOW);
     digitalWrite(BACKLIGHT_RS, state.substring(3, 4) == "1" ? HIGH : LOW);
     digitalWrite(BACKLIGHT_LCD, state.substring(4, 5) == "0" ? HIGH : LOW);
+  }
+}
+
+void adjustBacklights() {
+  int blPower = map(analogRead(BACKLIGHT_POTENTIOMETER), 0, 1023, BACKLIGHT_MIN_DUTY, BACKLIGHT_MAX_DUTY);
+  if(currentBacklightDuty != blPower) {
+    currentBacklightDuty = blPower;
+    analogWrite(BACKLIGHT_WB, backlightState.substring(0, 1) == "1" ? blPower : 0);
+    analogWrite(BACKLIGHT_WS, backlightState.substring(1, 2) == "1" ? blPower : 0);
   }
 }
 
@@ -136,6 +148,7 @@ void loop() {
     serialDataIsReady = false;
     serialBuffer = "";
   }
+  adjustBacklights();
   moveMotors();
 }
 
