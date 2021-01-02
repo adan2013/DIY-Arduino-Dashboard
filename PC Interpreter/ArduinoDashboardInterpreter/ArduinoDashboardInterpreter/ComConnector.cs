@@ -111,13 +111,13 @@ namespace ArduinoDashboardInterpreter
             return SendData(content);
         }
 
-        public bool SendClearLcdCommand() => SendData(LCD_CLEAR_COMMAND);
+        public bool SendClearLcdCommand() => SendData(LCD_CLEAR_COMMAND + VALUE_SEPARATOR);
 
         public bool SendPrintLcdCommand(ScreenController.ScreenType screen) => SendData(LCD_PRINT_COMMAND + VALUE_SEPARATOR + (int)screen);
 
-        public bool SendUpdateLcdCommand() => SendData(LCD_UPDATE_COMMAND);
+        public bool SendUpdateLcdCommand() => SendData(LCD_UPDATE_COMMAND + VALUE_SEPARATOR);
 
-        public bool SendBeepCommand() => SendData(BEEP_COMMAND);
+        public bool SendBeepCommand() => SendData(BEEP_COMMAND + VALUE_SEPARATOR);
         #endregion
     }
 }
