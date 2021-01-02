@@ -13,7 +13,7 @@
 #define BACKLIGHT_LCD 8
 
 #define MOTOR_LATENCY 4
-#define MOTOR_MAX_STEP 40
+#define MOTOR_MAX_STEP 1
 #define MOTOR_BIG_STEPS 600
 #define MOTOR_BIG_SPEED 60
 #define MOTOR_SMALL_STEPS 210
@@ -40,7 +40,7 @@ void splitData(String input, int count, String *output) {
   int cursorPosition = 0;
   int idx = 0;
   for(int i = 0; i < input.length(); i++) {
-    if(input.substring(i, i + 1) == "@") {
+    if(input.substring(i, i + 1) == "_") {
       output[idx] = input.substring(cursorPosition, i);
       cursorPosition = i + 1;
       idx++;
@@ -110,7 +110,7 @@ void resetBacklights() {
 }
 
 void resetGauges() {
-  updateGauges("0@0@0@0");
+  updateGauges("0_0_0_0");
 }
 
 void setup() {
@@ -153,10 +153,11 @@ void loop() {
 }
 
 void serialEvent() {
-  while(Serial.available()) {
+  while(Serial.available() > 0) {
     char inChar = (char)Serial.read();
     if(inChar == '\n') {
       serialDataIsReady = true;
+      break;
     }else{
       serialBuffer += inChar;
     }

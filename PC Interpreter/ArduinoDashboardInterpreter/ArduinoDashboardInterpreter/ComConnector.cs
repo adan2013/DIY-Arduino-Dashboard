@@ -9,7 +9,7 @@ namespace ArduinoDashboardInterpreter
 {
     public class ComConnector
     {
-        const string VALUE_SEPARATOR = "@";
+        const string VALUE_SEPARATOR = "_";
         const string LED_UPDATE_COMMAND = "LED";
         const string BACKLIGHT_UPDATE_COMMAND = "BKL";
         const string GAUGE_UPDATE_COMMAND = "GAU";
