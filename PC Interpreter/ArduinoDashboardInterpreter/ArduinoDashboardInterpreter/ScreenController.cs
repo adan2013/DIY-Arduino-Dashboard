@@ -165,7 +165,7 @@ namespace ArduinoDashboardInterpreter
         public CompactAlertType alertId = CompactAlertType.Off;
         public int retarderCurrent = 0;
         public int retarderMax = 0;
-        public string odometer = "0 km";
+        public int odometer = 0;
         public int speedLimit = 0;
         
         public ScreenController(ArduinoController arduino, Settings settings)
@@ -220,10 +220,13 @@ namespace ArduinoDashboardInterpreter
 
         public void Loop()
         {
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 0, gear);
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 1, ecoShift);
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 2, clock);
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 3, ccSpeed.ToString());
+            if((int)ScreenId > 2)
+            {
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 0, gear);
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 1, ecoShift);
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 2, clock);
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 3, ccSpeed.ToString());
+            }
             switch (ScreenId)
             {
                 case ScreenType.Testing:
@@ -325,11 +328,14 @@ namespace ArduinoDashboardInterpreter
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, accelerationTimerText);
                     break;
             }
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 0, ((int)alertId).ToString());
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 1, retarderCurrent.ToString());
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 2, retarderMax.ToString());
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 3, odometer);
-            arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 4, speedLimit.ToString());
+            if ((int)ScreenId > 2 && (int)ScreenId < 10)
+            {
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 0, ((int)alertId).ToString());
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 1, retarderCurrent.ToString());
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 2, retarderMax.ToString());
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 3, odometer.ToString());
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 4, speedLimit.ToString());
+            }
         }
         
         public void LeftButton()

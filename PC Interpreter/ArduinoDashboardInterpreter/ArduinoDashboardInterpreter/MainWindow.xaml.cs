@@ -453,7 +453,7 @@ namespace ArduinoDashboardInterpreter
 
         private void LcdUpdate_Click(object sender, RoutedEventArgs e) => serial.SendUpdateLcdCommand();
 
-        private void SoundBeep_Click(object sender, RoutedEventArgs e) => serial.SendBeepCommand();
+        private void SoundBeep_Click(object sender, RoutedEventArgs e) => System.Media.SystemSounds.Beep.Play();
         #endregion
     }
 }

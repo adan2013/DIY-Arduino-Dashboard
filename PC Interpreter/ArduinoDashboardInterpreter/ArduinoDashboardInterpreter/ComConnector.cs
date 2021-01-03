@@ -16,10 +16,8 @@ namespace ArduinoDashboardInterpreter
         const string REG_A_UPDATE_COMMAND = "REA";
         const string REG_B_UPDATE_COMMAND = "REB";
         const string REG_C_UPDATE_COMMAND = "REC";
-        const string LCD_CLEAR_COMMAND = "CLS";
         const string LCD_PRINT_COMMAND = "PRT";
         const string LCD_UPDATE_COMMAND = "UPD";
-        const string BEEP_COMMAND = "BEP";
 
         SerialPort port;
 
@@ -111,13 +109,9 @@ namespace ArduinoDashboardInterpreter
             return SendData(content);
         }
 
-        public bool SendClearLcdCommand() => SendData(LCD_CLEAR_COMMAND + VALUE_SEPARATOR);
-
         public bool SendPrintLcdCommand(ScreenController.ScreenType screen) => SendData(LCD_PRINT_COMMAND + VALUE_SEPARATOR + (int)screen);
 
         public bool SendUpdateLcdCommand() => SendData(LCD_UPDATE_COMMAND + VALUE_SEPARATOR);
-
-        public bool SendBeepCommand() => SendData(BEEP_COMMAND + VALUE_SEPARATOR);
         #endregion
     }
 }
