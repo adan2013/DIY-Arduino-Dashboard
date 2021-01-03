@@ -88,10 +88,10 @@ namespace ArduinoDashboardInterpreter
             return SendData(content);
         }
 
-        public bool SendGaugeUpdate(Double[] gaugeConfig)
+        public bool SendGaugeUpdate(int[] gaugeConfig)
         {
             string content = GAUGE_UPDATE_COMMAND + VALUE_SEPARATOR;
-            foreach (Double gauge in gaugeConfig) content += (int)gauge + VALUE_SEPARATOR;
+            foreach (int gauge in gaugeConfig) content += gauge + VALUE_SEPARATOR;
             content = content.Substring(0, content.Length - 1);
             return SendData(content);
         }

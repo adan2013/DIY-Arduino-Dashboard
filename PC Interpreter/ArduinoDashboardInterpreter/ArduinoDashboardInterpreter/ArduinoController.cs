@@ -18,7 +18,7 @@ namespace ArduinoDashboardInterpreter
         public delegate void BacklightStateChangedDelegate();
         public event BacklightStateChangedDelegate BacklightStateChanged;
 
-        Double[] GaugePositions = new double[4];
+        int[] GaugePositions = new int[4];
         public delegate void GaugePositionChangedDelegate();
         public event GaugePositionChangedDelegate GaugePositionChanged;
 
@@ -186,19 +186,18 @@ namespace ArduinoDashboardInterpreter
 
         public Double GetGaugeState(GaugeType id) => GaugePositions[(int)id];
 
-        public Double[] GetGaugeFullState() => GaugePositions;
+        public int[] GetGaugeFullState() => GaugePositions;
 
         public void SetDefaultGaugePosition()
         {
-            GaugePositions = new double[4];
+            GaugePositions = new int[4];
             GaugeModified = true;
             GaugePositionChanged?.Invoke();
         }
 
-        public bool SetGaugePosition(GaugeType id, Double value)
+        public bool SetGaugePosition(GaugeType id, int value)
         {
-            Double currentValue = GaugePositions[(int)id];
-            value = Math.Round(value);
+            int currentValue = GaugePositions[(int)id];
             if (value < 0) value = 0;
             if (value > 100) value = 100;
             GaugePositions[(int)id] = value;

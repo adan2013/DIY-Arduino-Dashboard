@@ -206,7 +206,7 @@ namespace ArduinoDashboardInterpreter
                     case "C": id = ArduinoController.GaugeType.Air; break;
                     case "D": id = ArduinoController.GaugeType.Engine; break;
                 }
-                arduino.SetGaugePosition(id, e.NewValue);
+                arduino.SetGaugePosition(id, (int)e.NewValue);
             }
         }
 
@@ -423,7 +423,11 @@ namespace ArduinoDashboardInterpreter
             ConnPortList.Items.Clear();
             string[] list = ComConnector.GetPortList();
             foreach (string item in list) ConnPortList.Items.Add(item);
-            if (ConnPortList.Items.Count == 1) ConnPortList.SelectedIndex = 0;
+            if (ConnPortList.Items.Count == 1)
+            {
+                ConnPortList.SelectedIndex = 0;
+                ConnConnect_Click(ConnConnect, new RoutedEventArgs());
+            }
         }
         #endregion
 
