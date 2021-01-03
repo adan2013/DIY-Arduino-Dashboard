@@ -5,6 +5,7 @@
 #define BACKLIGHT_POTENTIOMETER A8
 #define BACKLIGHT_MIN_DUTY 10
 #define BACKLIGHT_MAX_DUTY 128
+#define BLINK_LENGTH 600
 
 #define BACKLIGHT_WB 12
 #define BACKLIGHT_WS 11
@@ -26,8 +27,13 @@
 
 String serialBuffer = "";
 boolean serialDataIsReady = false;
+
+long lastBlinkStateSwitch = 0;
+bool ledBlinkState = false;
+String ledState = "0000000000000000";
 String backlightState = "00000";
 int currentBacklightDuty = 0;
+
 Adafruit_MCP23017 ledController;
 Stepper gaugeMotorA(MOTOR_BIG_STEPS, MOTOR_A_1, MOTOR_A_1 + 1, MOTOR_A_1 + 2, MOTOR_A_1 + 3);
 Stepper gaugeMotorB(MOTOR_SMALL_STEPS, MOTOR_B_1, MOTOR_B_1 + 1, MOTOR_B_1 + 2, MOTOR_B_1 + 3);
@@ -52,7 +58,25 @@ void splitData(String input, int count, String *output) {
 
 void updateLeds(String state) {
   if(state.length() == 16) {
-    for(int i = 0; i < 16; i++) ledController.digitalWrite(i, state.substring(i, i+1) == "1" ? HIGH : LOW);
+    ledState = state;
+    for(int i = 0; i < 16; i++) {
+      String val = state.substring(i, i+1);
+      if(val == "2") {
+        ledController.digitalWrite(i, ledBlinkState ? HIGH : LOW);
+      }else{
+        ledController.digitalWrite(i, val == "1" ? HIGH : LOW);
+      }
+    }
+  }
+}
+
+void updateBlinkingLeds() {
+  if(millis() - lastBlinkStateSwitch >= BLINK_LENGTH) {
+    lastBlinkStateSwitch = millis();
+    ledBlinkState = !ledBlinkState;
+    for(int i = 0; i < 16; i++) {
+      if(ledState.substring(i, i+1) == "2") ledController.digitalWrite(i, ledBlinkState ? HIGH : LOW);
+    }
   }
 }
 
@@ -148,6 +172,7 @@ void loop() {
     serialDataIsReady = false;
     serialBuffer = "";
   }
+  updateBlinkingLeds();
   adjustBacklights();
   moveMotors();
 }
