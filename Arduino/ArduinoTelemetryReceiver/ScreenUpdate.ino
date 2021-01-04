@@ -73,10 +73,22 @@ void updateLcd() {
       break;
     case 9: //TRAILER
       if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
-      printParam(1, regB[2], true);
-      printParam(3, regB[0], false);
-      printParam(3, regB[3], true);
-      printParam(5, regB[1], true);
+      int dmg = regB[0].toInt();
+      uint16_t color = ILI9341_DARKGREEN;
+      if(dmg >= 3 && dmg < 6) { color = ILI9341_GREEN;
+      }else if(dmg >= 6 && dmg < 9) { color = ILI9341_YELLOW;
+      }else if(dmg >= 9 && dmg < 12) { color = ILI9341_ORANGE;
+      }else if(dmg >= 12) { color = ILI9341_RED; }
+      tft.fillRect(45, 65, 155, 40, color);
+      tft.fillRect(100, 105, 32, 5, color);
+      for(int i = 0; i < 3; i++) {
+        tft.fillCircle(145 + i * 20, 109, 9, ILI9341_BLACK);
+        tft.fillCircle(145 + i * 20, 109, 7, color);
+      }
+      printParam(3, regB[2], false);
+      printParam(4, regB[0] + "%", true);
+      printParam(5, regB[3], true);
+      printParam(6, regB[1], true);
       printParam(7, regB[4], true);
       break;
   }
