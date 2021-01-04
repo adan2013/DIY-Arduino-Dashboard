@@ -39,6 +39,13 @@ void printLcd(int id) {
       printParam(4, getAssistantType("C"), false);
       printParam(6, "AdBlue tank", false);
       break;
+    case 9: //TRAILER
+      printParam(0, "Trailer name", false);
+      printParam(2, "Damage", false);
+      printParam(2, "Mass", true);
+      printParam(4, "Lift axle", false);
+      printParam(6, "Attached", false);
+      break;
   }
   clearValuesRequired = false;
 }
