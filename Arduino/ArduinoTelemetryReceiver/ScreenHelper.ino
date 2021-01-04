@@ -9,6 +9,50 @@ String getAlertText(int id, bool firstLine) {
   }
 }
 
+String getAssistantType(String hexId) {
+  int id = 0;
+  if(hexId == "A") { id = 10;
+  }else if(hexId == "B") { id = 11;
+  }else if(hexId == "C") { id = 12;
+  }else if(hexId == "D") { id = 13;
+  }else if(hexId == "E") { id = 14;
+  }else if(hexId == "F") { id = 15;
+  }else{ id = hexId.toInt(); }
+  switch(id) {
+    case 1: return "Nav time";
+    case 2: return "Nav distance";
+    case 3: return "Rest time";
+    case 4: return "Job deliv. time";
+    case 5: return "Air pressure";
+    case 6: return "Oil temp.";
+    case 7: return "Oil pressure";
+    case 8: return "Water temp.";
+    case 9: return "Battery";
+    case 10: return "Fuel left";
+    case 11: return "Fuel AVG";
+    case 12: return "Fuel range";
+    case 13: return "Current speed";
+    default: return "";
+  }
+}
+
+void clearParam(int row) {
+  int offsetY = 62 + row * 22;
+  tft.fillRect(0, offsetY, tft.width(), 22, ILI9341_BLACK);
+}
+
+void printParam(int row, String text, bool toRight) {
+  if(text == "") return;
+  int w = tft.width(), h = tft.height();
+  int offsetY = 62 + row * 22;
+  if(toRight) {
+    tft.setCursor(w - 35 - text.length() * 8, offsetY);
+  }else{
+    tft.setCursor(18, offsetY);
+  }
+  tft.println(text);
+}
+
 void printTopBar() {
   int w = tft.width(), h = tft.height();
   tft.fillRect(5, 2, w - 5, 44, ILI9341_BLACK);

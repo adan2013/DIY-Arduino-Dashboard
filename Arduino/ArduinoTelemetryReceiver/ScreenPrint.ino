@@ -8,14 +8,14 @@ void printLcd(int id) {
   }
   if(id > 2 && id < 10) printBottomBar();
   switch(id) {
-    case 1: //TESTING
-      tft.fillScreen(regB[0] == "0" ? ILI9341_RED : regB[0] == "1" ? ILI9341_GREEN : regB[0] == "2" ? ILI9341_BLUE : ILI9341_WHITE);
-      break;
     case 2: //INITIAL IMAGE
       tft.setCursor(40, 40);
       tft.setTextSize(5);
       tft.setTextColor(ILI9341_WHITE);
-      tft.println("HELLO");
+      tft.println("HELLO"); // TODO PLACEHOLDER, REPLACE BY INIT IMAGE
+      break;
+    case 3: //ASSISTANT
+      for(int i = 0; i < 4; i++) printParam(i * 2, getAssistantType(regB[0].substring(i, i + 1)), false);
       break;
   }
   clearValuesRequired = false;

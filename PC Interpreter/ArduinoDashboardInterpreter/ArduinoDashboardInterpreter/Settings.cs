@@ -237,19 +237,19 @@ namespace ArduinoDashboardInterpreter
             switch(type)
             {
                 case ScreenController.AssistantValueType.Off: return "OFF";
-                case ScreenController.AssistantValueType.NavTime: return "Nav Time";
+                case ScreenController.AssistantValueType.NavTime: return "Nav time";
                 case ScreenController.AssistantValueType.NavDistance: return "Nav distance";
                 case ScreenController.AssistantValueType.RestTime: return "Rest time";
-                case ScreenController.AssistantValueType.JobDeliveryTime: return "Job delivery time";
+                case ScreenController.AssistantValueType.JobDeliveryTime: return "Job deliv. time";
                 case ScreenController.AssistantValueType.AirPressure: return "Air pressure";
-                case ScreenController.AssistantValueType.OilTemperature: return "Oil temperature";
+                case ScreenController.AssistantValueType.OilTemperature: return "Oil temp.";
                 case ScreenController.AssistantValueType.OilPressure: return "Oil pressure";
-                case ScreenController.AssistantValueType.WaterTemperature: return "Water temperature";
+                case ScreenController.AssistantValueType.WaterTemperature: return "Water temp.";
                 case ScreenController.AssistantValueType.Battery: return "Battery";
                 case ScreenController.AssistantValueType.FuelLeft: return "Fuel left";
                 case ScreenController.AssistantValueType.FuelAvg: return "Fuel average";
                 case ScreenController.AssistantValueType.FuelRange: return "Fuel range";
-                case ScreenController.AssistantValueType.CurrentSpeed: return "Speed";
+                case ScreenController.AssistantValueType.CurrentSpeed: return "Current speed";
                 default: return "";
             }
         }
