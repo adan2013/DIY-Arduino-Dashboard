@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArduinoDashboardInterpreter"
         mc:Ignorable="d"
-        Title="Arduino Dashboard Interpreter" Height="560" Width="850" ResizeMode="NoResize">
+        Title="Arduino Dashboard Interpreter" Height="570" Width="850" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="6*"/>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="7*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
@@ -138,6 +138,10 @@
                     <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationInitImage" Click="CustomizationInitImage_Click" HorizontalContentAlignment="Center">INIT IMAGE</Button>
                     <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType1" Click="CustomizationAssistantType1_Click" HorizontalContentAlignment="Center">ASSISTANT 1</Button>
                     <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType2" Click="CustomizationAssistantType2_Click" HorizontalContentAlignment="Center">ASSISTANT 2</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType3" Click="CustomizationAssistantType3_Click" HorizontalContentAlignment="Center">ASSISTANT 3</Button>
+                    <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType4" Click="CustomizationAssistantType4_Click" HorizontalContentAlignment="Center">ASSISTANT 4</Button>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

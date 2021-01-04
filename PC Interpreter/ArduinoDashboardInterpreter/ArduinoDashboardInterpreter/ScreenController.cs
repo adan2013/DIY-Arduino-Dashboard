@@ -60,14 +60,10 @@ namespace ArduinoDashboardInterpreter
             Volvo
         }
 
-        public enum AssistantAlertType
+        public enum AlertType
         {
-            Normal
-        }
-
-        public enum CompactAlertType
-        {
-            Off
+            Off = 0,
+            BrakeLowPressure = 30
         }
 
         public enum MenuType
@@ -98,7 +94,9 @@ namespace ArduinoDashboardInterpreter
         {
             InitImage,
             AssistantType1,
-            AssistantType2
+            AssistantType2,
+            AssistantType3,
+            AssistantType4
         }
 
         public enum AccelerationScreenState
@@ -127,7 +125,6 @@ namespace ArduinoDashboardInterpreter
 
         //REGISTER B
         public int testColor = 0;
-        public AssistantAlertType assistantAlertId = AssistantAlertType.Normal;
         public string navTime = "0 min";
         public string navDistance = "0 km";
         public string restTime = "0 min";
@@ -162,7 +159,7 @@ namespace ArduinoDashboardInterpreter
         public string accelerationTimerText = "00:00";
 
         //REGISTER C
-        public CompactAlertType alertId = CompactAlertType.Off;
+        public AlertType alertId = AlertType.Off;
         public int retarderCurrent = 0;
         public int retarderMax = 0;
         public int odometer = 0;
@@ -236,11 +233,15 @@ namespace ArduinoDashboardInterpreter
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, ((int)settings.GetInitialImage()).ToString());
                     break;
                 case ScreenType.Assistant:
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, ((int)assistantAlertId).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, ((int)settings.GetAssistantType1()).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, GetAssistantValueByType(settings.GetAssistantType1()));
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, ((int)settings.GetAssistantType2()).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 4, GetAssistantValueByType(settings.GetAssistantType2()));
+                    String types = settings.GetAssistantType1().ToString("X") +
+                                   settings.GetAssistantType2().ToString("X") +
+                                   settings.GetAssistantType3().ToString("X") +
+                                   settings.GetAssistantType4().ToString("X");
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, types);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, GetAssistantValueByType(settings.GetAssistantType1()));
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, GetAssistantValueByType(settings.GetAssistantType2()));
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, GetAssistantValueByType(settings.GetAssistantType3()));
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 4, GetAssistantValueByType(settings.GetAssistantType4()));
                     break;
                 case ScreenType.Navigation:
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, navTime);
@@ -355,8 +356,10 @@ namespace ArduinoDashboardInterpreter
                     switch((CustomizationMenuItems)menuCursorPosition)
                     {
                         case CustomizationMenuItems.InitImage: settings.SwitchInitialImage(-1); break;
-                        case CustomizationMenuItems.AssistantType1: settings.SwitchAssistantType1(-1); break;
-                        case CustomizationMenuItems.AssistantType2: settings.SwitchAssistantType2(-1); break;
+                        case CustomizationMenuItems.AssistantType1: settings.SwitchAssistantType(1, -1); break;
+                        case CustomizationMenuItems.AssistantType2: settings.SwitchAssistantType(2, -1); break;
+                        case CustomizationMenuItems.AssistantType3: settings.SwitchAssistantType(3, -1); break;
+                        case CustomizationMenuItems.AssistantType4: settings.SwitchAssistantType(4, -1); break;
                     }
                     break;
                 case ScreenType.Acceleration:
@@ -441,8 +444,10 @@ namespace ArduinoDashboardInterpreter
                     switch ((CustomizationMenuItems)menuCursorPosition)
                     {
                         case CustomizationMenuItems.InitImage: settings.SwitchInitialImage(1); break;
-                        case CustomizationMenuItems.AssistantType1: settings.SwitchAssistantType1(1); break;
-                        case CustomizationMenuItems.AssistantType2: settings.SwitchAssistantType2(1); break;
+                        case CustomizationMenuItems.AssistantType1: settings.SwitchAssistantType(1, 1); break;
+                        case CustomizationMenuItems.AssistantType2: settings.SwitchAssistantType(2, 1); break;
+                        case CustomizationMenuItems.AssistantType3: settings.SwitchAssistantType(3, 1); break;
+                        case CustomizationMenuItems.AssistantType4: settings.SwitchAssistantType(4, 1); break;
                     }
                     break;
                 case ScreenType.Acceleration:

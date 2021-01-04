@@ -137,6 +137,8 @@ namespace ArduinoDashboardInterpreter
         ScreenController.InitialImageType initialImage;
         ScreenController.AssistantValueType assistantType1;
         ScreenController.AssistantValueType assistantType2;
+        ScreenController.AssistantValueType assistantType3;
+        ScreenController.AssistantValueType assistantType4;
 
         public delegate void CustomizationUpdatedDelegate();
         [field: NonSerialized]
@@ -146,7 +148,9 @@ namespace ArduinoDashboardInterpreter
         {
             InitialImage,
             AssistantType1,
-            AssistantType2
+            AssistantType2,
+            AssistantType3,
+            AssistantType4
         }
 
         public void SetDefaultCustomization()
@@ -154,6 +158,8 @@ namespace ArduinoDashboardInterpreter
             initialImage = ScreenController.InitialImageType.Redark;
             assistantType1 = ScreenController.AssistantValueType.Off;
             assistantType2 = ScreenController.AssistantValueType.Off;
+            assistantType3 = ScreenController.AssistantValueType.Off;
+            assistantType4 = ScreenController.AssistantValueType.Off;
             CustomizationUpdated?.Invoke();
         }
 
@@ -167,24 +173,37 @@ namespace ArduinoDashboardInterpreter
             CustomizationUpdated?.Invoke();
         }
 
-        public void SwitchAssistantType1(int difference)
+        public void SwitchAssistantType(int typeId, int difference)
         {
             int maxLength = Enum.GetNames(typeof(ScreenController.AssistantValueType)).Length;
-            int newValue = (int)assistantType1 + difference;
+            int newValue = (int)GetAssistantValueType(typeId) + difference;
             if (newValue < 0) newValue = maxLength - 1;
             if (newValue >= maxLength) newValue = 0;
-            assistantType1 = (ScreenController.AssistantValueType)newValue;
+            SetAssistantValueType(typeId, (ScreenController.AssistantValueType)newValue);
             CustomizationUpdated?.Invoke();
         }
 
-        public void SwitchAssistantType2(int difference)
+        private ScreenController.AssistantValueType GetAssistantValueType(int id)
         {
-            int maxLength = Enum.GetNames(typeof(ScreenController.AssistantValueType)).Length;
-            int newValue = (int)assistantType2 + difference;
-            if (newValue < 0) newValue = maxLength - 1;
-            if (newValue >= maxLength) newValue = 0;
-            assistantType2 = (ScreenController.AssistantValueType)newValue;
-            CustomizationUpdated?.Invoke();
+            switch (id)
+            {
+                case 1: return assistantType1;
+                case 2: return assistantType2;
+                case 3: return assistantType3;
+                case 4: return assistantType4;
+                default: return ScreenController.AssistantValueType.Off;
+            }
+        }
+
+        private void SetAssistantValueType(int id, ScreenController.AssistantValueType value)
+        {
+            switch (id)
+            {
+                case 1: assistantType1 = value; break;
+                case 2: assistantType2 = value; break;
+                case 3: assistantType3 = value; break;
+                case 4: assistantType4 = value; break;
+            }
         }
 
         public ScreenController.InitialImageType GetInitialImage() => initialImage;
@@ -192,6 +211,10 @@ namespace ArduinoDashboardInterpreter
         public ScreenController.AssistantValueType GetAssistantType1() => assistantType1;
 
         public ScreenController.AssistantValueType GetAssistantType2() => assistantType2;
+
+        public ScreenController.AssistantValueType GetAssistantType3() => assistantType3;
+
+        public ScreenController.AssistantValueType GetAssistantType4() => assistantType4;
         #endregion
     }
 }

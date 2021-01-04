@@ -297,13 +297,19 @@ namespace ArduinoDashboardInterpreter
             CustomizationInitImage.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "INIT IMAGE:\n" + settings.GetInitialImage() };
             CustomizationAssistantType1.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 1:\n" + settings.GetAssistantType1() };
             CustomizationAssistantType2.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 2:\n" + settings.GetAssistantType2() };
+            CustomizationAssistantType3.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 3:\n" + settings.GetAssistantType3() };
+            CustomizationAssistantType4.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 4:\n" + settings.GetAssistantType4() };
         }
 
         private void CustomizationInitImage_Click(object sender, RoutedEventArgs e) => settings.SwitchInitialImage(1);
 
-        private void CustomizationAssistantType1_Click(object sender, RoutedEventArgs e) => settings.SwitchAssistantType1(1);
+        private void CustomizationAssistantType1_Click(object sender, RoutedEventArgs e) => settings.SwitchAssistantType(1, 1);
 
-        private void CustomizationAssistantType2_Click(object sender, RoutedEventArgs e) => settings.SwitchAssistantType2(1);
+        private void CustomizationAssistantType2_Click(object sender, RoutedEventArgs e) => settings.SwitchAssistantType(2, 1);
+
+        private void CustomizationAssistantType3_Click(object sender, RoutedEventArgs e) => settings.SwitchAssistantType(3, 1);
+
+        private void CustomizationAssistantType4_Click(object sender, RoutedEventArgs e) => settings.SwitchAssistantType(4, 1);
         #endregion
 
         #region "SHORTCUTS"
