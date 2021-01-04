@@ -27,6 +27,12 @@ void printLcd(int id) {
       printParam(2, "Source", false);
       printParam(4, "Destination", false);
       break;
+    case 6: //ENGINE
+      printParam(0, getAssistantType("5"), false);
+      printParam(2, "Oil temp/pressure", false);
+      printParam(4, getAssistantType("8"), false);
+      printParam(6, getAssistantType("9"), false);
+      break;
   }
   clearValuesRequired = false;
 }

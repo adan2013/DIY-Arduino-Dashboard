@@ -19,6 +19,14 @@ void updateLcd() {
       printParam(3, regB[1], true);
       printParam(5, regB[2], true);
       break;
+    case 6: //ENGINE
+      if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
+      printParam(1, regB[0], true);
+      printParam(3, regB[1], false);
+      printParam(3, regB[2], true);
+      printParam(5, regB[3], true);
+      printParam(7, regB[4], true);
+      break;
   }
   clearValuesRequired = true;
 }
