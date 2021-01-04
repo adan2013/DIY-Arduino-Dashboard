@@ -72,7 +72,7 @@ void updateLcd() {
       }
       break;
     case 9: //TRAILER
-      if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
+      if(clearValuesRequired) clearCenterScreen();
       int dmg = regB[0].toInt();
       uint16_t color = ILI9341_DARKGREEN;
       if(dmg >= 3 && dmg < 6) { color = ILI9341_GREEN;
@@ -85,7 +85,13 @@ void updateLcd() {
         tft.fillCircle(145 + i * 20, 109, 9, ILI9341_BLACK);
         tft.fillCircle(145 + i * 20, 109, 7, color);
       }
+      printParam(4, "Damage", false);
+      printParam(5, "Mass", false);
+      printParam(6, "Lift axle", false);
+      printParam(7, "Attached", false);
+      tft.setTextWrap(false);
       printParam(3, regB[2], false);
+      tft.setTextWrap(true);
       printParam(4, regB[0] + "%", true);
       printParam(5, regB[3], true);
       printParam(6, regB[1], true);
