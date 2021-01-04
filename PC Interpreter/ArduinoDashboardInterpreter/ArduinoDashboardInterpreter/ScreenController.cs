@@ -141,11 +141,11 @@ namespace ArduinoDashboardInterpreter
         public string fuelAvgConsumption = "0 L/100km";
         public string fuelRange = "0 km";
         public string adblue = "0";
-        public string damageEngine = "0%";
-        public string damageTransmission = "0%";
-        public string damageCabin = "0%";
-        public string damageChassis = "0%";
-        public string damageWheels = "0%";
+        public string damageEngine = "0";
+        public string damageTransmission = "0";
+        public string damageCabin = "0";
+        public string damageChassis = "0";
+        public string damageWheels = "0";
         public string trailerDamage = "0%";
         public string trailerLiftAxle = "0";
         public string trailerName = "";
@@ -269,10 +269,10 @@ namespace ArduinoDashboardInterpreter
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 4, adblue);
                     break;
                 case ScreenType.Truck:
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, damageEngine);
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, damageTransmission);
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, damageCabin);
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, damageChassis);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, damageCabin);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, damageChassis);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, damageEngine);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, damageTransmission);
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 4, damageWheels);
                     break;
                 case ScreenType.Trailer:

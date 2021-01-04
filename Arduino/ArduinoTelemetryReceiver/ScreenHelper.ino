@@ -2,6 +2,10 @@ void clearLcd() {
   tft.fillScreen(ILI9341_BLACK);
 }
 
+void clearCenterScreen() {
+  tft.fillRect(0, 52, tft.width(), 190, ILI9341_BLACK);
+}
+
 String getAlertText(int id, bool firstLine) {
   switch(id) {
     case 31: return firstLine ? "Brake low" : "pressure!";
@@ -32,6 +36,17 @@ String getAssistantType(String hexId) {
     case 11: return "Fuel AVG";
     case 12: return "Fuel range";
     case 13: return "Current speed";
+    default: return "";
+  }
+}
+
+String getTruckPartName(int id) {
+  switch(id) {
+    case 0: return "CAB-";
+    case 1: return "CHA-";
+    case 2: return "ENG-";
+    case 3: return "TRA-";
+    case 4: return "WHE-";
     default: return "";
   }
 }

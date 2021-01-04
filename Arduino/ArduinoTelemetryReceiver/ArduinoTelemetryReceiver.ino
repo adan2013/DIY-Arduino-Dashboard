@@ -197,9 +197,9 @@ void setup() {
   //TEST
   updateBacklights("00001");
   updateRegistry(1, "4_OK_17:03_80_");
-  updateRegistry(2, "Abcd_Efgh_Ijkl_Mnop_Rqst");
+  updateRegistry(2, "0_3_6_9_12");
   updateRegistry(3, "0_2_5_180000_80");
-  printLcd(9);
+  printLcd(8);
   updateLcd();
 }
 

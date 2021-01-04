@@ -34,6 +34,43 @@ void updateLcd() {
       printParam(5, regB[3], true);
       printParam(7, regB[4], true);
       break;
+    case 8: //TRUCK
+      if(clearValuesRequired) clearCenterScreen();
+      for(int i = 0; i < 5; i++) {
+        int dmg = regB[i].toInt();
+        uint16_t color = ILI9341_DARKGREEN;
+        if(dmg >= 3 && dmg < 6) { color = ILI9341_GREEN;
+        }else if(dmg >= 6 && dmg < 9) { color = ILI9341_YELLOW;
+        }else if(dmg >= 9 && dmg < 12) { color = ILI9341_ORANGE;
+        }else if(dmg >= 12) { color = ILI9341_RED; }
+        switch(i) {
+          case 0: //cabin
+            tft.fillRect(20, 70, 80, 105, color);
+            break;
+          case 1: //chassis
+            tft.fillRect(20, 175, 200, 40, color);
+            break;
+          case 2: //engine
+            tft.fillRect(32, 167, 45, 28, ILI9341_BLACK);
+            tft.fillRect(34, 169, 41, 24, color);
+            break;
+          case 3: //transmission
+            tft.fillRect(75, 179, 35, 16, ILI9341_BLACK);
+            tft.fillRect(75, 181, 33, 12, color);
+            break;
+          case 4: //wheels
+            tft.fillCircle(55, 217, 20, ILI9341_BLACK);
+            tft.fillCircle(55, 217, 16, color);
+            tft.fillCircle(145, 217, 20, ILI9341_BLACK);
+            tft.fillCircle(145, 217, 16, color);
+            tft.fillCircle(190, 217, 20, ILI9341_BLACK);
+            tft.fillCircle(190, 217, 16, color);
+            break;
+        }
+        tft.setCursor(w - 120, 62 + i * 22);
+        tft.println(getTruckPartName(i) + dmg + "%");
+      }
+      break;
     case 9: //TRAILER
       if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
       printParam(1, regB[2], true);
