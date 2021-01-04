@@ -251,11 +251,11 @@ void printBottomBar() {
       alertBg = ILI9341_RED;
       alertFg = ILI9341_WHITE;
     }
-    tft.fillRect(11, h - 70, w - 16, 55, alertBg);
+    tft.fillRoundRect(11, h - 70, w - 16, 55, 8, alertBg);
     tft.setTextColor(alertFg);
-    tft.setCursor(17, h - 64);
+    tft.setCursor(18, h - 64);
     tft.println(getAlertText(id, true));
-    tft.setCursor(17, h - 38);
+    tft.setCursor(18, h - 38);
     tft.println(getAlertText(id, false));
   }
 }
