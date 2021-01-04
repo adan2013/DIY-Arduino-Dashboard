@@ -199,7 +199,7 @@ void setup() {
   updateRegistry(1, "4_OK_17:03_80_");
   updateRegistry(2, "Abcd_Efgh_Ijkl_Mnop_Rqst");
   updateRegistry(3, "0_2_5_180000_80");
-  printLcd(6);
+  printLcd(7);
   updateLcd();
 }
 

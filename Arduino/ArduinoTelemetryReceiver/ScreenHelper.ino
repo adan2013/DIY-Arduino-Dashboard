@@ -46,7 +46,7 @@ void printParam(int row, String text, bool toRight) {
   int w = tft.width(), h = tft.height();
   int offsetY = 62 + row * 22;
   if(toRight) {
-    tft.setCursor(w - 35 - text.length() * 8, offsetY);
+    tft.setCursor(w - 35 - text.length() * 10, offsetY);
   }else{
     tft.setCursor(18, offsetY);
   }

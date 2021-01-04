@@ -33,6 +33,12 @@ void printLcd(int id) {
       printParam(4, getAssistantType("8"), false);
       printParam(6, getAssistantType("9"), false);
       break;
+    case 7: //FUEL
+      printParam(0, "Fuel tank", false);
+      printParam(2, getAssistantType("B"), false);
+      printParam(4, getAssistantType("C"), false);
+      printParam(6, "AdBlue tank", false);
+      break;
   }
   clearValuesRequired = false;
 }
