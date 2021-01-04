@@ -12,6 +12,12 @@ void updateLcd() {
       printParam(5, regB[3], true);
       printParam(7, regB[4], true);
       break;
+    case 4: //NAVIGATION
+      if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); }
+      printParam(1, regB[0], true);
+      printParam(3, regB[1], true);
+      printParam(5, regB[2], true);
+      break;
   }
   clearValuesRequired = true;
 }

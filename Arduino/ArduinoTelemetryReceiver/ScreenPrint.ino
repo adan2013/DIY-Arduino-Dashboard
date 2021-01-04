@@ -17,6 +17,11 @@ void printLcd(int id) {
     case 3: //ASSISTANT
       for(int i = 0; i < 4; i++) printParam(i * 2, getAssistantType(regB[0].substring(i, i + 1)), false);
       break;
+    case 4: //NAVIGATION
+      printParam(0, getAssistantType("1"), false);
+      printParam(2, getAssistantType("2"), false);
+      printParam(4, getAssistantType("3"), false);
+      break;
   }
   clearValuesRequired = false;
 }
