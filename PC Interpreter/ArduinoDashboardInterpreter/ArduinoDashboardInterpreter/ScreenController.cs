@@ -63,7 +63,7 @@ namespace ArduinoDashboardInterpreter
         public enum AlertType
         {
             Off = 0,
-            BrakeLowPressure = 30
+            BrakeLowPressure = 31
         }
 
         public enum MenuType
@@ -233,10 +233,11 @@ namespace ArduinoDashboardInterpreter
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, ((int)settings.GetInitialImage()).ToString());
                     break;
                 case ScreenType.Assistant:
-                    String types = settings.GetAssistantType1().ToString("X") +
-                                   settings.GetAssistantType2().ToString("X") +
-                                   settings.GetAssistantType3().ToString("X") +
-                                   settings.GetAssistantType4().ToString("X");
+                    String types
+                        = settings.GetAssistantType1().ToString("X")
+                        + settings.GetAssistantType2().ToString("X")
+                        + settings.GetAssistantType3().ToString("X")
+                        + settings.GetAssistantType4().ToString("X");
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, types);
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, GetAssistantValueByType(settings.GetAssistantType1()));
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, GetAssistantValueByType(settings.GetAssistantType2()));

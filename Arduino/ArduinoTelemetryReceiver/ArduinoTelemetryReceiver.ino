@@ -175,6 +175,13 @@ void clearLcd() {
   tft.fillScreen(ILI9341_BLACK);
 }
 
+String getAlertText(int id, bool firstLine) {
+  switch(id) {
+    case 31: return firstLine ? "Brake low" : "pressure!";
+    default: return "";
+  }
+}
+
 void printTopBar() {
   int w = tft.width(), h = tft.height();
   tft.fillRect(5, 2, w - 5, 44, ILI9341_BLACK);
@@ -184,8 +191,8 @@ void printTopBar() {
   tft.setTextSize(3);
   tft.println(regA[0]);
   //ECO SHIFT
-  if(regA[1] == "UP") tft.fillTriangle(w - 80, 12, w - 70, 35, w - 90, 35, ILI9341_GREEN);
-  if(regA[1] == "DN") tft.fillTriangle(w - 90, 12, w - 70, 12, w - 80, 35, ILI9341_RED);
+  if(regA[1] == "UP") tft.fillTriangle(w - 80, 10, w - 70, 21, w - 90, 21, ILI9341_GREEN);
+  if(regA[1] == "DN") tft.fillTriangle(w - 90, 25, w - 70, 25, w - 80, 36, ILI9341_RED);
   //CLOCK
   tft.setCursor(12, 4);
   tft.setTextSize(2);
@@ -237,8 +244,6 @@ void printBottomBar() {
     int id = regC[0].toInt();
     uint16_t alertBg = ILI9341_CYAN;
     uint16_t alertFg = ILI9341_BLACK;
-    String alertText1 = "";
-    String alertText2 = "";
     if(id >= 10 && id < 20) {
       alertBg = ILI9341_ORANGE;
       alertFg = ILI9341_BLACK;
@@ -246,15 +251,12 @@ void printBottomBar() {
       alertBg = ILI9341_RED;
       alertFg = ILI9341_WHITE;
     }
-    switch(id) {
-      case 31: alertText1 = "Brake low"; alertText2 = "pressure!"; break;
-    }
     tft.fillRect(11, h - 70, w - 16, 55, alertBg);
     tft.setTextColor(alertFg);
     tft.setCursor(17, h - 64);
-    tft.println(alertText1);
+    tft.println(getAlertText(id, true));
     tft.setCursor(17, h - 38);
-    tft.println(alertText2);
+    tft.println(getAlertText(id, false));
   }
 }
 
@@ -318,7 +320,7 @@ void setup() {
   resetGauges();
 
   updateBacklights("00001");
-  updateRegistry(1, "11_DN_17:03_80_");
+  updateRegistry(1, "11_OK_17:03_80_");
   updateRegistry(3, "0_2_5_180000_80");
   printLcd(3);
 }
