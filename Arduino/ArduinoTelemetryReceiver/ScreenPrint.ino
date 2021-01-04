@@ -22,6 +22,11 @@ void printLcd(int id) {
       printParam(2, getAssistantType("2"), false);
       printParam(4, getAssistantType("3"), false);
       break;
+    case 5: //JOB
+      printParam(0, getAssistantType("4"), false);
+      printParam(2, "Source", false);
+      printParam(4, "Destination", false);
+      break;
   }
   clearValuesRequired = false;
 }
