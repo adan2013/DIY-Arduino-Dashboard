@@ -10,6 +10,8 @@ namespace ArduinoDashboardInterpreter
 {
     public class ScreenController
     {
+        #region "ENUMS"
+
         public enum ScreenType
         {
             ClearBlack,
@@ -27,8 +29,6 @@ namespace ArduinoDashboardInterpreter
             Customization,
             Acceleration
         }
-
-        #region "ENUMS"
 
         public enum AssistantValueType
         {
@@ -152,7 +152,7 @@ namespace ArduinoDashboardInterpreter
         public string trailerMass = "0 kg";
         public string trailerAttached = "0";
         public int menuCursorPosition = 0;
-        public string menuCheckboxs = "";
+        public string menuCurrentValue = "";
         public int currentSpeed = 0;
         public int accelerationTargetSpeed = 0;
         public Stopwatch accelerationTimer;
@@ -286,20 +286,30 @@ namespace ArduinoDashboardInterpreter
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
                     break;
                 case ScreenType.SettingsMenu:
-                    menuCheckboxs
-                        = (settings.GetOptionValue(Settings.OptionType.Sound) ? "1" : "0")
-                        + (settings.GetOptionValue(Settings.OptionType.Clock24h) ? "1" : "0")
-                        + (settings.GetOptionValue(Settings.OptionType.RealTimeClock) ? "1" : "0")
-                        + (settings.GetOptionValue(Settings.OptionType.EcoShift) ? "1" : "0")
-                        + (settings.GetOptionValue(Settings.OptionType.SpeedLimitWarning) ? "1" : "0");
+                    switch((SettingsMenuItems)menuCursorPosition)
+                    {
+                        case SettingsMenuItems.Back: menuCurrentValue = ""; break;
+                        case SettingsMenuItems.Sound: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.Sound) ? "YES" : "NO"; break;
+                        case SettingsMenuItems.Clock24h: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.Clock24h) ? "YES" : "NO"; break;
+                        case SettingsMenuItems.RealTimeClock: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.RealTimeClock) ? "YES" : "NO"; break;
+                        case SettingsMenuItems.EcoShift: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.EcoShift) ? "YES" : "NO"; break;
+                        case SettingsMenuItems.SpeedLimitWarning: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.SpeedLimitWarning) ? "YES" : "NO"; break;
+                    }
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, menuCheckboxs);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, menuCurrentValue);
                     break;
                 case ScreenType.Customization:
+                    switch ((CustomizationMenuItems)menuCursorPosition)
+                    {
+                        case CustomizationMenuItems.InitImage: menuCurrentValue = settings.GetInitialImageName(); break;
+                        case CustomizationMenuItems.AssistantType1: menuCurrentValue = settings.GetAssistantTypeName(settings.GetAssistantType1()); break;
+                        case CustomizationMenuItems.AssistantType2: menuCurrentValue = settings.GetAssistantTypeName(settings.GetAssistantType2()); break;
+                        case CustomizationMenuItems.AssistantType3: menuCurrentValue = settings.GetAssistantTypeName(settings.GetAssistantType3()); break;
+                        case CustomizationMenuItems.AssistantType4: menuCurrentValue = settings.GetAssistantTypeName(settings.GetAssistantType4()); break;
+
+                    }
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, ((int)settings.GetInitialImage()).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, ((int)settings.GetAssistantType1()).ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, ((int)settings.GetAssistantType2()).ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, menuCurrentValue);
                     break;
                 case ScreenType.Acceleration:
                     switch ((AccelerationScreenState)menuCursorPosition)
@@ -412,7 +422,9 @@ namespace ArduinoDashboardInterpreter
                     {
                         case CustomizationMenuItems.InitImage: menuCursorPosition = (int)CustomizationMenuItems.AssistantType1; break;
                         case CustomizationMenuItems.AssistantType1: menuCursorPosition = (int)CustomizationMenuItems.AssistantType2; break;
-                        case CustomizationMenuItems.AssistantType2: SwitchScreen(ScreenType.MainMenu, (int)MainMenuItems.Customization); break;
+                        case CustomizationMenuItems.AssistantType2: menuCursorPosition = (int)CustomizationMenuItems.AssistantType3; break;
+                        case CustomizationMenuItems.AssistantType3: menuCursorPosition = (int)CustomizationMenuItems.AssistantType4; break;
+                        case CustomizationMenuItems.AssistantType4: SwitchScreen(ScreenType.MainMenu, (int)MainMenuItems.Customization); break;
                     }
                     break;
                 case ScreenType.Acceleration:

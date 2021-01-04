@@ -215,6 +215,44 @@ namespace ArduinoDashboardInterpreter
         public ScreenController.AssistantValueType GetAssistantType3() => assistantType3;
 
         public ScreenController.AssistantValueType GetAssistantType4() => assistantType4;
+
+        public String GetInitialImageName()
+        {
+            switch (GetInitialImage())
+            {
+                case ScreenController.InitialImageType.ScsSoftware: return "SCS Software";
+                case ScreenController.InitialImageType.Redark: return "Redark";
+                case ScreenController.InitialImageType.Daf: return "Daf";
+                case ScreenController.InitialImageType.Man: return "Man";
+                case ScreenController.InitialImageType.Mercedes: return "Mercedes";
+                case ScreenController.InitialImageType.Renault: return "Renault";
+                case ScreenController.InitialImageType.Scania: return "Scania";
+                case ScreenController.InitialImageType.Volvo: return "Volvo";
+                default: return "";
+            }
+        }
+
+        public String GetAssistantTypeName(ScreenController.AssistantValueType type)
+        {
+            switch(type)
+            {
+                case ScreenController.AssistantValueType.Off: return "OFF";
+                case ScreenController.AssistantValueType.NavTime: return "Nav Time";
+                case ScreenController.AssistantValueType.NavDistance: return "Nav distance";
+                case ScreenController.AssistantValueType.RestTime: return "Rest time";
+                case ScreenController.AssistantValueType.JobDeliveryTime: return "Job delivery time";
+                case ScreenController.AssistantValueType.AirPressure: return "Air pressure";
+                case ScreenController.AssistantValueType.OilTemperature: return "Oil temperature";
+                case ScreenController.AssistantValueType.OilPressure: return "Oil pressure";
+                case ScreenController.AssistantValueType.WaterTemperature: return "Water temperature";
+                case ScreenController.AssistantValueType.Battery: return "Battery";
+                case ScreenController.AssistantValueType.FuelLeft: return "Fuel left";
+                case ScreenController.AssistantValueType.FuelAvg: return "Fuel average";
+                case ScreenController.AssistantValueType.FuelRange: return "Fuel range";
+                case ScreenController.AssistantValueType.CurrentSpeed: return "Speed";
+                default: return "";
+            }
+        }
         #endregion
     }
 }

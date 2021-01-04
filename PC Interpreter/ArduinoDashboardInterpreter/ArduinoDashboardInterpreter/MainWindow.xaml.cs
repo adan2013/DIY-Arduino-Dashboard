@@ -294,11 +294,11 @@ namespace ArduinoDashboardInterpreter
 
         private void UpdateCustomizationButtons()
         {
-            CustomizationInitImage.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "INIT IMAGE:\n" + settings.GetInitialImage() };
-            CustomizationAssistantType1.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 1:\n" + settings.GetAssistantType1() };
-            CustomizationAssistantType2.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 2:\n" + settings.GetAssistantType2() };
-            CustomizationAssistantType3.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 3:\n" + settings.GetAssistantType3() };
-            CustomizationAssistantType4.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 4:\n" + settings.GetAssistantType4() };
+            CustomizationInitImage.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "INIT IMAGE:\n" + settings.GetInitialImageName() };
+            CustomizationAssistantType1.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 1:\n" + settings.GetAssistantTypeName(settings.GetAssistantType1()) };
+            CustomizationAssistantType2.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 2:\n" + settings.GetAssistantTypeName(settings.GetAssistantType2()) };
+            CustomizationAssistantType3.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 3:\n" + settings.GetAssistantTypeName(settings.GetAssistantType3()) };
+            CustomizationAssistantType4.Content = new TextBlock() { TextAlignment = TextAlignment.Center, Text = "ASSISTANT 4:\n" + settings.GetAssistantTypeName(settings.GetAssistantType4()) };
         }
 
         private void CustomizationInitImage_Click(object sender, RoutedEventArgs e) => settings.SwitchInitialImage(1);
