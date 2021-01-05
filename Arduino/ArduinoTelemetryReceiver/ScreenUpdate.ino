@@ -89,10 +89,12 @@ void updateLcd() {
         tft.fillCircle(145 + i * 20, 109, 9, ILI9341_BLACK);
         tft.fillCircle(145 + i * 20, 109, 7, color);
       }
+      tft.setTextColor(ILI9341_LIGHTGREY);
       printParam(4, "Damage", false);
       printParam(5, "Mass", false);
       printParam(6, "Lift axle", false);
       printParam(7, "Attached", false);
+      tft.setTextColor(ILI9341_WHITE);
       tft.setTextWrap(false);
       printParam(3, regB[2], false);
       tft.setTextWrap(true);
