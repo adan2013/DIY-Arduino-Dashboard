@@ -15,7 +15,6 @@
 #define BACKLIGHT_RS 9
 #define BACKLIGHT_LCD 8
 
-#define MOTOR_LATENCY 4
 #define MOTOR_BIG_STEPS 600
 #define MOTOR_BIG_SPEED 60
 #define MOTOR_SMALL_STEPS 210
@@ -128,7 +127,7 @@ void updateGauges(String state) {
 void moveMotors() {
   for(int i = 0; i < 4; i++) {
     int diff = gaugeCurrentStep[i] - gaugeTargetStep[i];
-    if(abs(diff) >= MOTOR_LATENCY) {
+    if(diff != 0) {
       diff = diff > 0 ? 1 : -1;
       switch(i) {
         case 0: gaugeMotorA.step(diff); break;
