@@ -4,9 +4,16 @@ void printLcd(int id) {
   switch(id) {
     case 2: //INITIAL IMAGE
     {
-      tft.setCursor(40, 40);
-      tft.setTextSize(5);
-      tft.println("HELLO"); // TODO PLACEHOLDER, REPLACE BY INIT IMAGE
+      switch(regB[0].toInt()) {
+        case 1: tft.drawBitmap(w / 2 - 40, h / 2 - 45, redarkImage, 90, 90, ILI9341_WHITE); break;
+        case 2: tft.drawBitmap(w / 2 - 60, h / 2 - 15, dafImage, 130, 30, ILI9341_WHITE); break;
+        case 3: tft.drawBitmap(w / 2 - 60, h / 2 - 15, manImage, 130, 30, ILI9341_WHITE); break;
+        case 4: tft.drawBitmap(w / 2 - 40, h / 2 - 45, mercedesImage, 90, 90, ILI9341_WHITE); break;
+        case 5: tft.drawBitmap(w / 2 - 40, h / 2 - 45, renaultImage, 90, 90, ILI9341_WHITE); break;
+        case 6: tft.drawBitmap(w / 2 - 40, h / 2 - 45, scaniaImage, 90, 90, ILI9341_WHITE); break;
+        case 7: tft.drawBitmap(w / 2 - 40, h / 2 - 45, volvoImage, 90, 90, ILI9341_WHITE); break;
+        default: tft.drawBitmap(w / 2 - 40, h / 2 - 45, scsImage, 90, 90, ILI9341_WHITE); break;
+      }
     }
       break;
     case 3: //ASSISTANT
