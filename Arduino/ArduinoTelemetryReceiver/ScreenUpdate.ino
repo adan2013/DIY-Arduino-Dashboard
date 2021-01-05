@@ -126,9 +126,24 @@ void updateLcd() {
         printParam(8, "Current: " + regB[1], false);
         tft.setTextColor(ILI9341_WHITE);
       }
-      printMenuNavHint(regB[0] == "0" ? "L/R-move | OK-exit" : "L/R-move | OK-switch");
+      printMenuNavHint(regB[0] == "0" ? "L/R-move | OK-exit" : "L/R-move | OK-change");
     }
       break;
+    case 12: //CUSTOMIZATION
+    {
+      if(clearValuesRequired) { clearParam(2); clearParam(5); }
+      String optName = "Initial image";
+      if(regB[0] == "1") { optName = "Assistant 1";
+      }else if(regB[0] == "2") { optName = "Assistant 2";
+      }else if(regB[0] == "3") { optName = "Assistant 3";
+      }else if(regB[0] == "4") { optName = "Assistant 4"; }
+      tft.setTextColor(ILI9341_YELLOW);
+      printParam(2, optName, true);
+      printParam(5, regB[1], true);
+      tft.setTextColor(ILI9341_WHITE);
+      printMenuNavHint(regB[0] == "4" ? "L/R-change | OK-exit" : "L/R-change | OK-next option");
+    }
+    break;
   }
   clearValuesRequired = true;
 }

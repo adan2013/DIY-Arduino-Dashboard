@@ -51,6 +51,12 @@ void printLcd(int id) {
       printParam(6, "AdBlue tank", false);
     }
       break;
+    case 12: //CUSTOMIZATION
+    {
+      printParam(1, "Option:", false);
+      printParam(4, "Value:", false);
+    }
+    break;
   }
   clearValuesRequired = false;
 }
