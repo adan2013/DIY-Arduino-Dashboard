@@ -291,11 +291,11 @@ namespace ArduinoDashboardInterpreter
                     switch((SettingsMenuItems)menuCursorPosition)
                     {
                         case SettingsMenuItems.Back: menuCurrentValue = ""; break;
-                        case SettingsMenuItems.Sound: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.Sound) ? "YES" : "NO"; break;
-                        case SettingsMenuItems.Clock24h: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.Clock24h) ? "YES" : "NO"; break;
-                        case SettingsMenuItems.RealTimeClock: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.RealTimeClock) ? "YES" : "NO"; break;
-                        case SettingsMenuItems.EcoShift: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.EcoShift) ? "YES" : "NO"; break;
-                        case SettingsMenuItems.SpeedLimitWarning: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.SpeedLimitWarning) ? "YES" : "NO"; break;
+                        case SettingsMenuItems.Sound: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.Sound) ? "Yes" : "No"; break;
+                        case SettingsMenuItems.Clock24h: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.Clock24h) ? "Yes" : "No"; break;
+                        case SettingsMenuItems.RealTimeClock: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.RealTimeClock) ? "Yes" : "No"; break;
+                        case SettingsMenuItems.EcoShift: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.EcoShift) ? "Yes" : "No"; break;
+                        case SettingsMenuItems.SpeedLimitWarning: menuCurrentValue = settings.GetOptionValue(Settings.OptionType.SpeedLimitWarning) ? "Yes" : "No"; break;
                     }
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, menuCurrentValue);

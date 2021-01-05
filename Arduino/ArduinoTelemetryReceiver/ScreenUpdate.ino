@@ -112,6 +112,23 @@ void updateLcd() {
       printMenuNavHint(regB[0] == "0" ? "L/R-move | OK-exit" : "L/R-move | OK-select");
     }
       break;
+    case 11: //SETTINGS
+    {
+      if(clearValuesRequired) clearParam(8);
+      printMenuItem(0, "Back", regB[0] == "0");
+      printMenuItem(1, "Sound", regB[0] == "1");
+      printMenuItem(2, "Clock 24h", regB[0] == "2");
+      printMenuItem(3, "Real time clock", regB[0] == "3");
+      printMenuItem(4, "Eco shift", regB[0] == "4");
+      printMenuItem(5, "Speed limit warn", regB[0] == "5");
+      if(regB[0] != "0") {
+        tft.setTextColor(ILI9341_YELLOW);
+        printParam(8, "Current: " + regB[1], false);
+        tft.setTextColor(ILI9341_WHITE);
+      }
+      printMenuNavHint(regB[0] == "0" ? "L/R-move | OK-exit" : "L/R-move | OK-switch");
+    }
+      break;
   }
   clearValuesRequired = true;
 }
