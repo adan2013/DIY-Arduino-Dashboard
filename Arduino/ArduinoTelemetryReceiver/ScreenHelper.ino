@@ -13,6 +13,15 @@ String getAlertText(int id, bool firstLine) {
   }
 }
 
+uint16_t getDiagnosticColor(int dmg) {
+  uint16_t color = ILI9341_DARKGREEN;
+  if(dmg >= 3 && dmg < 6) { color = ILI9341_GREEN;
+  }else if(dmg >= 6 && dmg < 9) { color = ILI9341_YELLOW;
+  }else if(dmg >= 9 && dmg < 12) { color = ILI9341_ORANGE;
+  }else if(dmg >= 12) { color = ILI9341_RED; }
+  return color;
+}
+
 String getAssistantType(String hexId) {
   int id = 0;
   if(hexId == "A") { id = 10;
@@ -51,6 +60,30 @@ String getTruckPartName(int id) {
   }
 }
 
+void printMenuNavHint(String text) {
+  int w = tft.width(), h = tft.height();
+  tft.fillRect(0, h - 33, w, 15, ILI9341_BLACK);
+  tft.setCursor(w - 20 - text.length() * 6, h - 30);
+  tft.setTextSize(1);
+  tft.println(text);
+}
+
+void printMenuItem(int row, String text, bool selected) {
+  if(text == "") return;
+  int w = tft.width();
+  int offsetY = 62 + row * 26;
+  uint16_t bg = ILI9341_BLACK;
+  tft.setCursor(36, offsetY + 5);
+  if(selected) {
+    bg = ILI9341_WHITE;
+    tft.setTextColor(ILI9341_BLACK);
+  }
+  tft.fillRect(0, offsetY, w, 26, bg);
+  if(selected) tft.fillTriangle(14, offsetY + 6, 28, offsetY + 13, 14, offsetY + 20, ILI9341_BLACK);
+  tft.println(text);
+  if(selected) tft.setTextColor(ILI9341_WHITE);
+}
+
 void clearParam(int row) {
   int offsetY = 62 + row * 22;
   tft.fillRect(0, offsetY, tft.width(), 22, ILI9341_BLACK);
@@ -58,10 +91,9 @@ void clearParam(int row) {
 
 void printParam(int row, String text, bool toRight) {
   if(text == "") return;
-  int w = tft.width(), h = tft.height();
   int offsetY = 62 + row * 22;
   if(toRight) {
-    tft.setCursor(w - 35 - text.length() * 10, offsetY);
+    tft.setCursor(tft.width() - 35 - text.length() * 10, offsetY);
   }else{
     tft.setCursor(18, offsetY);
   }

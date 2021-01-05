@@ -27,7 +27,8 @@ namespace ArduinoDashboardInterpreter
             MainMenu,
             SettingsMenu,
             Customization,
-            Acceleration
+            Acceleration,
+            Information
         }
 
         public enum AssistantValueType
@@ -77,7 +78,8 @@ namespace ArduinoDashboardInterpreter
             Back,
             Settings,
             Customization,
-            Acceleration
+            Acceleration,
+            Information
         }
 
         public enum SettingsMenuItems
@@ -436,6 +438,9 @@ namespace ArduinoDashboardInterpreter
                     {
                         SwitchScreen(ScreenType.MainMenu, (int)MainMenuItems.Acceleration);
                     }
+                    break;
+                case ScreenType.Information:
+                    SwitchScreen(ScreenType.MainMenu, (int)MainMenuItems.Information);
                     break;
             }
         }

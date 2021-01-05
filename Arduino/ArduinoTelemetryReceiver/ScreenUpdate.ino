@@ -2,47 +2,54 @@ void updateLcd() {
   int w = tft.width(), h = tft.height();
   switch(screenId) {
     case 1: //TESTING
+    {
       if(clearValuesRequired) clearLcd();
       tft.fillScreen(regB[0] == "0" ? ILI9341_RED : regB[0] == "1" ? ILI9341_GREEN : regB[0] == "2" ? ILI9341_BLUE : ILI9341_WHITE);
+    }
       break;
     case 3: //ASSISTANT
+    {
       if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
       printParam(1, regB[1], true);
       printParam(3, regB[2], true);
       printParam(5, regB[3], true);
       printParam(7, regB[4], true);
+    }
       break;
     case 4: //NAVIGATION
     case 5: //JOB
+    {
       if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); }
       printParam(1, regB[0], true);
       printParam(3, regB[1], true);
       printParam(5, regB[2], true);
+    }
       break;
     case 6: //ENGINE
+    {
       if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
       printParam(1, regB[0], true);
       printParam(3, regB[1], false);
       printParam(3, regB[2], true);
       printParam(5, regB[3], true);
       printParam(7, regB[4], true);
+    }
       break;
     case 7: //FUEL
+    {
       if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
       printParam(1, regB[1] + "/" + regB[1], true);
       printParam(3, regB[2], true);
       printParam(5, regB[3], true);
       printParam(7, regB[4], true);
+    }
       break;
     case 8: //TRUCK
+    {
       if(clearValuesRequired) clearCenterScreen();
       for(int i = 0; i < 5; i++) {
         int dmg = regB[i].toInt();
-        uint16_t color = ILI9341_DARKGREEN;
-        if(dmg >= 3 && dmg < 6) { color = ILI9341_GREEN;
-        }else if(dmg >= 6 && dmg < 9) { color = ILI9341_YELLOW;
-        }else if(dmg >= 9 && dmg < 12) { color = ILI9341_ORANGE;
-        }else if(dmg >= 12) { color = ILI9341_RED; }
+        uint16_t color = getDiagnosticColor(dmg);
         switch(i) {
           case 0: //cabin
             tft.fillRect(20, 70, 80, 105, color);
@@ -70,15 +77,12 @@ void updateLcd() {
         tft.setCursor(w - 120, 62 + i * 22);
         tft.println(getTruckPartName(i) + dmg + "%");
       }
+    }
       break;
     case 9: //TRAILER
+    {
       if(clearValuesRequired) clearCenterScreen();
-      int dmg = regB[0].toInt();
-      uint16_t color = ILI9341_DARKGREEN;
-      if(dmg >= 3 && dmg < 6) { color = ILI9341_GREEN;
-      }else if(dmg >= 6 && dmg < 9) { color = ILI9341_YELLOW;
-      }else if(dmg >= 9 && dmg < 12) { color = ILI9341_ORANGE;
-      }else if(dmg >= 12) { color = ILI9341_RED; }
+      uint16_t color = getDiagnosticColor(regB[0].toInt());
       tft.fillRect(45, 65, 155, 40, color);
       tft.fillRect(100, 105, 32, 5, color);
       for(int i = 0; i < 3; i++) {
@@ -96,6 +100,17 @@ void updateLcd() {
       printParam(5, regB[3], true);
       printParam(6, regB[1], true);
       printParam(7, regB[4], true);
+    }
+      break;
+    case 10: //MAIN MENU
+    {
+      printMenuItem(0, "Back", regB[0] == "0");
+      printMenuItem(1, "Settings", regB[0] == "1");
+      printMenuItem(2, "Customization", regB[0] == "2");
+      printMenuItem(3, "Acceleration", regB[0] == "3");
+      printMenuItem(4, "Information", regB[0] == "4");
+      printMenuNavHint(regB[0] == "0" ? "L/R-move | OK-exit" : "L/R-move | OK-select");
+    }
       break;
   }
   clearValuesRequired = true;
