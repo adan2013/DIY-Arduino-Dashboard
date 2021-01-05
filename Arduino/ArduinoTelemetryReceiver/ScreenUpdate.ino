@@ -1,6 +1,6 @@
-void updateLcd() {
-  printBars(false);
-  if(!regBchanged) return;
+void updateLcd(bool firstPrint) {
+  printBars(firstPrint);
+  if(!(firstPrint || regBchanged)) return;
   regBchanged = false;
   switch(screenId) {
     case 1: //TESTING

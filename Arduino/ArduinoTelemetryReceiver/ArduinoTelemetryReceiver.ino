@@ -216,7 +216,7 @@ void loop() {
     }else if(cmdType == "PRT") {
       printLcd(cmdData.toInt());
     }else if(cmdType == "UPD") {
-      updateLcd();
+      updateLcd(false);
     }
     serialDataIsReady = false;
     serialBuffer = "";

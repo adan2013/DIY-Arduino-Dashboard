@@ -22,8 +22,14 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             if (arduino.RegistryAModified) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryA, arduino.GetRegistryA());
             if (arduino.RegistryBModified) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryB, arduino.GetRegistryB());
             if (arduino.RegistryCModified) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryC, arduino.GetRegistryC());
-            if (arduino.ScreenIdModified) serial.SendPrintLcdCommand(arduino.Screen.ScreenId);
-            if (arduino.RegistryAModified || arduino.RegistryBModified || arduino.RegistryCModified) serial.SendUpdateLcdCommand();
+            if (arduino.ScreenIdModified)
+            {
+                serial.SendPrintLcdCommand(arduino.Screen.ScreenId);
+            }
+            else
+            {
+                if (arduino.RegistryAModified || arduino.RegistryBModified || arduino.RegistryCModified) serial.SendUpdateLcdCommand();
+            }
             arduino.MarkChangesAsUpdated();
             base.Loop(serial, arduino, settings);
         }

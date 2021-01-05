@@ -140,6 +140,7 @@
                     <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType2" Click="CustomizationAssistantType2_Click" HorizontalContentAlignment="Center">ASSISTANT 2</Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Margin="2" Width="120" Height="35" FontSize="11" Name="Placeholder" HorizontalContentAlignment="Center" Visibility="Hidden">PLACEHOLDER</Button>
                     <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType3" Click="CustomizationAssistantType3_Click" HorizontalContentAlignment="Center">ASSISTANT 3</Button>
                     <Button Margin="2" Width="120" Height="35" FontSize="11" Name="CustomizationAssistantType4" Click="CustomizationAssistantType4_Click" HorizontalContentAlignment="Center">ASSISTANT 4</Button>
                 </StackPanel>

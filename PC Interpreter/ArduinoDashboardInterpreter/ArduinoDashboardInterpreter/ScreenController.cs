@@ -406,6 +406,7 @@ namespace ArduinoDashboardInterpreter
                         case MainMenuItems.Settings: SwitchScreen(ScreenType.SettingsMenu); break;
                         case MainMenuItems.Customization: SwitchScreen(ScreenType.Customization); break;
                         case MainMenuItems.Acceleration: SwitchScreen(ScreenType.Acceleration); break;
+                        case MainMenuItems.Information: SwitchScreen(ScreenType.Information); break;
                     }
                     break;
                 case ScreenType.SettingsMenu:

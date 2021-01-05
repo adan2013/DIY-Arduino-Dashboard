@@ -1,7 +1,6 @@
 void printLcd(int id) {
   screenId = id;
   clearLcd();
-  printBars(true);
   switch(id) {
     case 2: //INITIAL IMAGE
     {
@@ -77,4 +76,5 @@ void printLcd(int id) {
   }
   tft.setTextColor(ILI9341_WHITE);
   clearValuesRequired = false;
+  updateLcd(true);
 }
