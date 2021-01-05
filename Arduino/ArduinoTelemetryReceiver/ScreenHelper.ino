@@ -3,7 +3,7 @@ void clearLcd() {
 }
 
 void clearCenterScreen() {
-  tft.fillRect(0, 52, tft.width(), 190, ILI9341_BLACK);
+  tft.fillRect(0, 52, w, 190, ILI9341_BLACK);
 }
 
 String getAlertText(int id, bool firstLine) {
@@ -61,7 +61,6 @@ String getTruckPartName(int id) {
 }
 
 void printMenuNavHint(String text) {
-  int w = tft.width(), h = tft.height();
   tft.fillRect(0, h - 33, w, 15, ILI9341_BLACK);
   tft.setCursor(w - 20 - text.length() * 6, h - 30);
   tft.setTextSize(1);
@@ -71,7 +70,6 @@ void printMenuNavHint(String text) {
 
 void printMenuItem(int row, String text, bool selected) {
   if(text == "") return;
-  int w = tft.width();
   int offsetY = 62 + row * 26;
   uint16_t bg = ILI9341_BLACK;
   tft.setCursor(36, offsetY + 5);
@@ -87,14 +85,14 @@ void printMenuItem(int row, String text, bool selected) {
 
 void clearParam(int row) {
   int offsetY = 62 + row * 22;
-  tft.fillRect(0, offsetY, tft.width(), 22, ILI9341_BLACK);
+  tft.fillRect(0, offsetY, w, 22, ILI9341_BLACK);
 }
 
 void printParam(int row, String text, bool toRight) {
   if(text == "") return;
   int offsetY = 62 + row * 22;
   if(toRight) {
-    tft.setCursor(tft.width() - 35 - text.length() * 10, offsetY);
+    tft.setCursor(w - 35 - text.length() * 10, offsetY);
   }else{
     tft.setCursor(18, offsetY);
   }
@@ -102,7 +100,6 @@ void printParam(int row, String text, bool toRight) {
 }
 
 void printTopBar() {
-  int w = tft.width(), h = tft.height();
   tft.fillRect(5, 2, w - 5, 44, ILI9341_BLACK);
   //GEAR
   tft.drawRect(w - 60, 4, 55, 40, ILI9341_WHITE);
@@ -129,7 +126,6 @@ void printTopBar() {
 }
 
 void printBottomBar() {
-  int w = tft.width(), h = tft.height();
   tft.fillRect(5, h - 80, w - 5, 72, ILI9341_BLACK);
   //SEPARATOR
   tft.drawLine(11, h - 76, w - 6, h - 76, ILI9341_WHITE);

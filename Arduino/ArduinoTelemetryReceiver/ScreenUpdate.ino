@@ -1,5 +1,4 @@
 void updateLcd() {
-  int w = tft.width(), h = tft.height();
   switch(screenId) {
     case 1: //TESTING
     {

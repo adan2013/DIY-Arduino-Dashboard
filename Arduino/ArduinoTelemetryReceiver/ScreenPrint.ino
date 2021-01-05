@@ -1,7 +1,6 @@
 void printLcd(int id) {
   screenId = id;
   clearLcd();
-  int w = tft.width(), h = tft.height();
   if(id > 2) {
     printTopBar();
     tft.drawLine(11, 50, w - 6, 50, ILI9341_WHITE);

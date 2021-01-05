@@ -40,6 +40,8 @@ String backlightState = "00000";
 int currentBacklightDuty = 0;
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+int w;
+int h;
 String regA[5];
 String regB[5];
 String regC[5];
@@ -176,6 +178,8 @@ void setup() {
   //LCD
   tft.begin();
   tft.setRotation(0);
+  w = tft.width();
+  h = tft.height();
   //LED CONTROLLER
   ledController.begin();
   for(int i = 0; i < 16; i++) ledController.pinMode(i, OUTPUT);
