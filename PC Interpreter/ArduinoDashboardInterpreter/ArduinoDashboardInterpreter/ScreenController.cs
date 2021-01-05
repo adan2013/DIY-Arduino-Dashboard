@@ -174,6 +174,20 @@ namespace ArduinoDashboardInterpreter
             SwitchScreen(ScreenType.ClearBlack);
         }
 
+        private String getAssistantHexValue(AssistantValueType value)
+        {
+            switch((int)value)
+            {
+                case 10: return "A";
+                case 11: return "B";
+                case 12: return "C";
+                case 13: return "D";
+                case 14: return "E";
+                case 15: return "F";
+                default: return ((int)value).ToString();
+            }
+        }
+
         public bool SwitchScreen(ScreenType newScreen, int initialCursorPosition = 0)
         {
             if(ScreenId != newScreen)
@@ -236,10 +250,10 @@ namespace ArduinoDashboardInterpreter
                     break;
                 case ScreenType.Assistant:
                     String types
-                        = settings.GetAssistantType1().ToString("X")
-                        + settings.GetAssistantType2().ToString("X")
-                        + settings.GetAssistantType3().ToString("X")
-                        + settings.GetAssistantType4().ToString("X");
+                        = getAssistantHexValue(settings.GetAssistantType1())
+                        + getAssistantHexValue(settings.GetAssistantType2())
+                        + getAssistantHexValue(settings.GetAssistantType3())
+                        + getAssistantHexValue(settings.GetAssistantType4());
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, types);
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, GetAssistantValueByType(settings.GetAssistantType1()));
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, GetAssistantValueByType(settings.GetAssistantType2()));
