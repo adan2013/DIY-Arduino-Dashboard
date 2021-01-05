@@ -99,8 +99,10 @@ void printParam(int row, String text, bool toRight) {
   tft.println(text);
 }
 
-void printTopBar() {
-  tft.fillRect(5, 2, w - 5, 44, ILI9341_BLACK);
+void printTopBar(bool firstPrint) {
+  if(!(firstPrint || regAchanged)) return;
+  if(!firstPrint) tft.fillRect(5, 2, w - 5, 44, ILI9341_BLACK);
+  regAchanged = false;
   //GEAR
   tft.drawRect(w - 60, 4, 55, 40, ILI9341_WHITE);
   tft.setCursor(w - (regA[0].length() < 2 ? 40 : 50), 13);
@@ -125,8 +127,10 @@ void printTopBar() {
   }
 }
 
-void printBottomBar() {
-  tft.fillRect(5, h - 80, w - 5, 72, ILI9341_BLACK);
+void printBottomBar(bool firstPrint) {
+  if(!(firstPrint || regCchanged)) return;
+  if(!firstPrint) tft.fillRect(5, h - 80, w - 5, 72, ILI9341_BLACK);
+  regCchanged = false;
   //SEPARATOR
   tft.drawLine(11, h - 76, w - 6, h - 76, ILI9341_WHITE);
   if(regC[0] == "0") {
@@ -173,4 +177,12 @@ void printBottomBar() {
     tft.setCursor(18, h - 38);
     tft.println(getAlertText(id, false));
   }
+}
+
+void printBars(bool firstPrint) {
+  if(screenId > 2) {
+    printTopBar(firstPrint);
+    tft.drawLine(11, 50, w - 6, 50, ILI9341_WHITE);
+  }
+  if(screenId > 2 && screenId < 10) printBottomBar(firstPrint);
 }

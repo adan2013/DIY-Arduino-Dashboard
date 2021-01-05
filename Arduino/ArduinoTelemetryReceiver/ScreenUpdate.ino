@@ -1,4 +1,7 @@
 void updateLcd() {
+  printBars(false);
+  if(!regBchanged) return;
+  regBchanged = false;
   switch(screenId) {
     case 1: //TESTING
     {

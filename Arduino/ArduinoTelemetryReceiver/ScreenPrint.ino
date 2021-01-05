@@ -1,11 +1,7 @@
 void printLcd(int id) {
   screenId = id;
   clearLcd();
-  if(id > 2) {
-    printTopBar();
-    tft.drawLine(11, 50, w - 6, 50, ILI9341_WHITE);
-  }
-  if(id > 2 && id < 10) printBottomBar();
+  printBars(true);
   switch(id) {
     case 2: //INITIAL IMAGE
     {
