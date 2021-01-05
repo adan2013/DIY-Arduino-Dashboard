@@ -56,7 +56,14 @@ void printLcd(int id) {
       printParam(1, "Option:", false);
       printParam(4, "Value:", false);
     }
-    break;
+      break;
+    case 13: //ACCELERATION
+    {
+      printParam(3, "Current Speed:", false);
+      printParam(5, "Target Speed:", false);
+      printParam(7, "Time:", false);
+    }
+      break;
   }
   clearValuesRequired = false;
 }

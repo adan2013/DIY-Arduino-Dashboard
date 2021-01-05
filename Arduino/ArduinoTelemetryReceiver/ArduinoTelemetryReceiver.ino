@@ -197,9 +197,9 @@ void setup() {
   //TEST
   updateBacklights("00001");
   updateRegistry(1, "4_OK_17:03_80_");
-  updateRegistry(2, "0_Job deliv. time_Drewno_1300_Yes");
+  updateRegistry(2, "4_14_100_01:43:458_");
   updateRegistry(3, "0_2_5_180000_80");
-  printLcd(12);
+  printLcd(13);
   updateLcd();
 }
 

@@ -66,6 +66,7 @@ void printMenuNavHint(String text) {
   tft.setCursor(w - 20 - text.length() * 6, h - 30);
   tft.setTextSize(1);
   tft.println(text);
+  tft.setTextSize(2);
 }
 
 void printMenuItem(int row, String text, bool selected) {

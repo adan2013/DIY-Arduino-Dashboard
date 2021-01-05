@@ -143,7 +143,59 @@ void updateLcd() {
       tft.setTextColor(ILI9341_WHITE);
       printMenuNavHint(regB[0] == "4" ? "L/R-change | OK-exit" : "L/R-change | OK-next option");
     }
-    break;
+      break;
+    case 13: //ACCELERATION
+    {
+      if(clearValuesRequired) { clearParam(1); clearParam(4); clearParam(6); clearParam(8); }
+      tft.setTextColor(ILI9341_YELLOW);
+      switch(regB[0].toInt()) {
+        case 0: //select target speed
+          printParam(1, "Select t. speed", false);
+          tft.setTextColor(ILI9341_WHITE);
+          printParam(4, regB[1] + "km/h", true);
+          tft.setTextColor(ILI9341_YELLOW);
+          printParam(6, regB[2] + "km/h", true);
+          tft.setTextColor(ILI9341_WHITE);
+          printParam(8, "--:--:---", true);
+          printMenuNavHint("L/R-change | OK-confirm");
+          break;
+        case 1: //waiting for stop
+          printParam(1, "Stop the truck", false);
+          tft.setTextColor(ILI9341_WHITE);
+          printParam(4, regB[1] + "km/h", true);
+          printParam(6, regB[2] + "km/h", true);
+          printParam(8, "--:--:---", true);
+          printMenuNavHint("OK-cancel");
+          break;
+        case 2: //waiting for start
+          printParam(1, "Ready to go", false);
+          tft.setTextColor(ILI9341_WHITE);
+          printParam(4, regB[1] + "km/h", true);
+          printParam(6, regB[2] + "km/h", true);
+          printParam(8, "--:--:---", true);
+          printMenuNavHint("OK-canel");
+          break;
+        case 3: //measuring
+          printParam(1, "MEASURING...", false);
+          printParam(4, regB[1] + "km/h", true);
+          tft.setTextColor(ILI9341_WHITE);
+          printParam(6, regB[2] + "km/h", true);
+          printParam(8, "--:--:---", true);
+          printMenuNavHint("OK-cancel");
+          break;
+        case 4: //time display
+          printParam(1, "Finished!", false);
+          tft.setTextColor(ILI9341_WHITE);
+          printParam(4, regB[1] + "km/h", true);
+          printParam(6, regB[2] + "km/h", true);
+          tft.setTextColor(ILI9341_YELLOW);
+          printParam(8, regB[3], true);
+          tft.setTextColor(ILI9341_WHITE);
+          printMenuNavHint("OK-exit");
+          break;
+      }
+    }
+      break;
   }
   clearValuesRequired = true;
 }
