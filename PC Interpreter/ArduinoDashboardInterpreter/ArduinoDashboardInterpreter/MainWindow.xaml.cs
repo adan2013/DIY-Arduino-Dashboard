@@ -237,6 +237,7 @@ namespace ArduinoDashboardInterpreter
 
         public void SetNewProgram(ProgramType newProgram)
         {
+            if (program is TelemetryLoop) ((TelemetryLoop)program).ShutDownTelemetryServer();
             switch(newProgram)
             {
                 case ProgramType.Home: program = new HomeLoop(serial, arduino, settings); break;

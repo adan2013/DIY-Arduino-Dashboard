@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SCSSdkClient">
+      <HintPath>.\SCSSdkClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -74,6 +77,7 @@
     <Compile Include="ScreenController.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="TelemetryReceiver.cs" />
     <Compile Include="WaitForKey.xaml.cs">
       <DependentUpon>WaitForKey.xaml</DependentUpon>
     </Compile>
