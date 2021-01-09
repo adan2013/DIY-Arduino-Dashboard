@@ -67,7 +67,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 
         private bool EngineRunning() => telemetry.TruckValues.CurrentValues.EngineEnabled;
 
-        private bool DashboardLightsOn() => telemetry.TruckValues.CurrentValues.LightsValues.BeamLow; //TODO dashboard backlight
+        private bool DashboardLightsOn() => telemetry.TruckValues.CurrentValues.LightsValues.Parking;
 
         private bool LowLightsOn() => telemetry.TruckValues.CurrentValues.LightsValues.BeamLow;
 
@@ -191,7 +191,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.battery = Math.Round(telemetry.TruckValues.CurrentValues.DashboardValues.BatteryVoltage, 1) + " V";
             arduino.Screen.fuelLeft = ((int)telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount).ToString();
             arduino.Screen.fuelCapacity = ((int)telemetry.TruckValues.ConstantsValues.CapacityValues.Fuel).ToString();
-            arduino.Screen.fuelAvgConsumption = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption, "L/100km");
+            arduino.Screen.fuelAvgConsumption = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption * 100, "L/100km");
             arduino.Screen.fuelRange = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Range, "km");
             arduino.Screen.adblue = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.AdBlue, "L");
             arduino.Screen.damageEngine = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.Engine * 100).ToString();
