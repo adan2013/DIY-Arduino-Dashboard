@@ -179,7 +179,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.ccSpeed = telemetry.TruckValues.CurrentValues.DashboardValues.CruiseControl ? (int)Math.Round(telemetry.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph) : 0;
             // REG B
             arduino.Screen.navTime = FormatScreenTimeValue(telemetry.NavigationValues.NavigationTime);
-            arduino.Screen.navDistance = FormatScreenValue(telemetry.NavigationValues.NavigationDistance, "km");
+            arduino.Screen.navDistance = FormatScreenValue(telemetry.NavigationValues.NavigationDistance / 1000, "km");
             arduino.Screen.restTime = FormatScreenTimeValue(telemetry.CommonValues.NextRestStop.Value);
             arduino.Screen.jobDeliveryTime = FormatScreenTimeValue(telemetry.JobValues.DeliveryTime.Value);
             arduino.Screen.jobSource = telemetry.JobValues.CitySource;
@@ -188,18 +188,18 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.oilTemperature = (int)telemetry.TruckValues.CurrentValues.DashboardValues.OilTemperature + " C";
             arduino.Screen.oilPressure = (int)telemetry.TruckValues.CurrentValues.DashboardValues.OilPressure + " bar";
             arduino.Screen.waterTemperature = (int)telemetry.TruckValues.CurrentValues.DashboardValues.WaterTemperature + " C";
-            arduino.Screen.battery = telemetry.TruckValues.CurrentValues.DashboardValues.BatteryVoltage + " V";
+            arduino.Screen.battery = Math.Round(telemetry.TruckValues.CurrentValues.DashboardValues.BatteryVoltage, 1) + " V";
             arduino.Screen.fuelLeft = ((int)telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount).ToString();
             arduino.Screen.fuelCapacity = ((int)telemetry.TruckValues.ConstantsValues.CapacityValues.Fuel).ToString();
             arduino.Screen.fuelAvgConsumption = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption, "L/100km");
             arduino.Screen.fuelRange = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Range, "km");
             arduino.Screen.adblue = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.AdBlue, "L");
-            arduino.Screen.damageEngine = ((int)telemetry.TruckValues.CurrentValues.DamageValues.Engine).ToString();
-            arduino.Screen.damageTransmission = ((int)telemetry.TruckValues.CurrentValues.DamageValues.Transmission).ToString();
-            arduino.Screen.damageCabin = ((int)telemetry.TruckValues.CurrentValues.DamageValues.Cabin).ToString();
-            arduino.Screen.damageChassis = ((int)telemetry.TruckValues.CurrentValues.DamageValues.Chassis).ToString();
-            arduino.Screen.damageWheels = ((int)telemetry.TruckValues.CurrentValues.DamageValues.WheelsAvg).ToString();
-            arduino.Screen.trailerDamage = ((int)telemetry.JobValues.CargoValues.CargoDamage).ToString();
+            arduino.Screen.damageEngine = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.Engine * 100).ToString();
+            arduino.Screen.damageTransmission = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.Transmission * 100).ToString();
+            arduino.Screen.damageCabin = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.Cabin * 100).ToString();
+            arduino.Screen.damageChassis = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.Chassis * 100).ToString();
+            arduino.Screen.damageWheels = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.WheelsAvg * 100).ToString();
+            arduino.Screen.trailerDamage = Math.Round(telemetry.JobValues.CargoValues.CargoDamage * 100).ToString();
             arduino.Screen.trailerLiftAxle = CheckTrailerLiftAxle() ? "Yes" : "No";
             arduino.Screen.trailerName = telemetry.JobValues.CargoValues.Name;
             arduino.Screen.trailerMass = FormatScreenValue(telemetry.JobValues.CargoValues.Mass, "kg");
