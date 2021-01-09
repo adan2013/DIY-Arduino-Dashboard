@@ -180,7 +180,7 @@ void printBottomBar(bool firstPrint) {
 }
 
 void printBars(bool firstPrint) {
-  if(screenId > 2) {
+  if(screenId > 2 && screenId != 15) {
     printTopBar(firstPrint);
     tft.drawLine(11, 50, w - 6, 50, ILI9341_WHITE);
   }

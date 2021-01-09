@@ -80,6 +80,13 @@ void printLcd(int id) {
       printMenuNavHint("OK-exit");
     }
       break;
+    case 15: //TELEMETRY NOT CONNECTED
+    {
+      tft.setTextSize(2);
+      printParam(0, "Telemetry", false);
+      printParam(1, "not connected!", false);
+    }
+      break;
   }
   tft.setTextColor(ILI9341_WHITE);
   clearValuesRequired = false;

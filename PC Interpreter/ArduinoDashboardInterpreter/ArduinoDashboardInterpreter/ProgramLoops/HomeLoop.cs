@@ -14,10 +14,10 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
         public override void Start(ComConnector serial, ArduinoController arduino, Settings settings)
         {
             //RESET
-            arduino.SetDefaultLedState();
-            arduino.SetDefaultBacklightState();
-            arduino.SetDefaultGaugePosition();
-            arduino.SetDefaultLcdState();
+            arduino.SetDefaultLedState(true);
+            arduino.SetDefaultBacklightState(true);
+            arduino.SetDefaultGaugePosition(true);
+            arduino.SetDefaultLcdState(true);
             //SENDING
             serial.SendLedUpdate(arduino.GetLedFullState());
             serial.SendBacklightUpdate(arduino.GetBacklightFullState());

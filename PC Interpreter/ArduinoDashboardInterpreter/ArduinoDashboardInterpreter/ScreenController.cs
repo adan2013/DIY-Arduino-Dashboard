@@ -28,7 +28,8 @@ namespace ArduinoDashboardInterpreter
             SettingsMenu,
             Customization,
             Acceleration,
-            Information
+            Information,
+            TelemetryNotConnected
         }
 
         public enum AssistantValueType
@@ -138,8 +139,8 @@ namespace ArduinoDashboardInterpreter
         public string oilPressure = "";
         public string waterTemperature = "";
         public string battery = "0.0 V";
-        public string fuelLeft = "0 L";
-        public string fuelCapacity = "0 L";
+        public string fuelLeft = "0";
+        public string fuelCapacity = "0";
         public string fuelAvgConsumption = "0 L/100km";
         public string fuelRange = "0 km";
         public string adblue = "0";
@@ -148,11 +149,11 @@ namespace ArduinoDashboardInterpreter
         public string damageCabin = "0";
         public string damageChassis = "0";
         public string damageWheels = "0";
-        public string trailerDamage = "0%";
+        public string trailerDamage = "0";
         public string trailerLiftAxle = "0";
         public string trailerName = "";
         public string trailerMass = "0 kg";
-        public string trailerAttached = "0";
+        public string trailerAttached = "No";
         public int menuCursorPosition = 0;
         public string menuCurrentValue = "";
         public int currentSpeed = 0;
@@ -233,7 +234,7 @@ namespace ArduinoDashboardInterpreter
 
         public void Loop()
         {
-            if((int)ScreenId > 2)
+            if ((int)ScreenId > 2 && ScreenId != ScreenType.TelemetryNotConnected)
             {
                 arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 0, gear);
                 arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryA, 1, ecoShift);

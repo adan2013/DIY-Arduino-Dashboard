@@ -23,9 +23,9 @@ namespace ArduinoDashboardInterpreter
         public event GaugePositionChangedDelegate GaugePositionChanged;
 
         public ScreenController Screen;
-        string[] RegistryA;
-        string[] RegistryB;
-        string[] RegistryC;
+        string[] RegistryA = new string[5];
+        string[] RegistryB = new string[5];
+        string[] RegistryC = new string[5];
         public delegate void LcdDataChangedDelegate(ScreenController.ScreenType id, string[] regA, string[] regB, string[] regC);
         public event LcdDataChangedDelegate LcdDataChanged;
 
@@ -41,7 +41,7 @@ namespace ArduinoDashboardInterpreter
         {
             Screen = new ScreenController(this, settingsManager);
             Screen.ScreenIdChanged += Screen_ScreenIdChanged;
-            SetDefaultLcdState();
+            SetDefaultLcdState(true);
         }
 
         public void MarkChangesAsUpdated()
@@ -66,8 +66,8 @@ namespace ArduinoDashboardInterpreter
             Fuel,
             LiftAxle,
             DiffLock,
-            LeftIndicator,
-            RightIndicator,
+            LeftBlinker,
+            RightBlinker,
             CruiseControl,
             Rest,
             WarningBrake,
@@ -89,8 +89,8 @@ namespace ArduinoDashboardInterpreter
             switch(id)
             {
                 case LedType.LowBeam:
-                case LedType.LeftIndicator:
-                case LedType.RightIndicator:
+                case LedType.LeftBlinker:
+                case LedType.RightBlinker:
                 case LedType.CruiseControl:
                 case LedType.Retarder:
                     return Brushes.LightGreen;
@@ -117,8 +117,14 @@ namespace ArduinoDashboardInterpreter
 
         public LedState[] GetLedFullState() => LedController;
 
-        public void SetDefaultLedState()
+        public void SetDefaultLedState(bool forceUpdate)
         {
+            if(!forceUpdate)
+            {
+                bool isClear = true;
+                foreach(LedState led in LedController) if (led != LedState.Off) isClear = false;
+                if (isClear) return;
+            }
             LedController = new LedState[16];
             LedModified = true;
             LedStateChanged?.Invoke();
@@ -153,8 +159,14 @@ namespace ArduinoDashboardInterpreter
 
         public LedState[] GetBacklightFullState() => BacklightController;
 
-        public void SetDefaultBacklightState()
+        public void SetDefaultBacklightState(bool forceUpdate)
         {
+            if (!forceUpdate)
+            {
+                bool isClear = true;
+                foreach (LedState bl in BacklightController) if (bl != LedState.Off) isClear = false;
+                if (isClear) return;
+            }
             BacklightController = new LedState[5];
             BacklightModified = true;
             BacklightStateChanged?.Invoke();
@@ -172,6 +184,28 @@ namespace ArduinoDashboardInterpreter
             }
             return false;
         }
+
+        public bool SetBacklightState(bool gauges, bool lcd)
+        {
+            bool result = false;
+            result = SetBacklightState(BacklightType.WhiteBig, gauges ? LedState.On : LedState.Off) || result;
+            result = SetBacklightState(BacklightType.WhiteSmall, gauges ? LedState.On : LedState.Off) || result;
+            result = SetBacklightState(BacklightType.RedBig, gauges ? LedState.On : LedState.Off) || result;
+            result = SetBacklightState(BacklightType.RedSmall, gauges ? LedState.On : LedState.Off) || result;
+            result = SetBacklightState(BacklightType.LcdLed, lcd ? LedState.On : LedState.Off) || result;
+            return result;
+        }
+
+        public bool SetBacklightState(bool whiteBig, bool whiteSmall, bool redBig, bool redSmall, bool lcdLed)
+        {
+            bool result = false;
+            result = SetBacklightState(BacklightType.WhiteBig, whiteBig ? LedState.On : LedState.Off) || result;
+            result = SetBacklightState(BacklightType.WhiteSmall, whiteSmall ? LedState.On : LedState.Off) || result;
+            result = SetBacklightState(BacklightType.RedBig, redBig ? LedState.On : LedState.Off) || result;
+            result = SetBacklightState(BacklightType.RedSmall, redSmall ? LedState.On : LedState.Off) || result;
+            result = SetBacklightState(BacklightType.LcdLed, lcdLed ? LedState.On : LedState.Off) || result;
+            return result;
+        }
         #endregion
 
         #region "GAUGE"
@@ -188,8 +222,14 @@ namespace ArduinoDashboardInterpreter
 
         public int[] GetGaugeFullState() => GaugePositions;
 
-        public void SetDefaultGaugePosition()
+        public void SetDefaultGaugePosition(bool forceUpdate)
         {
+            if (!forceUpdate)
+            {
+                bool isClear = true;
+                foreach (int gauge in GaugePositions) if (gauge != 0) isClear = false;
+                if (isClear) return;
+            }
             GaugePositions = new int[4];
             GaugeModified = true;
             GaugePositionChanged?.Invoke();
@@ -267,9 +307,23 @@ namespace ArduinoDashboardInterpreter
             LcdDataChanged?.Invoke(Screen.ScreenId, RegistryA, RegistryB, RegistryC);
         }
 
-        public void SetDefaultLcdState()
+        public void SetDefaultLcdState(bool forceUpdate)
         {
+            if (!forceUpdate)
+            {
+                bool isClear = true;
+                foreach (string regValue in RegistryA) if (regValue != "") isClear = false;
+                foreach (string regValue in RegistryB) if (regValue != "") isClear = false;
+                foreach (string regValue in RegistryC) if (regValue != "") isClear = false;
+                System.Diagnostics.Debug.WriteLine("FORCE UPDATE " + forceUpdate + " IS CLEAR " + isClear);
+                foreach (string regValue in RegistryA) System.Diagnostics.Debug.WriteLine("A: " + regValue);
+                foreach (string regValue in RegistryB) System.Diagnostics.Debug.WriteLine("B: " + regValue);
+                foreach (string regValue in RegistryC) System.Diagnostics.Debug.WriteLine("C: " + regValue);
+                if (isClear) return;
+            }
+            System.Diagnostics.Debug.WriteLine("PRZED A2:" + RegistryA[2]);
             RegistryA = new string[5];
+            System.Diagnostics.Debug.WriteLine("PO A2:" + RegistryA[2]);
             RegistryB = new string[5];
             RegistryC = new string[5];
             RegistryAModified = true;
