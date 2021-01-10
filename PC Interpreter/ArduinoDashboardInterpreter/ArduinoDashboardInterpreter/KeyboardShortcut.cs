@@ -12,7 +12,6 @@ namespace ArduinoDashboardInterpreter
     {
         public readonly TargetType Target;
         public readonly Keys ShortcutKey;
-        public readonly KeyModifiers ShortcutModifiers;
 
         [field: NonSerialized]
         public GlobalKeyboardHook gkh;
@@ -25,12 +24,11 @@ namespace ArduinoDashboardInterpreter
             Right
         }
 
-        public KeyboardShortcut(GlobalKeyboardHook gkh, TargetType Target, Keys ShortcutKey, KeyModifiers ShortcutModifiers)
+        public KeyboardShortcut(GlobalKeyboardHook gkh, TargetType Target, Keys ShortcutKey)
         {
             this.gkh = gkh;
             this.Target = Target;
             this.ShortcutKey = ShortcutKey;
-            this.ShortcutModifiers = ShortcutModifiers;
         }
 
         public void RegisterKey()
@@ -45,12 +43,7 @@ namespace ArduinoDashboardInterpreter
 
         public override string ToString()
         {
-            string s = "";
-            if (ShortcutModifiers == KeyModifiers.Control) s += "Ctrl+";
-            if (ShortcutModifiers == KeyModifiers.Alt) s += "Alt+";
-            if (ShortcutModifiers == KeyModifiers.Shift) s += "Shift+";
-            s += ShortcutKey.ToString();
-            return s;
+            return ShortcutKey.ToString();
         }
     }
 }

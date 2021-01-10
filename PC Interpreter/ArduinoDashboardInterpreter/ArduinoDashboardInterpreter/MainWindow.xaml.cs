@@ -365,7 +365,7 @@ namespace ArduinoDashboardInterpreter
             modalWindow.Owner = this;
             if((bool)modalWindow.ShowDialog())
             {
-                settings.AddShortcut(new KeyboardShortcut(gkh, target, modalWindow.DetectedKey, 0));
+                settings.AddShortcut(new KeyboardShortcut(gkh, target, modalWindow.DetectedKey));
             }
             else
             {
