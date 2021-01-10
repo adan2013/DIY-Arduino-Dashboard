@@ -315,15 +315,9 @@ namespace ArduinoDashboardInterpreter
                 foreach (string regValue in RegistryA) if (regValue != "") isClear = false;
                 foreach (string regValue in RegistryB) if (regValue != "") isClear = false;
                 foreach (string regValue in RegistryC) if (regValue != "") isClear = false;
-                System.Diagnostics.Debug.WriteLine("FORCE UPDATE " + forceUpdate + " IS CLEAR " + isClear);
-                foreach (string regValue in RegistryA) System.Diagnostics.Debug.WriteLine("A: " + regValue);
-                foreach (string regValue in RegistryB) System.Diagnostics.Debug.WriteLine("B: " + regValue);
-                foreach (string regValue in RegistryC) System.Diagnostics.Debug.WriteLine("C: " + regValue);
                 if (isClear) return;
             }
-            System.Diagnostics.Debug.WriteLine("PRZED A2:" + RegistryA[2]);
             RegistryA = new string[5];
-            System.Diagnostics.Debug.WriteLine("PO A2:" + RegistryA[2]);
             RegistryB = new string[5];
             RegistryC = new string[5];
             RegistryAModified = true;
