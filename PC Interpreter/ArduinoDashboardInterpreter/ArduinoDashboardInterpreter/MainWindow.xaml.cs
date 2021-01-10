@@ -33,6 +33,8 @@ namespace ArduinoDashboardInterpreter
         ComMonitor ComMonitorWindow;
         RegMonitor RegMonitorWindow;
 
+        public GlobalKeyboardHook gkh = new GlobalKeyboardHook();
+
         public enum ProgramType
         {
             Home,
@@ -65,12 +67,19 @@ namespace ArduinoDashboardInterpreter
             if (System.IO.File.Exists(settingsPath))
             {
                 settings = Serialization.DeserializeObject(settingsPath);
-                if (settings is null) settings = new Settings();
+                if (settings is null)
+                {
+                    settings = new Settings(gkh);
+                }
+                else
+                {
+                    settings.gkh = gkh;
+                }
                 settings.StartListening();
             }
             else
             {
-                settings = new Settings();
+                settings = new Settings(gkh);
                 settings.StartListening();
             }
             settings.ShortcutsUpdated += UpdateShortcutButtons;
@@ -356,7 +365,7 @@ namespace ArduinoDashboardInterpreter
             modalWindow.Owner = this;
             if((bool)modalWindow.ShowDialog())
             {
-                settings.AddShortcut(new KeyboardShortcut(target, modalWindow.DetectedKey, 0));
+                settings.AddShortcut(new KeyboardShortcut(gkh, target, modalWindow.DetectedKey, 0));
             }
             else
             {

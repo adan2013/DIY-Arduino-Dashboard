@@ -69,6 +69,7 @@
     <Compile Include="ComMonitor.xaml.cs">
       <DependentUpon>ComMonitor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GlobalKeyboardHook.cs" />
     <Compile Include="ProgramLoop.cs" />
     <Compile Include="ProgramLoops\HomeLoop.cs" />
     <Compile Include="ProgramLoops\ManualLoop.cs" />
@@ -101,7 +102,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ArduinoController.cs" />
-    <Compile Include="GlobalHotKey.cs" />
     <Compile Include="KeyboardShortcut.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

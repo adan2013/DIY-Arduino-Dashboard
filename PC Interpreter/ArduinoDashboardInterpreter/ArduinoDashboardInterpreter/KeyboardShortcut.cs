@@ -13,7 +13,9 @@ namespace ArduinoDashboardInterpreter
         public readonly TargetType Target;
         public readonly Keys ShortcutKey;
         public readonly KeyModifiers ShortcutModifiers;
-        private int hotkeyID;
+
+        [field: NonSerialized]
+        public GlobalKeyboardHook gkh;
 
         public enum TargetType
         {
@@ -23,8 +25,9 @@ namespace ArduinoDashboardInterpreter
             Right
         }
 
-        public KeyboardShortcut(TargetType Target, Keys ShortcutKey, KeyModifiers ShortcutModifiers)
+        public KeyboardShortcut(GlobalKeyboardHook gkh, TargetType Target, Keys ShortcutKey, KeyModifiers ShortcutModifiers)
         {
+            this.gkh = gkh;
             this.Target = Target;
             this.ShortcutKey = ShortcutKey;
             this.ShortcutModifiers = ShortcutModifiers;
@@ -32,12 +35,12 @@ namespace ArduinoDashboardInterpreter
 
         public void RegisterKey()
         {
-            hotkeyID = GlobalHotKey.RegisterHotKey(ShortcutKey, ShortcutModifiers);
+            gkh.HookedKeys.Add(ShortcutKey);
         }
 
         public void UnregisterKey()
         {
-            GlobalHotKey.UnregisterHotKey(hotkeyID);
+            gkh.HookedKeys.Remove(ShortcutKey);
         }
 
         public override string ToString()

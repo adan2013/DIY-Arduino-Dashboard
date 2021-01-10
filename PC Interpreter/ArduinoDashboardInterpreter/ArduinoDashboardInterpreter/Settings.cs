@@ -11,8 +11,12 @@ namespace ArduinoDashboardInterpreter
     [Serializable()]
     public class Settings
     {
-        public Settings()
+        [field: NonSerialized]
+        public GlobalKeyboardHook gkh;
+
+        public Settings(GlobalKeyboardHook gkh)
         {
+            this.gkh = gkh;
             SetDefaultOptions();
             SetDefaultCustomization();
         }
@@ -31,14 +35,26 @@ namespace ArduinoDashboardInterpreter
 
         public void StartListening()
         {
-            foreach (KeyboardShortcut item in shortcuts) item.RegisterKey();
-            GlobalHotKey.HotKeyPressed += HotKeyPressed;
+            foreach (KeyboardShortcut item in shortcuts)
+            {
+                item.gkh = gkh;
+                item.RegisterKey();
+            }
+            gkh.KeyUp += Gkh_KeyUp;
+        }
+
+        private void Gkh_KeyUp(object sender, KeyEventArgs e)
+        {
+            foreach (KeyboardShortcut item in shortcuts)
+            {
+                if (item.ShortcutKey == e.KeyCode && e.Modifiers == 0) KeyPressed?.Invoke(item);
+            }
         }
 
         public void EndListening()
         {
             foreach (KeyboardShortcut item in shortcuts) item.UnregisterKey();
-            GlobalHotKey.HotKeyPressed -= HotKeyPressed;
+            gkh.KeyUp += Gkh_KeyUp;
         }
 
         public void AddShortcut(KeyboardShortcut shortcut)
@@ -70,14 +86,6 @@ namespace ArduinoDashboardInterpreter
                 if (item.Target == target) return item.ToString();
             }
             return "none";
-        }
-
-        private void HotKeyPressed(object sender, HotKeyEventArgs e)
-        {
-            foreach (KeyboardShortcut item in shortcuts)
-            {
-                if (item.ShortcutKey == e.Key && item.ShortcutModifiers == e.Modifiers) KeyPressed?.Invoke(item);
-            }
         }
         #endregion
 
