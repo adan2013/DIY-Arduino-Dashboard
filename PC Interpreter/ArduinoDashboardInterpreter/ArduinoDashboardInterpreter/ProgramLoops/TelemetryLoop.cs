@@ -10,6 +10,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 {
     class TelemetryLoop : ProgramLoop
     {
+        const double PSI_TO_BAR = 0.069;
 
         SCSSdkTelemetry sdk;
         SCSTelemetry telemetry;
@@ -73,21 +74,29 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 
         private bool HighLightsOn() => telemetry.TruckValues.CurrentValues.LightsValues.BeamHigh;
 
-        private bool LeftBlinkerOn() => telemetry.TruckValues.CurrentValues.LightsValues.BlinkerLeftOn;
-
-        private bool RightBlinkerOn() => telemetry.TruckValues.CurrentValues.LightsValues.BlinkerRightOn;
-
         private bool ParkingBrakeOn() => telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.ParkingBrake;
 
         private bool RunOfFuel() => telemetry.TruckValues.CurrentValues.DashboardValues.WarningValues.FuelW;
 
         private bool CruiseControlOn() => telemetry.TruckValues.CurrentValues.DashboardValues.CruiseControl;
 
-        private bool RetarderActivated() => telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel > 0; //TODO gas position > 0 ???
+        private bool RetarderActivated() => telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel > 0 && telemetry.ControlValues.InputValues.Throttle == 0 && telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph > 0;
 
         private bool LowBrakePressure() => telemetry.TruckValues.CurrentValues.DashboardValues.WarningValues.AirPressure;
 
         private bool RestNeeded() => telemetry.CommonValues.NextRestStop.Value < 120;
+
+        private ArduinoController.LedState LeftBlinkerState()
+        {
+            if (telemetry.TruckValues.CurrentValues.LightsValues.BlinkerLeftActive) return ArduinoController.LedState.Blink;
+            return telemetry.TruckValues.CurrentValues.LightsValues.BlinkerLeftOn ? ArduinoController.LedState.On : ArduinoController.LedState.Off;
+        }
+
+        private ArduinoController.LedState RightBlinkerState()
+        {
+            if (telemetry.TruckValues.CurrentValues.LightsValues.BlinkerRightActive) return ArduinoController.LedState.Blink;
+            return telemetry.TruckValues.CurrentValues.LightsValues.BlinkerRightOn ? ArduinoController.LedState.On : ArduinoController.LedState.Off;
+        }
 
         private string GetGearDashboardValue()
         {
@@ -127,20 +136,20 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             max = Math.Max(max, telemetry.TruckValues.CurrentValues.DamageValues.WheelsAvg);
             max = Math.Max(max, telemetry.TruckValues.CurrentValues.DamageValues.Engine);
             max = Math.Max(max, telemetry.TruckValues.CurrentValues.DamageValues.Transmission);
-            return max > 8;
+            return max > 0.08;
         }
 
-        private void SetLedState(ArduinoController arduino, bool initial, bool ignition)
+        private void SetLedState(ArduinoController arduino, bool initial, bool ignition, Settings settings)
         {
             arduino.SetLedState(ArduinoController.LedType.CheckEngine, initial || TruckIsDamaged() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
             arduino.SetLedState(ArduinoController.LedType.GlowPlug, initial ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
             arduino.SetLedState(ArduinoController.LedType.LowBeam, LowLightsOn() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
             arduino.SetLedState(ArduinoController.LedType.HighBeam, HighLightsOn() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
             arduino.SetLedState(ArduinoController.LedType.Fuel, initial || RunOfFuel() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
-            arduino.SetLedState(ArduinoController.LedType.LiftAxle, false ? ArduinoController.LedState.On : ArduinoController.LedState.Off); //TODO false led
-            arduino.SetLedState(ArduinoController.LedType.DiffLock, false ? ArduinoController.LedState.On : ArduinoController.LedState.Off); //TODO false led
-            arduino.SetLedState(ArduinoController.LedType.LeftBlinker, LeftBlinkerOn() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
-            arduino.SetLedState(ArduinoController.LedType.RightBlinker, RightBlinkerOn() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
+            arduino.SetLedState(ArduinoController.LedType.LiftAxle, CheckAxleIsLiftOff(true, true) ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
+            arduino.SetLedState(ArduinoController.LedType.DiffLock, settings.GetOptionValue(Settings.OptionType.DiffLock) ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
+            arduino.SetLedState(ArduinoController.LedType.LeftBlinker, LeftBlinkerState());
+            arduino.SetLedState(ArduinoController.LedType.RightBlinker, RightBlinkerState());
             arduino.SetLedState(ArduinoController.LedType.CruiseControl, CruiseControlOn() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
             arduino.SetLedState(ArduinoController.LedType.Rest, RestNeeded() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
             arduino.SetLedState(ArduinoController.LedType.WarningBrake, LowBrakePressure() ? ArduinoController.LedState.Blink : ArduinoController.LedState.Off);
@@ -150,9 +159,29 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.SetLedState(ArduinoController.LedType.Retarder, RetarderActivated() ? ArduinoController.LedState.On : ArduinoController.LedState.Off);
         }
 
-        private bool CheckTrailerLiftAxle()
+        private bool CheckAxleIsLiftOff(bool truck, bool trailer)
         {
-            foreach (bool liftable in telemetry.TrailerValues[0].WheelsConstant.Liftable) if (liftable) return true;
+            if (truck)
+            {
+                foreach (float lift in telemetry.TruckValues.CurrentValues.WheelsValues.Lift) if (lift > 0) return true;
+            }
+            if (trailer)
+            {
+                foreach (float lift in telemetry.TrailerValues[0].Wheelvalues.Lift) if (lift > 0) return true;
+            }
+            return false;
+        }
+
+        private bool CheckAxleIsLiftable(bool truck, bool trailer)
+        {
+            if (truck)
+            {
+                foreach (bool liftable in telemetry.TruckValues.ConstantsValues.WheelsValues.Liftable) if (liftable) return true;
+            }
+            if(trailer)
+            {
+                foreach (bool liftable in telemetry.TrailerValues[0].WheelsConstant.Liftable) if (liftable) return true;
+            }
             return false;
         }
 
@@ -178,17 +207,17 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.clock = GetDashboardClock(settings);
             arduino.Screen.ccSpeed = telemetry.TruckValues.CurrentValues.DashboardValues.CruiseControl ? (int)Math.Round(telemetry.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph) : 0;
             // REG B
-            arduino.Screen.navTime = FormatScreenTimeValue(telemetry.NavigationValues.NavigationTime);
+            arduino.Screen.navTime = FormatScreenTimeValue(telemetry.NavigationValues.NavigationTime / 60);
             arduino.Screen.navDistance = FormatScreenValue(telemetry.NavigationValues.NavigationDistance / 1000, "km");
             arduino.Screen.restTime = FormatScreenTimeValue(telemetry.CommonValues.NextRestStop.Value);
             arduino.Screen.jobDeliveryTime = FormatScreenTimeValue(telemetry.JobValues.DeliveryTime.Value);
             arduino.Screen.jobSource = telemetry.JobValues.CitySource;
             arduino.Screen.jobDestination = telemetry.JobValues.CityDestination;
-            arduino.Screen.airPressure = (int)telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.AirPressure + " bar";
+            arduino.Screen.airPressure = (telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.AirPressure * PSI_TO_BAR).ToString("N1").Replace(',', '.') + " bar";
             arduino.Screen.oilTemperature = (int)telemetry.TruckValues.CurrentValues.DashboardValues.OilTemperature + " C";
-            arduino.Screen.oilPressure = (int)telemetry.TruckValues.CurrentValues.DashboardValues.OilPressure + " bar";
+            arduino.Screen.oilPressure = (telemetry.TruckValues.CurrentValues.DashboardValues.OilPressure * PSI_TO_BAR).ToString("N1").Replace(',', '.') + " bar";
             arduino.Screen.waterTemperature = (int)telemetry.TruckValues.CurrentValues.DashboardValues.WaterTemperature + " C";
-            arduino.Screen.battery = Math.Round(telemetry.TruckValues.CurrentValues.DashboardValues.BatteryVoltage, 1) + " V";
+            arduino.Screen.battery = (telemetry.TruckValues.CurrentValues.DashboardValues.BatteryVoltage).ToString("N1").Replace(',', '.') + " V";
             arduino.Screen.fuelLeft = ((int)telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount).ToString();
             arduino.Screen.fuelCapacity = ((int)telemetry.TruckValues.ConstantsValues.CapacityValues.Fuel).ToString();
             arduino.Screen.fuelAvgConsumption = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption * 100, "L/100km");
@@ -199,8 +228,8 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.damageCabin = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.Cabin * 100).ToString();
             arduino.Screen.damageChassis = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.Chassis * 100).ToString();
             arduino.Screen.damageWheels = Math.Round(telemetry.TruckValues.CurrentValues.DamageValues.WheelsAvg * 100).ToString();
-            arduino.Screen.trailerDamage = Math.Round(telemetry.JobValues.CargoValues.CargoDamage * 100).ToString();
-            arduino.Screen.trailerLiftAxle = CheckTrailerLiftAxle() ? "Yes" : "No";
+            arduino.Screen.trailerDamage = Math.Round(telemetry.TrailerValues[0].DamageValues.Chassis * 100).ToString();
+            arduino.Screen.trailerLiftAxle = CheckAxleIsLiftable(false, true) ? "Yes" : "No";
             arduino.Screen.trailerName = telemetry.JobValues.CargoValues.Name;
             arduino.Screen.trailerMass = FormatScreenValue(telemetry.JobValues.CargoValues.Mass, "kg");
             arduino.Screen.trailerAttached = telemetry.TrailerValues[0].Attached ? "Yes" : "No";
@@ -219,7 +248,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             lastStateSwitch = DateTime.Now;
         }
 
-        private void AutoStateSwitch()
+        private void AutoStateSwitch(ArduinoController arduino)
         {
             if((DateTime.Now - lastStateSwitch).TotalMilliseconds > 2000)
             {
@@ -227,6 +256,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
                 {
                     case WorkingState.InitialTesting:
                         SwitchState(WorkingState.Ignition);
+                        if (!arduino.Screen.RestorePrevScreen()) arduino.Screen.SwitchScreen(ScreenController.ScreenType.Assistant);
                         break;
                     case WorkingState.Ignition:
                         if(EngineRunning()) SwitchState(WorkingState.EngineWorking);
@@ -237,25 +267,24 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 
         public override void Loop(ComConnector serial, ArduinoController arduino, Settings settings)
         {
-            AutoStateSwitch();
+            AutoStateSwitch(arduino);
             if(GameIsRunning() && ElectricEnabled())
             {
                 switch (state)
                 {
                     case WorkingState.TelemetryNotConnected:
                     case WorkingState.PowerOff:
+                        arduino.Screen.SwitchScreen(ScreenController.ScreenType.InitialImage);
                         SwitchState(WorkingState.InitialTesting);
                         break;
                     case WorkingState.InitialTesting:
-                        SetLedState(arduino, true, true);
-                        arduino.Screen.SwitchScreen(ScreenController.ScreenType.InitialImage);
+                        SetLedState(arduino, true, true, settings);
                         break;
                     case WorkingState.Ignition:
-                        SetLedState(arduino, false, true);
-                        arduino.Screen.SwitchScreen(ScreenController.ScreenType.Assistant);
+                        SetLedState(arduino, false, true, settings);
                         break;
                     case WorkingState.EngineWorking:
-                        SetLedState(arduino, false, false);
+                        SetLedState(arduino, false, false, settings);
                         break;
                 }
                 arduino.SetBacklightState(DashboardLightsOn(), true);
@@ -268,6 +297,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
                 if(GameIsRunning())
                 {
                     SwitchState(WorkingState.PowerOff);
+                    if((int)arduino.Screen.ScreenId > 2 && (int)arduino.Screen.ScreenId < 10) arduino.Screen.SaveCurrentScreen();
                     arduino.Screen.SwitchScreen(ScreenController.ScreenType.InitialImage);
                     arduino.Screen.Loop();
                     arduino.SetDefaultBacklightState(false);
