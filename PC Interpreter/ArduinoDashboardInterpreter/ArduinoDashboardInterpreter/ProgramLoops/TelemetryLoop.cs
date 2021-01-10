@@ -209,7 +209,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             // REG B
             arduino.Screen.navTime = FormatScreenTimeValue(telemetry.NavigationValues.NavigationTime / 60);
             arduino.Screen.navDistance = FormatScreenValue(telemetry.NavigationValues.NavigationDistance / 1000, "km");
-            arduino.Screen.restTime = FormatScreenTimeValue(telemetry.CommonValues.NextRestStop.Value);
+            arduino.Screen.restTime = FormatScreenTimeValue(telemetry.CommonValues.NextRestStop.Value > 0 ? telemetry.CommonValues.NextRestStop.Value : 0);
             arduino.Screen.jobDeliveryTime = FormatScreenTimeValue(telemetry.JobValues.DeliveryTime.Value);
             arduino.Screen.jobSource = telemetry.JobValues.CitySource;
             arduino.Screen.jobDestination = telemetry.JobValues.CityDestination;
