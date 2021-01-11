@@ -210,7 +210,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.navTime = FormatScreenTimeValue(telemetry.NavigationValues.NavigationTime / 60);
             arduino.Screen.navDistance = FormatScreenValue(telemetry.NavigationValues.NavigationDistance / 1000, "km");
             arduino.Screen.restTime = FormatScreenTimeValue(telemetry.CommonValues.NextRestStop.Value > 0 ? telemetry.CommonValues.NextRestStop.Value : 0);
-            arduino.Screen.jobDeliveryTime = FormatScreenTimeValue(telemetry.JobValues.DeliveryTime.Value);
+            arduino.Screen.jobDeliveryTime = FormatScreenTimeValue(telemetry.JobValues.RemainingDeliveryTime.Value);
             arduino.Screen.jobSource = telemetry.JobValues.CitySource;
             arduino.Screen.jobDestination = telemetry.JobValues.CityDestination;
             arduino.Screen.airPressure = (telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.AirPressure * PSI_TO_BAR).ToString("N1").Replace(',', '.') + " bar";
