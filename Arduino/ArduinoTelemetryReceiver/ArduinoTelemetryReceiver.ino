@@ -43,10 +43,7 @@ int h;
 String regA[5];
 String regB[5];
 String regC[5];
-bool regAchanged = false;
-bool regBchanged = false;
-bool regCchanged = false;
-bool clearValuesRequired = false;
+bool regChanges[15];
 int screenId = 0;
 
 Adafruit_MCP23017 ledController;
@@ -157,16 +154,22 @@ void updateRegistry(int id, String data) {
   splitData(data, 5, v);
   switch(id) {
     case 1:
-      for(int i = 0; i < 5; i++) regA[i] = v[i];
-      regAchanged = true;
+      for(int i = 0; i < 5; i++) {
+        if(regA[i] != v[i]) regChanges[i] = true;
+        regA[i] = v[i];
+      }
       break;
     case 2:
-      for(int i = 0; i < 5; i++) regB[i] = v[i];
-      regBchanged = true;
+      for(int i = 0; i < 5; i++) {
+        if(regB[i] != v[i]) regChanges[5 + i] = true;
+        regB[i] = v[i];
+      }
       break;
     case 3:
-      for(int i = 0; i < 5; i++) regC[i] = v[i];
-      regCchanged = true;
+      for(int i = 0; i < 5; i++) {
+        if(regC[i] != v[i]) regChanges[10 + i] = true;
+        regC[i] = v[i];
+      }
       break;
   }
 }

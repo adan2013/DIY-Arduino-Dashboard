@@ -217,7 +217,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.oilTemperature = (int)telemetry.TruckValues.CurrentValues.DashboardValues.OilTemperature + " C";
             arduino.Screen.oilPressure = (telemetry.TruckValues.CurrentValues.DashboardValues.OilPressure * PSI_TO_BAR).ToString("N1").Replace(',', '.') + " bar";
             arduino.Screen.waterTemperature = (int)telemetry.TruckValues.CurrentValues.DashboardValues.WaterTemperature + " C";
-            arduino.Screen.battery = (telemetry.TruckValues.CurrentValues.DashboardValues.BatteryVoltage).ToString("N1").Replace(',', '.') + " V";
+            arduino.Screen.battery = Math.Round(telemetry.TruckValues.CurrentValues.DashboardValues.BatteryVoltage) + " V";
             arduino.Screen.fuelLeft = ((int)telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount).ToString();
             arduino.Screen.fuelCapacity = ((int)telemetry.TruckValues.ConstantsValues.CapacityValues.Fuel).ToString();
             arduino.Screen.fuelAvgConsumption = FormatScreenValue(telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption * 100, "L/100km");
@@ -315,16 +315,16 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             if (arduino.LedModified) serial.SendLedUpdate(arduino.GetLedFullState());
             if (arduino.BacklightModified) serial.SendBacklightUpdate(arduino.GetBacklightFullState());
             if (arduino.GaugeModified) serial.SendGaugeUpdate(arduino.GetGaugeFullState());
-            if (arduino.RegistryAModified) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryA, arduino.GetRegistryA());
-            if (arduino.RegistryBModified) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryB, arduino.GetRegistryB());
-            if (arduino.RegistryCModified) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryC, arduino.GetRegistryC());
+            if (arduino.RegistryAIsModified()) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryA, arduino.GetRegistryA());
+            if (arduino.RegistryBIsModified()) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryB, arduino.GetRegistryB());
+            if (arduino.RegistryCIsModified()) serial.SendRegistryUpdate(ArduinoController.RegistryType.RegistryC, arduino.GetRegistryC());
             if (arduino.ScreenIdModified)
             {
                 serial.SendPrintLcdCommand(arduino.Screen.ScreenId);
             }
             else
             {
-                if (arduino.RegistryAModified || arduino.RegistryBModified || arduino.RegistryCModified) serial.SendUpdateLcdCommand();
+                if (arduino.RegistryAIsModified() || arduino.RegistryBIsModified() || arduino.RegistryCIsModified()) serial.SendUpdateLcdCommand();
             }
             arduino.MarkChangesAsUpdated();
             base.Loop(serial, arduino, settings);

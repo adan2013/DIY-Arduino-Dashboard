@@ -89,6 +89,5 @@ void printLcd(int id) {
       break;
   }
   tft.setTextColor(ILI9341_WHITE);
-  clearValuesRequired = false;
   updateLcd(true);
 }

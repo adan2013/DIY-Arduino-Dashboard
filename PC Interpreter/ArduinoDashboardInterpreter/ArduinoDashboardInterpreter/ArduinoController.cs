@@ -32,9 +32,9 @@ namespace ArduinoDashboardInterpreter
         public bool LedModified = false;
         public bool BacklightModified = false;
         public bool GaugeModified = false;
-        public bool RegistryAModified = false;
-        public bool RegistryBModified = false;
-        public bool RegistryCModified = false;
+        public bool[] RegistryAModified = new bool[5];
+        public bool[] RegistryBModified = new bool[5];
+        public bool[] RegistryCModified = new bool[5];
         public bool ScreenIdModified = false;
 
         public ArduinoController(Settings settingsManager)
@@ -49,9 +49,9 @@ namespace ArduinoDashboardInterpreter
             LedModified = false;
             BacklightModified = false;
             GaugeModified = false;
-            RegistryAModified = false;
-            RegistryBModified = false;
-            RegistryCModified = false;
+            RegistryAModified = new bool[5];
+            RegistryBModified = new bool[5];
+            RegistryCModified = new bool[5];
             ScreenIdModified = false;
         }
 
@@ -284,14 +284,32 @@ namespace ArduinoDashboardInterpreter
                 {
                     switch(reg)
                     {
-                        case RegistryType.RegistryA: RegistryAModified = true; break;
-                        case RegistryType.RegistryB: RegistryBModified = true; break;
-                        case RegistryType.RegistryC: RegistryCModified = true; break;
+                        case RegistryType.RegistryA: RegistryAModified[cellID] = true; break;
+                        case RegistryType.RegistryB: RegistryBModified[cellID] = true; break;
+                        case RegistryType.RegistryC: RegistryCModified[cellID] = true; break;
                     }
                     LcdDataChanged?.Invoke(Screen.ScreenId, RegistryA, RegistryB, RegistryC);
                     return true;
                 }
             }
+            return false;
+        }
+
+        public bool RegistryAIsModified()
+        {
+            for (int i = 0; i < 5; i++) if (RegistryAModified[i]) return true;
+            return false;
+        }
+
+        public bool RegistryBIsModified()
+        {
+            for (int i = 0; i < 5; i++) if (RegistryBModified[i]) return true;
+            return false;
+        }
+
+        public bool RegistryCIsModified()
+        {
+            for (int i = 0; i < 5; i++) if (RegistryCModified[i]) return true;
             return false;
         }
 
@@ -320,9 +338,12 @@ namespace ArduinoDashboardInterpreter
             RegistryA = new string[5];
             RegistryB = new string[5];
             RegistryC = new string[5];
-            RegistryAModified = true;
-            RegistryBModified = true;
-            RegistryCModified = true;
+            for (int i = 0; i < 5; i++)
+            {
+                RegistryAModified[i] = true;
+                RegistryBModified[i] = true;
+                RegistryCModified[i] = true;
+            }
             Screen.SwitchScreen(ScreenController.ScreenType.ClearBlack);
         }
         #endregion

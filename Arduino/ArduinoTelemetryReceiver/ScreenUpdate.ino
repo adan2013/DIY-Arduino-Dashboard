@@ -1,54 +1,124 @@
+void printAccParam0(bool firstPrint, String text) {
+  if(firstPrint || regChanges[5]) {
+    if(!firstPrint) clearParam(1);
+    printParam(1, text, false);
+  }
+}
+
+void printAccParam1(bool firstPrint, String speedValue) {
+  if(firstPrint || regChanges[6]) {
+    if(!firstPrint) clearParam(4);
+    printParam(4, speedValue + "km/h", true);
+  }
+}
+
+void printAccParam2(bool firstPrint, String targetSpeedValue) {
+  if(firstPrint || regChanges[7]) {
+    if(!firstPrint) clearParam(6);
+    printParam(6, targetSpeedValue + "km/h", true);
+  }
+}
+
+void printAccParam3(bool firstPrint, String timeValue) {
+  if(firstPrint || regChanges[8]) {
+    if(!firstPrint) clearParam(8);
+    printParam(8, timeValue == "" ? "--:--:---" : timeValue, true);
+  }
+}
+
 void updateLcd(bool firstPrint) {
   printBars(firstPrint);
-  if(!(firstPrint || regBchanged)) return;
-  regBchanged = false;
+  if(!(firstPrint || regBChanged())) return;
   switch(screenId) {
     case 1: //TESTING
     {
-      if(clearValuesRequired) clearLcd();
-      tft.fillScreen(regB[0] == "0" ? ILI9341_RED : regB[0] == "1" ? ILI9341_GREEN : regB[0] == "2" ? ILI9341_BLUE : ILI9341_WHITE);
+      if(firstPrint || regChanges[5]) {
+        if(!firstPrint) clearLcd();
+        tft.fillScreen(regB[0] == "0" ? ILI9341_RED : regB[0] == "1" ? ILI9341_GREEN : regB[0] == "2" ? ILI9341_BLUE : ILI9341_WHITE);
+      }
     }
       break;
     case 3: //ASSISTANT
     {
-      if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
-      printParam(1, regB[1], true);
-      printParam(3, regB[2], true);
-      printParam(5, regB[3], true);
-      printParam(7, regB[4], true);
+      if(firstPrint || regChanges[6]) {
+        if(!firstPrint) clearParam(1);
+        printParam(1, regB[1], true);
+      }
+      if(firstPrint || regChanges[7]) {
+        if(!firstPrint) clearParam(3);
+        printParam(3, regB[2], true);
+      }
+      if(firstPrint || regChanges[8]) {
+        if(!firstPrint) clearParam(5);
+        printParam(5, regB[3], true);
+      }
+      if(firstPrint || regChanges[9]) {
+        if(!firstPrint) clearParam(7);
+        printParam(7, regB[4], true);
+      }
     }
       break;
     case 4: //NAVIGATION
     case 5: //JOB
     {
-      if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); }
-      printParam(1, regB[0], true);
-      printParam(3, regB[1], true);
-      printParam(5, regB[2], true);
+      if(firstPrint || regChanges[5]) {
+        if(!firstPrint) clearParam(1);
+        printParam(1, regB[0], true);
+      }
+      if(firstPrint || regChanges[6]) {
+        if(!firstPrint) clearParam(3);
+        printParam(3, regB[1], true);
+      }
+      if(firstPrint || regChanges[7]) {
+        if(!firstPrint) clearParam(5);
+        printParam(5, regB[2], true);
+      }
     }
       break;
     case 6: //ENGINE
     {
-      if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
-      printParam(1, regB[0], true);
-      printParam(3, regB[1], false);
-      printParam(3, regB[2], true);
-      printParam(5, regB[3], true);
-      printParam(7, regB[4], true);
+      if(firstPrint || regChanges[5]) {
+        if(!firstPrint) clearParam(1);
+        printParam(1, regB[0], true);
+      }
+      if(firstPrint || regChanges[6] || regChanges[7]) {
+        if(!firstPrint) clearParam(3);
+        printParam(3, regB[1], false);
+        printParam(3, regB[2], true);
+      }
+      if(firstPrint || regChanges[8]) {
+        if(!firstPrint) clearParam(5);
+        printParam(5, regB[3], true);
+      }
+      if(firstPrint || regChanges[9]) {
+        if(!firstPrint) clearParam(7);
+        printParam(7, regB[4], true);
+      }
     }
       break;
     case 7: //FUEL
     {
-      if(clearValuesRequired) { clearParam(1); clearParam(3); clearParam(5); clearParam(7); }
-      printParam(1, regB[0] + "/" + regB[1], true);
-      printParam(3, regB[2], true);
-      printParam(5, regB[3], true);
-      printParam(7, regB[4], true);
+      if(firstPrint || regChanges[5] || regChanges[6]) {
+        if(!firstPrint) clearParam(1);
+        printParam(1, regB[0] + "/" + regB[1], true);
+      }
+      if(firstPrint || regChanges[7]) {
+        if(!firstPrint) clearParam(3);
+        printParam(3, regB[2], true);
+      }
+      if(firstPrint || regChanges[8]) {
+        if(!firstPrint) clearParam(5);
+        printParam(5, regB[3], true);
+      }
+      if(firstPrint || regChanges[9]) {
+        if(!firstPrint) clearParam(7);
+        printParam(7, regB[4], true);
+      }
     }
       break;
     case 8: //TRUCK
     {
-      if(clearValuesRequired) clearCenterScreen();
+      if(!firstPrint) clearCenterScreen();
       for(int i = 0; i < 5; i++) {
         int dmg = regB[i].toInt();
         uint16_t color = getDiagnosticColor(dmg);
@@ -83,7 +153,7 @@ void updateLcd(bool firstPrint) {
       break;
     case 9: //TRAILER
     {
-      if(clearValuesRequired) clearCenterScreen();
+      if(!firstPrint) clearCenterScreen();
       uint16_t color = getDiagnosticColor(regB[0].toInt());
       tft.fillRect(45, 65, 155, 40, color);
       tft.fillRect(100, 105, 32, 5, color);
@@ -118,7 +188,7 @@ void updateLcd(bool firstPrint) {
       break;
     case 11: //SETTINGS
     {
-      if(clearValuesRequired) clearParam(8);
+      if(!firstPrint) clearParam(8);
       printMenuItem(0, "Back", regB[0] == "0");
       printMenuItem(1, "Sound", regB[0] == "1");
       printMenuItem(2, "Clock 24h", regB[0] == "2");
@@ -135,7 +205,7 @@ void updateLcd(bool firstPrint) {
       break;
     case 12: //CUSTOMIZATION
     {
-      if(clearValuesRequired) { clearParam(2); clearParam(5); }
+      if(!firstPrint) { clearParam(2); clearParam(5); }
       String optName = "Initial image";
       if(regB[0] == "1") { optName = "Assistant 1";
       }else if(regB[0] == "2") { optName = "Assistant 2";
@@ -150,50 +220,49 @@ void updateLcd(bool firstPrint) {
       break;
     case 13: //ACCELERATION
     {
-      if(clearValuesRequired) { clearParam(1); clearParam(4); clearParam(6); clearParam(8); }
       tft.setTextColor(ILI9341_YELLOW);
       switch(regB[0].toInt()) {
         case 0: //select target speed
-          printParam(1, "Select t. speed", false);
+          printAccParam0(firstPrint, "Select t. speed");
           tft.setTextColor(ILI9341_WHITE);
-          printParam(4, regB[1] + "km/h", true);
+          printAccParam1(firstPrint, regB[1]);
           tft.setTextColor(ILI9341_YELLOW);
-          printParam(6, regB[2] + "km/h", true);
+          printAccParam2(firstPrint, regB[2]);
           tft.setTextColor(ILI9341_WHITE);
-          printParam(8, "--:--:---", true);
+          printAccParam3(firstPrint, "");
           printMenuNavHint("L/R-change | OK-confirm");
           break;
         case 1: //waiting for stop
-          printParam(1, "Stop the truck", false);
+          printAccParam0(firstPrint, "Stop the truck");
           tft.setTextColor(ILI9341_WHITE);
-          printParam(4, regB[1] + "km/h", true);
-          printParam(6, regB[2] + "km/h", true);
-          printParam(8, "--:--:---", true);
+          printAccParam1(firstPrint, regB[1]);
+          printAccParam2(firstPrint, regB[2]);
+          printAccParam3(firstPrint, "");
           printMenuNavHint("OK-cancel");
           break;
         case 2: //waiting for start
-          printParam(1, "Ready to go", false);
+          printAccParam0(firstPrint, "Ready to go");
           tft.setTextColor(ILI9341_WHITE);
-          printParam(4, regB[1] + "km/h", true);
-          printParam(6, regB[2] + "km/h", true);
-          printParam(8, "--:--:---", true);
+          printAccParam1(firstPrint, regB[1]);
+          printAccParam2(firstPrint, regB[2]);
+          printAccParam3(firstPrint, "");
           printMenuNavHint("OK-canel");
           break;
         case 3: //measuring
-          printParam(1, "MEASURING...", false);
-          printParam(4, regB[1] + "km/h", true);
+          printAccParam0(firstPrint, "MEASURING...");
+          printAccParam1(firstPrint, regB[1]);
           tft.setTextColor(ILI9341_WHITE);
-          printParam(6, regB[2] + "km/h", true);
-          printParam(8, "--:--:---", true);
+          printAccParam2(firstPrint, regB[2]);
+          printAccParam3(firstPrint, "");
           printMenuNavHint("OK-cancel");
           break;
         case 4: //time display
-          printParam(1, "Finished!", false);
+          printAccParam0(firstPrint, "Finished!");
           tft.setTextColor(ILI9341_WHITE);
-          printParam(4, regB[1] + "km/h", true);
-          printParam(6, regB[2] + "km/h", true);
+          printAccParam1(firstPrint, regB[1]);
+          printAccParam2(firstPrint, regB[2]);
           tft.setTextColor(ILI9341_YELLOW);
-          printParam(8, regB[3], true);
+          printAccParam3(firstPrint, regB[3]);
           tft.setTextColor(ILI9341_WHITE);
           printMenuNavHint("OK-exit");
           break;
@@ -201,5 +270,5 @@ void updateLcd(bool firstPrint) {
     }
       break;
   }
-  clearValuesRequired = true;
+  regBUpdated();
 }
