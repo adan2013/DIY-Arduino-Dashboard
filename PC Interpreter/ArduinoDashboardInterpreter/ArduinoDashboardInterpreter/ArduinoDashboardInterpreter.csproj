@@ -70,6 +70,7 @@
       <DependentUpon>ComMonitor.xaml</DependentUpon>
     </Compile>
     <Compile Include="GlobalKeyboardHook.cs" />
+    <Compile Include="NotificationsController.cs" />
     <Compile Include="ProgramLoop.cs" />
     <Compile Include="ProgramLoops\HomeLoop.cs" />
     <Compile Include="ProgramLoops\ManualLoop.cs" />

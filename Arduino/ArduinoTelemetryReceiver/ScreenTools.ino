@@ -174,7 +174,7 @@ void printBottomBar(bool firstPrint) {
   if(firstPrint) tft.drawLine(11, h - 78, w - 6, h - 78, ILI9341_WHITE);
   //REPRINT BETWEEN ALERT AND BOTTOM NAV MODE
   if(regChanges[10]) tft.fillRect(5, h - 76, w - 5, 76, ILI9341_BLACK);
-  if(regC[0] == "0") {
+  if(regC[0] == "0" || regC[0] == "") {
     //RETARDER
     if(firstPrint || regChanges[11] || regChanges[12]) {
       if(!firstPrint) tft.fillRect(16, h - 65, w - 75, 20, ILI9341_BLACK);
@@ -212,10 +212,10 @@ void printBottomBar(bool firstPrint) {
     int id = regC[0].toInt();
     uint16_t alertBg = ILI9341_CYAN;
     uint16_t alertFg = ILI9341_BLACK;
-    if(id >= 10 && id < 20) {
+    if(id > 10 && id <= 20) {
       alertBg = ILI9341_ORANGE;
       alertFg = ILI9341_BLACK;
-    }else if(id >= 30) {
+    }else if(id > 20) {
       alertBg = ILI9341_RED;
       alertFg = ILI9341_WHITE;
     }

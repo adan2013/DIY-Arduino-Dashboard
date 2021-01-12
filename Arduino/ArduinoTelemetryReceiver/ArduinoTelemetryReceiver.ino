@@ -54,6 +54,10 @@ Stepper gaugeMotorD(MOTOR_BIG_STEPS, MOTOR_D_1, MOTOR_D_1 + 1, MOTOR_D_1 + 2, MO
 int gaugeCurrentStep[4];
 int gaugeTargetStep[4];
 
+bool welcomeSignalEnabled = true;
+bool welcomeSignalActivated = false;
+long welcomeLastSignal = 0;
+
 void splitData(String input, int count, String *output) {
   int cursorPosition = 0;
   int idx = 0;
@@ -186,6 +190,31 @@ void updateRegistry(int id, String data) {
   }
 }
 
+void welcomeSignal() {
+  if(welcomeSignalEnabled) {
+    if(welcomeSignalActivated) {
+      if(millis() - welcomeLastSignal > 50) {
+        updateLeds("0000000000000000");
+        welcomeSignalActivated = false;
+        welcomeLastSignal = millis();
+      }
+    }else{
+      if(millis() - welcomeLastSignal > 5000) {
+        updateLeds("0000000000000001");
+        welcomeSignalActivated = true;
+        welcomeLastSignal = millis();
+      }
+    }
+  }
+}
+
+void disableWelcomeSignal() {
+  welcomeSignalEnabled = false;
+  updateLeds("0000000110000001");
+  delay(600);
+  resetLeds();
+}
+
 void setup() {
   Serial.begin(9600);
   //LCD
@@ -210,13 +239,19 @@ void setup() {
   gaugeMotorC.setSpeed(MOTOR_SMALL_SPEED);
   gaugeMotorD.setSpeed(MOTOR_BIG_SPEED);
   resetGauges();
+  //HELLO SIGNAL
+  updateLeds("0000000110000000");
+  delay(600);
+  resetLeds();
 }
 
 void loop() {
   if(serialDataIsReady) {
     String cmdType = serialBuffer.substring(0, 3);
     String cmdData = serialBuffer.substring(4, serialBuffer.length());
-    if(cmdType == "LED"){
+    if(cmdType == "WEL"){
+      disableWelcomeSignal();
+    }else if(cmdType == "LED") {
       updateLeds(cmdData);
     }else if(cmdType == "BKL") {
       updateBacklights(cmdData);
@@ -241,6 +276,7 @@ void loop() {
   updateBlinkingLeds();
   adjustBacklights();
   moveMotors();
+  welcomeSignal();
 }
 
 void serialEvent() {

@@ -202,6 +202,11 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             return (int)data + " " + text;
         }
 
+        private void CalculateNotifications()
+        {
+
+        }
+
         private void UpdateScreenData(ArduinoController arduino, Settings settings)
         {
             // REG A
@@ -238,7 +243,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.trailerAttached = telemetry.TrailerValues[0].Attached ? "Yes" : "No";
             arduino.Screen.currentSpeed = (int)telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph;
             // REG C
-            arduino.Screen.alertId = ScreenController.AlertType.Off;
+            arduino.Screen.notificationId = arduino.Screen.notifications.GetCurrentNotification();
             arduino.Screen.retarderCurrent = (int)telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel;
             arduino.Screen.retarderMax = (int)telemetry.TruckValues.ConstantsValues.MotorValues.RetarderStepCount;
             arduino.Screen.odometer = (int)telemetry.TruckValues.CurrentValues.DashboardValues.Odometer;
@@ -295,6 +300,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
                 arduino.SetGaugePosition(ArduinoController.GaugeType.Fuel, telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount * 100 / telemetry.TruckValues.ConstantsValues.CapacityValues.Fuel);
                 arduino.SetGaugePosition(ArduinoController.GaugeType.Air, telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.AirPressure * 100 / MAX_PSI_AIR_PRESSURE_GAUGE);
                 arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, telemetry.TruckValues.CurrentValues.DashboardValues.RPM * 100 / MAX_ENGINE_GAUGE);
+                CalculateNotifications();
                 UpdateScreenData(arduino, settings);
                 arduino.Screen.Loop();
             }

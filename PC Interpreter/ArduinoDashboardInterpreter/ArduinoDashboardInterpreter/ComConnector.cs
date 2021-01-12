@@ -10,6 +10,7 @@ namespace ArduinoDashboardInterpreter
     public class ComConnector
     {
         const string VALUE_SEPARATOR = "_";
+        const string WELCOME_COMMAND = "WEL";
         const string LED_UPDATE_COMMAND = "LED";
         const string BACKLIGHT_UPDATE_COMMAND = "BKL";
         const string GAUGE_UPDATE_COMMAND = "GAU";
@@ -34,6 +35,7 @@ namespace ArduinoDashboardInterpreter
                 Disconnect();
                 port = new SerialPort(portName, 9600);
                 port.Open();
+                if (port.IsOpen) SendWelcomeCommand();
                 return port.IsOpen;
             }
             catch { return false; }
@@ -72,6 +74,8 @@ namespace ArduinoDashboardInterpreter
             }
             return false;
         }
+
+        public bool SendWelcomeCommand() => SendData(WELCOME_COMMAND + VALUE_SEPARATOR);
 
         public bool SendLedUpdate(ArduinoController.LedState[] ledConfig)
         {

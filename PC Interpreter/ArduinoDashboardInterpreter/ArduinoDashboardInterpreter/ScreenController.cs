@@ -62,12 +62,6 @@ namespace ArduinoDashboardInterpreter
             Volvo
         }
 
-        public enum AlertType
-        {
-            Off = 0,
-            BrakeLowPressure = 31
-        }
-
         public enum MenuType
         {
             MainMenu,
@@ -119,6 +113,7 @@ namespace ArduinoDashboardInterpreter
         public ScreenType ScreenId { get; private set; }
         ArduinoController arduino;
         Settings settings;
+        public NotificationsController notifications = new NotificationsController();
 
         //REGISTER A
         public string gear = "";
@@ -162,7 +157,7 @@ namespace ArduinoDashboardInterpreter
         public string accelerationTimerText = "00:00";
 
         //REGISTER C
-        public AlertType alertId = AlertType.Off;
+        public NotificationsController.NotificationType notificationId = NotificationsController.NotificationType.Off;
         public int retarderCurrent = 0;
         public int retarderMax = 0;
         public int odometer = 0;
@@ -359,7 +354,7 @@ namespace ArduinoDashboardInterpreter
             }
             if ((int)ScreenId > 2 && (int)ScreenId < 10)
             {
-                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 0, ((int)alertId).ToString());
+                arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 0, ((int)notificationId).ToString());
                 arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 1, retarderCurrent.ToString());
                 arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 2, retarderMax.ToString());
                 arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryC, 3, odometer.ToString());
