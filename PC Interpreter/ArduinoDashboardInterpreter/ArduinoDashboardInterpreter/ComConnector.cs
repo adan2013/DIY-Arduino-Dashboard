@@ -13,6 +13,7 @@ namespace ArduinoDashboardInterpreter
         const string LED_UPDATE_COMMAND = "LED";
         const string BACKLIGHT_UPDATE_COMMAND = "BKL";
         const string GAUGE_UPDATE_COMMAND = "GAU";
+        const string GAUGE_HOME_RESET_COMMAND = "GHR";
         const string REG_A_UPDATE_COMMAND = "REA";
         const string REG_B_UPDATE_COMMAND = "REB";
         const string REG_C_UPDATE_COMMAND = "REC";
@@ -93,6 +94,8 @@ namespace ArduinoDashboardInterpreter
             content = content.Substring(0, content.Length - 1);
             return SendData(content);
         }
+
+        public bool SendGaugeHomeResetCommand() => SendData(GAUGE_HOME_RESET_COMMAND + VALUE_SEPARATOR);
 
         public bool SendRegistryUpdate(ArduinoController.RegistryType type, string[] values)
         {

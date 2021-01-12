@@ -147,14 +147,14 @@ void printTopBar(bool firstPrint) {
   }
   //CLOCK
   if(firstPrint || regChanges[2]) {
-    if(!firstPrint) tft.fillRect(12, 4, w - 95, 23, ILI9341_BLACK);
+    if(!firstPrint) tft.fillRect(12, 4, w - 115, 23, ILI9341_BLACK);
     tft.setCursor(12, 4);
     tft.setTextSize(2);
     tft.println(regA[2]);
   }
   //CC SPEED
   if(firstPrint || regChanges[3]) {
-    if(!firstPrint) tft.fillRect(14, 23, w - 95, 16, ILI9341_BLACK);
+    if(!firstPrint) tft.fillRect(14, 23, w - 115, 16, ILI9341_BLACK);
     if(regA[3] != "0") {
       tft.fillRect(14, 23, 30, 16, ILI9341_WHITE);
       tft.setCursor(18, 24);

@@ -10,6 +10,9 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 {
     class TelemetryLoop : ProgramLoop
     {
+        const int MAX_SPEED_GAUGE = 140;
+        const int MAX_ENGINE_GAUGE = 3000;
+        const int MAX_PSI_AIR_PRESSURE_GAUGE = 160;
         const double PSI_TO_BAR = 0.069;
 
         SCSSdkTelemetry sdk;
@@ -288,7 +291,10 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
                         break;
                 }
                 arduino.SetBacklightState(DashboardLightsOn(), true);
-                //TODO GAUGES
+                arduino.SetGaugePosition(ArduinoController.GaugeType.Speed, telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph * 100 / MAX_SPEED_GAUGE);
+                arduino.SetGaugePosition(ArduinoController.GaugeType.Fuel, telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount * 100 / telemetry.TruckValues.ConstantsValues.CapacityValues.Fuel);
+                arduino.SetGaugePosition(ArduinoController.GaugeType.Air, telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.AirPressure * 100 / MAX_PSI_AIR_PRESSURE_GAUGE);
+                arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, telemetry.TruckValues.CurrentValues.DashboardValues.RPM * 100 / MAX_ENGINE_GAUGE);
                 UpdateScreenData(arduino, settings);
                 arduino.Screen.Loop();
             }

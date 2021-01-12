@@ -226,6 +226,17 @@ namespace ArduinoDashboardInterpreter
             arduino.SetGaugePosition(ArduinoController.GaugeType.Fuel, 0);
             arduino.SetGaugePosition(ArduinoController.GaugeType.Air, 0);
             arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, 0);
+            serial.SendGaugeHomeResetCommand();
+            ignoreSliderUpdate = false;
+        }
+
+        private void GaugeMin_Click(object sender, RoutedEventArgs e)
+        {
+            ignoreSliderUpdate = true;
+            arduino.SetGaugePosition(ArduinoController.GaugeType.Speed, 0);
+            arduino.SetGaugePosition(ArduinoController.GaugeType.Fuel, 0);
+            arduino.SetGaugePosition(ArduinoController.GaugeType.Air, 0);
+            arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, 0);
             ignoreSliderUpdate = false;
         }
 

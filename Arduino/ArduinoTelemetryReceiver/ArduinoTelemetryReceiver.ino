@@ -17,8 +17,8 @@
 
 #define MOTOR_BIG_STEPS 600
 #define MOTOR_BIG_SPEED 60
-#define MOTOR_SMALL_STEPS 210
-#define MOTOR_SMALL_SPEED 180
+#define MOTOR_SMALL_STEPS 160
+#define MOTOR_SMALL_SPEED 60
 
 #define MOTOR_A_1 38
 #define MOTOR_B_1 34
@@ -149,6 +149,18 @@ void resetGauges() {
   updateGauges("0_0_0_0");
 }
 
+void gaugeHomeReset() {
+  resetGauges();
+  gaugeMotorA.step(MOTOR_BIG_STEPS * 1.5);
+  gaugeMotorB.step(MOTOR_SMALL_STEPS * 1.5);
+  gaugeMotorC.step(MOTOR_SMALL_STEPS * 1.5);
+  gaugeMotorD.step(MOTOR_BIG_STEPS * 1.5);
+  for(int i = 0; i < 4; i++) {
+    gaugeCurrentStep[i] = 0;
+    gaugeTargetStep[i] = 0;
+  }
+}
+
 void updateRegistry(int id, String data) {
   String v[5];
   splitData(data, 5, v);
@@ -210,6 +222,8 @@ void loop() {
       updateBacklights(cmdData);
     }else if(cmdType == "GAU") {
       updateGauges(cmdData);
+    }else if(cmdType == "GHR") {
+      gaugeHomeReset();
     }else if(cmdType == "REA") {
       updateRegistry(1, cmdData);
     }else if(cmdType == "REB") {
