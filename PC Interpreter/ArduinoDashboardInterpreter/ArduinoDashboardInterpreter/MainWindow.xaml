@@ -76,19 +76,19 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="10">
                 <Label HorizontalAlignment="Center">Speed</Label>
-                <Slider Minimum="0" Maximum="100" Margin="10 0"  Name="GaugeA" ValueChanged="Gauge_ValueChanged"/>
+                <Slider Minimum="0" Maximum="1000" Margin="10 0"  Name="GaugeA" ValueChanged="Gauge_ValueChanged"/>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="10">
                 <Label HorizontalAlignment="Center">Fuel</Label>
-                <Slider Minimum="0" Maximum="100" Margin="10 0" Name="GaugeB" ValueChanged="Gauge_ValueChanged"/>
+                <Slider Minimum="0" Maximum="1000" Margin="10 0" Name="GaugeB" ValueChanged="Gauge_ValueChanged"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Margin="10">
                 <Label HorizontalAlignment="Center">Air</Label>
-                <Slider Minimum="0" Maximum="100" Margin="10 0" Name="GaugeC" ValueChanged="Gauge_ValueChanged"/>
+                <Slider Minimum="0" Maximum="1000" Margin="10 0" Name="GaugeC" ValueChanged="Gauge_ValueChanged"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Margin="10">
                 <Label HorizontalAlignment="Center">Engine</Label>
-                <Slider Minimum="0" Maximum="100" Margin="10 0" Name="GaugeD" ValueChanged="Gauge_ValueChanged"/>
+                <Slider Minimum="0" Maximum="1000" Margin="10 0" Name="GaugeD" ValueChanged="Gauge_ValueChanged"/>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Margin="2 0" Width="120" Height="20" Name="GaugeHome" Click="GaugeHome_Click">HOME RESET</Button>

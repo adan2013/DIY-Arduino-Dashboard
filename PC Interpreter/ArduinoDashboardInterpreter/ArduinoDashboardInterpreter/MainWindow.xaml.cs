@@ -54,9 +54,9 @@ namespace ArduinoDashboardInterpreter
             arduino.LedStateChanged += LedButtonColor;
             arduino.BacklightStateChanged += BacklightButtonColor;
             arduino.GaugePositionChanged += GaugeSliderUpdate;
-            SetNewProgram(ProgramType.Manual);
+            SetNewProgram(ProgramType.Telemetry);
             loopTimer = new DispatcherTimer();
-            loopTimer.Interval = new TimeSpan(100);
+            loopTimer.Interval = TimeSpan.FromMilliseconds(20);
             loopTimer.Tick += LoopTimer_Tick;
             loopTimer.Start();
         }
@@ -243,10 +243,10 @@ namespace ArduinoDashboardInterpreter
         private void GaugeMax_Click(object sender, RoutedEventArgs e)
         {
             ignoreSliderUpdate = true;
-            arduino.SetGaugePosition(ArduinoController.GaugeType.Speed, 100);
-            arduino.SetGaugePosition(ArduinoController.GaugeType.Fuel, 100);
-            arduino.SetGaugePosition(ArduinoController.GaugeType.Air, 100);
-            arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, 100);
+            arduino.SetGaugePosition(ArduinoController.GaugeType.Speed, 1000);
+            arduino.SetGaugePosition(ArduinoController.GaugeType.Fuel, 1000);
+            arduino.SetGaugePosition(ArduinoController.GaugeType.Air, 1000);
+            arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, 1000);
             ignoreSliderUpdate = false;
         }
         #endregion

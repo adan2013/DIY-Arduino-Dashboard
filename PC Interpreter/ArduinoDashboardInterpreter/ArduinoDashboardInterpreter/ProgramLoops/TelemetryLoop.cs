@@ -296,10 +296,10 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
                         break;
                 }
                 arduino.SetBacklightState(DashboardLightsOn(), true);
-                arduino.SetGaugePosition(ArduinoController.GaugeType.Speed, telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph * 100 / MAX_SPEED_GAUGE);
-                arduino.SetGaugePosition(ArduinoController.GaugeType.Fuel, telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount * 100 / telemetry.TruckValues.ConstantsValues.CapacityValues.Fuel);
-                arduino.SetGaugePosition(ArduinoController.GaugeType.Air, telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.AirPressure * 100 / MAX_PSI_AIR_PRESSURE_GAUGE);
-                arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, telemetry.TruckValues.CurrentValues.DashboardValues.RPM * 100 / MAX_ENGINE_GAUGE);
+                arduino.SetGaugePosition(ArduinoController.GaugeType.Speed, telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph * 1000 / MAX_SPEED_GAUGE);
+                arduino.SetGaugePosition(ArduinoController.GaugeType.Fuel, telemetry.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount * 1000 / telemetry.TruckValues.ConstantsValues.CapacityValues.Fuel);
+                arduino.SetGaugePosition(ArduinoController.GaugeType.Air, telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.AirPressure * 1000 / MAX_PSI_AIR_PRESSURE_GAUGE);
+                arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, telemetry.TruckValues.CurrentValues.DashboardValues.RPM * 1000 / MAX_ENGINE_GAUGE);
                 CalculateNotifications();
                 UpdateScreenData(arduino, settings);
                 arduino.Screen.Loop();

@@ -239,7 +239,7 @@ namespace ArduinoDashboardInterpreter
         {
             int currentValue = GaugePositions[(int)id];
             if (value < 0) value = 0;
-            if (value > 100) value = 100;
+            if (value > 1000) value = 1000;
             GaugePositions[(int)id] = (int)value;
             if(currentValue != value)
             {

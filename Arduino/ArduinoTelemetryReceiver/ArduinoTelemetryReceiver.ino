@@ -121,7 +121,7 @@ void updateGauges(String state) {
   String values[4];
   splitData(state, 4, values);
   for(int i = 0; i < 4; i++) {
-    gaugeTargetStep[i] = values[i].toFloat() * (i == 0 || i == 3 ? MOTOR_BIG_STEPS : MOTOR_SMALL_STEPS) * 0.01;
+    gaugeTargetStep[i] = values[i].toFloat() * (i == 0 || i == 3 ? MOTOR_BIG_STEPS : MOTOR_SMALL_STEPS) * 0.001;
   }
 }
 
