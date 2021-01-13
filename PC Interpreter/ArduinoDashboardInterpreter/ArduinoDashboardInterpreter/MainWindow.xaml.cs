@@ -56,7 +56,7 @@ namespace ArduinoDashboardInterpreter
             arduino.GaugePositionChanged += GaugeSliderUpdate;
             SetNewProgram(ProgramType.Telemetry);
             loopTimer = new DispatcherTimer();
-            loopTimer.Interval = TimeSpan.FromMilliseconds(20);
+            loopTimer.Interval = TimeSpan.FromMilliseconds(10);
             loopTimer.Tick += LoopTimer_Tick;
             loopTimer.Start();
         }

@@ -1,4 +1,4 @@
-#include <Stepper.h>
+#include <SwitecX25.h>
 #include <Wire.h>
 #include <Adafruit_MCP23017.h>
 #include <Adafruit_GFX.h>
@@ -15,10 +15,8 @@
 #define BACKLIGHT_RS 9
 #define BACKLIGHT_LCD 8
 
-#define MOTOR_BIG_STEPS 600
-#define MOTOR_BIG_SPEED 60
-#define MOTOR_SMALL_STEPS 170
-#define MOTOR_SMALL_SPEED 60
+#define MOTOR_BIG_STEPS 820
+#define MOTOR_SMALL_STEPS 250
 
 #define MOTOR_A_1 38
 #define MOTOR_B_1 34
@@ -31,6 +29,7 @@
 String serialBuffer = "";
 boolean serialDataIsReady = false;
 
+Adafruit_MCP23017 ledController;
 long lastBlinkStateSwitch = 0;
 bool ledBlinkState = false;
 String ledState = "0000000000000000";
@@ -46,13 +45,10 @@ String regC[5];
 bool regChanges[15];
 int screenId = 0;
 
-Adafruit_MCP23017 ledController;
-Stepper gaugeMotorA(MOTOR_BIG_STEPS, MOTOR_A_1, MOTOR_A_1 + 1, MOTOR_A_1 + 2, MOTOR_A_1 + 3);
-Stepper gaugeMotorB(MOTOR_SMALL_STEPS, MOTOR_B_1, MOTOR_B_1 + 1, MOTOR_B_1 + 2, MOTOR_B_1 + 3);
-Stepper gaugeMotorC(MOTOR_SMALL_STEPS, MOTOR_C_1, MOTOR_C_1 + 1, MOTOR_C_1 + 2, MOTOR_C_1 + 3);
-Stepper gaugeMotorD(MOTOR_BIG_STEPS, MOTOR_D_1, MOTOR_D_1 + 1, MOTOR_D_1 + 2, MOTOR_D_1 + 3);
-int gaugeCurrentStep[4];
-int gaugeTargetStep[4];
+SwitecX25 gaugeMotorA(MOTOR_BIG_STEPS, MOTOR_A_1 + 3, MOTOR_A_1 + 2, MOTOR_A_1 + 1, MOTOR_A_1);
+SwitecX25 gaugeMotorB(MOTOR_SMALL_STEPS, MOTOR_B_1 + 3, MOTOR_B_1 + 2, MOTOR_B_1 + 1, MOTOR_B_1);
+SwitecX25 gaugeMotorC(MOTOR_SMALL_STEPS, MOTOR_C_1 + 3, MOTOR_C_1 + 2, MOTOR_C_1 + 1, MOTOR_C_1);
+SwitecX25 gaugeMotorD(MOTOR_BIG_STEPS, MOTOR_D_1 + 3, MOTOR_D_1 + 2, MOTOR_D_1 + 1, MOTOR_D_1);
 
 bool welcomeSignalEnabled = true;
 bool welcomeSignalActivated = false;
@@ -120,25 +116,17 @@ void adjustBacklights() {
 void updateGauges(String state) {
   String values[4];
   splitData(state, 4, values);
-  for(int i = 0; i < 4; i++) {
-    gaugeTargetStep[i] = values[i].toFloat() * (i == 0 || i == 3 ? MOTOR_BIG_STEPS : MOTOR_SMALL_STEPS) * 0.001;
-  }
+  gaugeMotorA.setPosition(values[0].toFloat() * MOTOR_BIG_STEPS * 0.001);
+  gaugeMotorB.setPosition(values[1].toFloat() * MOTOR_SMALL_STEPS * 0.001);
+  gaugeMotorC.setPosition(values[2].toFloat() * MOTOR_SMALL_STEPS * 0.001);
+  gaugeMotorD.setPosition(values[3].toFloat() * MOTOR_BIG_STEPS * 0.001);
 }
 
 void moveMotors() {
-  for(int i = 0; i < 4; i++) {
-    int diff = gaugeCurrentStep[i] - gaugeTargetStep[i];
-    if(diff != 0) {
-      diff = diff > 0 ? 1 : -1;
-      switch(i) {
-        case 0: gaugeMotorA.step(diff); break;
-        case 1: gaugeMotorB.step(diff); break;
-        case 2: gaugeMotorC.step(diff); break;
-        case 3: gaugeMotorD.step(diff); break;
-      }
-      gaugeCurrentStep[i] = gaugeCurrentStep[i] - diff;
-    }
-  }
+  gaugeMotorA.update();
+  gaugeMotorB.update();
+  gaugeMotorC.update();
+  gaugeMotorD.update();
 }
 
 void resetLeds() {
@@ -155,14 +143,10 @@ void resetGauges() {
 
 void gaugeHomeReset() {
   resetGauges();
-  gaugeMotorA.step(MOTOR_BIG_STEPS * 1.5);
-  gaugeMotorB.step(MOTOR_SMALL_STEPS * 1.5);
-  gaugeMotorC.step(MOTOR_SMALL_STEPS * 1.5);
-  gaugeMotorD.step(MOTOR_BIG_STEPS * 1.5);
-  for(int i = 0; i < 4; i++) {
-    gaugeCurrentStep[i] = 0;
-    gaugeTargetStep[i] = 0;
-  }
+  gaugeMotorA.zero();
+  gaugeMotorB.zero();
+  gaugeMotorC.zero();
+  gaugeMotorD.zero();
 }
 
 void updateRegistry(int id, String data) {
@@ -234,10 +218,6 @@ void setup() {
   pinMode(BACKLIGHT_LCD, OUTPUT);
   resetBacklights();
   //GAUGE
-  gaugeMotorA.setSpeed(MOTOR_BIG_SPEED);
-  gaugeMotorB.setSpeed(MOTOR_SMALL_SPEED);
-  gaugeMotorC.setSpeed(MOTOR_SMALL_SPEED);
-  gaugeMotorD.setSpeed(MOTOR_BIG_SPEED);
   resetGauges();
   //HELLO SIGNAL
   updateLeds("0000000110000000");

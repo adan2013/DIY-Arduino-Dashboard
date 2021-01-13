@@ -72,7 +72,7 @@ void printLcd(int id) {
     case 14: //INFORMATION
     {
       tft.setTextColor(ILI9341_LIGHTGREY);
-      printParam(1, "Autor:", false);
+      printParam(1, "Author:", false);
       printParam(4, "More info:", false);
       tft.setTextColor(ILI9341_WHITE);
       printParam(2, "Daniel Alberski", true);

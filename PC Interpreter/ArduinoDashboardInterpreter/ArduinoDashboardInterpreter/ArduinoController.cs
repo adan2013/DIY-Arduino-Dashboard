@@ -237,11 +237,12 @@ namespace ArduinoDashboardInterpreter
 
         public bool SetGaugePosition(GaugeType id, float value)
         {
+            int newValue = (int)value;
             int currentValue = GaugePositions[(int)id];
-            if (value < 0) value = 0;
-            if (value > 1000) value = 1000;
-            GaugePositions[(int)id] = (int)value;
-            if(currentValue != value)
+            if (newValue < 0) newValue = 0;
+            if (newValue > 1000) newValue = 1000;
+            GaugePositions[(int)id] = newValue;
+            if(currentValue != newValue)
             {
                 GaugeModified = true;
                 GaugePositionChanged?.Invoke();

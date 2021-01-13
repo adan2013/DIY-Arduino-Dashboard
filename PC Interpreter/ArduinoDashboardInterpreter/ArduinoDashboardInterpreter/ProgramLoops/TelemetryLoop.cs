@@ -47,7 +47,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.MarkChangesAsUpdated();
             base.Start(serial, arduino, settings);
             //TELEMETRY SERVER
-            sdk = new SCSSdkTelemetry();
+            sdk = new SCSSdkTelemetry(20);
             telemetry = new SCSTelemetry();
             sdk.Data += Telemetry_Data;
             if (sdk.Error != null) System.Windows.MessageBox.Show(sdk.Error.Message);
