@@ -147,7 +147,7 @@ void printTopBar(bool firstPrint) {
   }
   //CLOCK
   if(firstPrint || regChanges[2]) {
-    if(!firstPrint) tft.fillRect(12, 4, w - 115, 23, ILI9341_BLACK);
+    if(!firstPrint) tft.fillRect(12, 4, w - 115, 19, ILI9341_BLACK);
     tft.setCursor(12, 4);
     tft.setTextSize(2);
     tft.println(regA[2]);
