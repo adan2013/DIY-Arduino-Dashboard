@@ -8,7 +8,21 @@ void clearCenterScreen() {
 
 String getAlertText(int id, bool firstLine) {
   switch(id) {
-    case 31: return firstLine ? "Brake low" : "pressure!";
+    case 1: return firstLine ? "Trailer" : "attached";
+    case 2: return firstLine ? "Short" : "delivery time";
+    case 3: return firstLine ? "New job" : "detected";
+    case 4: return firstLine ? "Cargo" : "delivered";
+    case 5: return firstLine ? "Tollgate" : "exceeded";
+    case 6: return firstLine ? "Truck" : "refueled";
+    case 11: return firstLine ? "You need" : "to rest!";
+    case 12: return firstLine ? "Low level" : "of fuel!";
+    case 13: return firstLine ? "Truck damaged!" : "";
+    case 14: return firstLine ? "Trailer" : "damaged!";
+    case 15: return firstLine ? "Received" : "a mandate";
+    case 21: return firstLine ? "Low brake" : "pressure!";
+    case 22: return firstLine ? "BRAKES LOCKED!" : "";
+    case 23: return firstLine ? "Rest time" : "exceeded!";
+    case 24: return firstLine ? "Release" : "the handbrake!";
     default: return "";
   }
 }
@@ -173,7 +187,10 @@ void printBottomBar(bool firstPrint) {
   //SEPARATOR
   if(firstPrint) tft.drawLine(11, h - 78, w - 6, h - 78, ILI9341_WHITE);
   //REPRINT BETWEEN ALERT AND BOTTOM NAV MODE
-  if(regChanges[10]) tft.fillRect(5, h - 76, w - 5, 76, ILI9341_BLACK);
+  if(regChanges[10]) {
+    tft.fillRect(5, h - 76, w - 5, 76, ILI9341_BLACK);
+    for(int i = 11; i < 15; i++) regChanges[i] = true;
+  }
   if(regC[0] == "0" || regC[0] == "") {
     //RETARDER
     if(firstPrint || regChanges[11] || regChanges[12]) {

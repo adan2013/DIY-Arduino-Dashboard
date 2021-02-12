@@ -14,7 +14,9 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
         const int MAX_ENGINE_GAUGE = 3000;
         const int MAX_PSI_AIR_PRESSURE_GAUGE = 160;
         const double PSI_TO_BAR = 0.069;
+        const int SHORT_DELIVERY_TIME = 120;
 
+        NotificationsController nc;
         SCSSdkTelemetry sdk;
         SCSTelemetry telemetry;
         WorkingState state;
@@ -31,6 +33,8 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 
         public TelemetryLoop(ComConnector serial, ArduinoController arduino, Settings settings) : base(serial, arduino, settings)
         {
+            nc = arduino.Screen.notifications;
+            nc.ResetNotificationSystem();
             //RESET
             arduino.SetDefaultLedState(true);
             arduino.SetDefaultBacklightState(true);
@@ -49,9 +53,21 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             //TELEMETRY SERVER
             sdk = new SCSSdkTelemetry(20);
             telemetry = new SCSTelemetry();
+            sdk.JobStarted += Sdk_JobStarted;
+            sdk.JobDelivered += Sdk_JobDelivered;
+            sdk.Tollgate += Sdk_Tollgate;
+            sdk.RefuelPayed += Sdk_RefuelPayed;
+            sdk.Fined += Sdk_Fined;
             sdk.Data += Telemetry_Data;
             if (sdk.Error != null) System.Windows.MessageBox.Show(sdk.Error.Message);
         }
+
+        private bool AcceptSdkGameEvents() => GameIsRunning() && ElectricEnabled();
+        private void Sdk_JobStarted(object sender, EventArgs e) => nc.TurnOnNotification(NotificationsController.NotificationType.NewJob, AcceptSdkGameEvents(), false);
+        private void Sdk_JobDelivered(object sender, EventArgs e) => nc.TurnOnNotification(NotificationsController.NotificationType.CargoDelivered, AcceptSdkGameEvents(), false);
+        private void Sdk_Tollgate(object sender, EventArgs e) => nc.TurnOnNotification(NotificationsController.NotificationType.Tollgate, AcceptSdkGameEvents(), false);
+        private void Sdk_RefuelPayed(object sender, EventArgs e) => nc.TurnOnNotification(NotificationsController.NotificationType.TruckRefueled, AcceptSdkGameEvents(), false);
+        private void Sdk_Fined(object sender, EventArgs e) => nc.TurnOnNotification(NotificationsController.NotificationType.Fined, AcceptSdkGameEvents(), false);
 
         public void ShutDownTelemetryServer()
         {
@@ -86,6 +102,8 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
         private bool RetarderActivated() => telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel > 0 && telemetry.ControlValues.InputValues.Throttle == 0 && telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph > 0;
 
         private bool LowBrakePressure() => telemetry.TruckValues.CurrentValues.DashboardValues.WarningValues.AirPressure;
+
+        private bool BrakesLocked() => telemetry.TruckValues.CurrentValues.DashboardValues.WarningValues.AirPressureEmergency;
 
         private bool RestNeeded() => telemetry.CommonValues.NextRestStop.Value < 120;
 
@@ -204,7 +222,45 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
 
         private void CalculateNotifications()
         {
-
+            //TrailerAttached
+            nc.TurnOnNotification(NotificationsController.NotificationType.TrailerAttached, telemetry.TrailerValues[0].Attached);
+            nc.UnlockTheNotification(NotificationsController.NotificationType.TrailerAttached, !telemetry.TrailerValues[0].Attached);
+            //ShortDeliveryTime
+            bool onJob = telemetry.JobValues.CityDestination != "";
+            nc.TurnOnNotification(NotificationsController.NotificationType.ShortDeliveryTime, onJob && telemetry.JobValues.RemainingDeliveryTime.Value < SHORT_DELIVERY_TIME);
+            nc.UnlockTheNotification(NotificationsController.NotificationType.ShortDeliveryTime, telemetry.JobValues.RemainingDeliveryTime.Value > SHORT_DELIVERY_TIME + 10);
+            //NewJob
+            //nc.TurnOnNotification(NotificationsController.NotificationType.NewJob, telemetry.SpecialEventsValues.OnJob);
+            //nc.UnlockTheNotification(NotificationsController.NotificationType.NewJob, !telemetry.SpecialEventsValues.OnJob);
+            //CargoDelivered
+            //nc.TurnOnNotification(NotificationsController.NotificationType.CargoDelivered, telemetry.SpecialEventsValues.JobDelivered);
+            //nc.UnlockTheNotification(NotificationsController.NotificationType.CargoDelivered, telemetry.SpecialEventsValues.JobDelivered);
+            //RestNeeded
+            nc.TurnOnNotification(NotificationsController.NotificationType.RestNeeded, RestNeeded());
+            nc.UnlockTheNotification(NotificationsController.NotificationType.RestNeeded, !RestNeeded());
+            //LowLevelOfFuel
+            nc.TurnOnNotification(NotificationsController.NotificationType.LowLevelOfFuel, RunOfFuel());
+            nc.UnlockTheNotification(NotificationsController.NotificationType.LowLevelOfFuel, !RunOfFuel());
+            //VehicleDamaged
+            //TODO vehicle damaged
+            //TrailerDamaged
+            //TODO trailer damaged
+            //BrakeLowPressure
+            nc.TurnOnNotification(NotificationsController.NotificationType.LowBrakePressure, LowBrakePressure());
+            nc.UnlockTheNotification(NotificationsController.NotificationType.LowBrakePressure, !LowBrakePressure());
+            //BrakesLocked
+            nc.TurnOnNotification(NotificationsController.NotificationType.BrakesLocked, BrakesLocked());
+            nc.UnlockTheNotification(NotificationsController.NotificationType.BrakesLocked, !BrakesLocked());
+            //RestTimeLimitExceeded
+            nc.TurnOnNotification(NotificationsController.NotificationType.RestTimeLimitExceeded, telemetry.CommonValues.NextRestStop.Value <= 0);
+            nc.UnlockTheNotification(NotificationsController.NotificationType.RestTimeLimitExceeded, telemetry.CommonValues.NextRestStop.Value > 10);
+            //ReleaseHandbrake
+            bool rh = ParkingBrakeOn()
+                && telemetry.ControlValues.InputValues.Throttle > 0
+                && telemetry.TruckValues.CurrentValues.DashboardValues.GearDashboards != 0
+                && telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph > 0;
+            nc.TurnOnNotification(NotificationsController.NotificationType.ReleaseHandbrake, rh);
+            nc.UnlockTheNotification(NotificationsController.NotificationType.ReleaseHandbrake, !rh);
         }
 
         private void UpdateScreenData(ArduinoController arduino, Settings settings)
@@ -308,6 +364,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             {
                 if(GameIsRunning())
                 {
+                    nc.ResetNotificationSystem();
                     SwitchState(WorkingState.PowerOff);
                     if((int)arduino.Screen.ScreenId > 2 && (int)arduino.Screen.ScreenId < 10) arduino.Screen.SaveCurrentScreen();
                     arduino.Screen.SwitchScreen(ScreenController.ScreenType.InitialImage);
