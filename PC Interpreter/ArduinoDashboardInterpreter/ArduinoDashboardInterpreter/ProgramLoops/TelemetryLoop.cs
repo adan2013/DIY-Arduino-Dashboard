@@ -258,7 +258,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             bool rh = ParkingBrakeOn()
                 && telemetry.ControlValues.InputValues.Throttle > 0
                 && telemetry.TruckValues.CurrentValues.DashboardValues.GearDashboards != 0
-                && telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph > 0;
+                && telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph != 0;
             nc.TurnOnNotification(NotificationsController.NotificationType.ReleaseHandbrake, rh);
             nc.UnlockTheNotification(NotificationsController.NotificationType.ReleaseHandbrake, !rh);
         }

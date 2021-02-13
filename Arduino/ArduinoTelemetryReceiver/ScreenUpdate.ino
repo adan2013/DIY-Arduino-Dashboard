@@ -1,28 +1,27 @@
 void printAccParam0(bool firstPrint, String text) {
   if(firstPrint || regChanges[5]) {
-    if(!firstPrint) clearParam(1);
-    printParam(1, text, false);
+    if(!firstPrint) clearParam(2);
+    tft.setTextColor(ILI9341_YELLOW);
+    printParam(2, text, true);
+    tft.setTextColor(ILI9341_WHITE);
   }
 }
 
-void printAccParam1(bool firstPrint, String speedValue) {
+void printAccParam1(bool firstPrint, String targetSpeedValue) {
   if(firstPrint || regChanges[6]) {
-    if(!firstPrint) clearParam(4);
-    printParam(4, speedValue + "km/h", true);
+    if(!firstPrint) clearParam(5);
+    tft.setTextColor(ILI9341_YELLOW);
+    printParam(5, targetSpeedValue + "km/h", true);
+    tft.setTextColor(ILI9341_WHITE);
   }
 }
 
-void printAccParam2(bool firstPrint, String targetSpeedValue) {
+void printAccParam2(bool firstPrint, String timeValue) {
   if(firstPrint || regChanges[7]) {
-    if(!firstPrint) clearParam(6);
-    printParam(6, targetSpeedValue + "km/h", true);
-  }
-}
-
-void printAccParam3(bool firstPrint, String timeValue) {
-  if(firstPrint || regChanges[8]) {
-    if(!firstPrint) clearParam(8);
-    printParam(8, timeValue == "" ? "--:--:---" : timeValue, true);
+    if(!firstPrint) clearParam(7);
+    tft.setTextColor(ILI9341_YELLOW);
+    printParam(7, timeValue == "" ? "--:--:---" : timeValue, true);
+    tft.setTextColor(ILI9341_WHITE);
   }
 }
 
@@ -220,50 +219,35 @@ void updateLcd(bool firstPrint) {
       break;
     case 13: //ACCELERATION
     {
-      tft.setTextColor(ILI9341_YELLOW);
       switch(regB[0].toInt()) {
         case 0: //select target speed
           printAccParam0(firstPrint, "Select t. speed");
-          tft.setTextColor(ILI9341_WHITE);
           printAccParam1(firstPrint, regB[1]);
-          tft.setTextColor(ILI9341_YELLOW);
-          printAccParam2(firstPrint, regB[2]);
-          tft.setTextColor(ILI9341_WHITE);
-          printAccParam3(firstPrint, "");
+          printAccParam2(firstPrint, "");
           printMenuNavHint("L/R-change | OK-confirm");
           break;
         case 1: //waiting for stop
           printAccParam0(firstPrint, "Stop the truck");
-          tft.setTextColor(ILI9341_WHITE);
           printAccParam1(firstPrint, regB[1]);
-          printAccParam2(firstPrint, regB[2]);
-          printAccParam3(firstPrint, "");
+          printAccParam2(firstPrint, "");
           printMenuNavHint("OK-cancel");
           break;
         case 2: //waiting for start
           printAccParam0(firstPrint, "Ready to go");
-          tft.setTextColor(ILI9341_WHITE);
           printAccParam1(firstPrint, regB[1]);
-          printAccParam2(firstPrint, regB[2]);
-          printAccParam3(firstPrint, "");
-          printMenuNavHint("OK-canel");
+          printAccParam2(firstPrint, "");
+          printMenuNavHint("OK-cancel");
           break;
         case 3: //measuring
           printAccParam0(firstPrint, "MEASURING...");
           printAccParam1(firstPrint, regB[1]);
-          tft.setTextColor(ILI9341_WHITE);
-          printAccParam2(firstPrint, regB[2]);
-          printAccParam3(firstPrint, "");
+          printAccParam2(firstPrint, "");
           printMenuNavHint("OK-cancel");
           break;
         case 4: //time display
           printAccParam0(firstPrint, "Finished!");
-          tft.setTextColor(ILI9341_WHITE);
           printAccParam1(firstPrint, regB[1]);
           printAccParam2(firstPrint, regB[2]);
-          tft.setTextColor(ILI9341_YELLOW);
-          printAccParam3(firstPrint, regB[3]);
-          tft.setTextColor(ILI9341_WHITE);
           printMenuNavHint("OK-exit");
           break;
       }

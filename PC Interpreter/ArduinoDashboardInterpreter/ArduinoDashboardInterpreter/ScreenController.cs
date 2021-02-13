@@ -184,6 +184,8 @@ namespace ArduinoDashboardInterpreter
             }
         }
 
+        private String addLeadingZero(int number) => number < 10 ? "0" + number.ToString() : number.ToString();
+
         public bool SwitchScreen(ScreenType newScreen, int initialCursorPosition = 0)
         {
             if(ScreenId != newScreen)
@@ -340,16 +342,15 @@ namespace ArduinoDashboardInterpreter
                             if(accelerationTargetSpeed <= currentSpeed)
                             {
                                 menuCursorPosition = (int)AccelerationScreenState.TimeDisplay;
+                                TimeSpan timeDiff = accelerationTimer.Elapsed;
+                                accelerationTimerText = addLeadingZero(timeDiff.Minutes) + ":" + addLeadingZero(timeDiff.Seconds) + ":" + timeDiff.Milliseconds;
                                 accelerationTimer.Stop();
                             }
-                            TimeSpan timeDiff = accelerationTimer.Elapsed;
-                            accelerationTimerText = timeDiff.Minutes + ":" + timeDiff.Seconds + ":" + timeDiff.Milliseconds;
                             break;
                     }
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, currentSpeed.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, accelerationTargetSpeed.ToString());
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, accelerationTimerText);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, accelerationTargetSpeed.ToString());
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, accelerationTimerText);
                     break;
             }
             if ((int)ScreenId > 2 && (int)ScreenId < 10)

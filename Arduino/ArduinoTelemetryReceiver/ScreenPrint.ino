@@ -64,9 +64,9 @@ void printLcd(int id) {
       break;
     case 13: //ACCELERATION
     {
-      printParam(3, "Current Speed:", false);
-      printParam(5, "Target Speed:", false);
-      printParam(7, "Time:", false);
+      printParam(1, "Status:", false);
+      printParam(4, "Target Speed:", false);
+      printParam(6, "Time:", false);
     }
       break;
     case 14: //INFORMATION
