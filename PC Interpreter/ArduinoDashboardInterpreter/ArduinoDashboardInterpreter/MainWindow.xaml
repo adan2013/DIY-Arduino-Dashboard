@@ -124,7 +124,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Margin="2" Width="120" Height="20" Name="Option0" Click="OptionButton_Click">KEYBOARD</Button>
                     <Button Margin="2" Width="120" Height="20" Name="Option1" Click="OptionButton_Click">SOUND</Button>
-                    <Button Margin="2" Width="120" Height="20" Name="Option2" Click="OptionButton_Click">DIFF LOCK</Button>
+                    <Button Margin="2" Width="120" Height="20" Name="Option6" Click="OptionButton_Click">SPEED LIMIT WARN</Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Margin="2" Width="120" Height="20" Name="Option3" Click="OptionButton_Click">CLOCK 24H</Button>
@@ -132,7 +132,7 @@
                     <Button Margin="2" Width="120" Height="20" Name="Option5" Click="OptionButton_Click">ECO SHIFT</Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Margin="2" Width="120" Height="20" Name="Option6" Click="OptionButton_Click">SPEED LIMIT WARN</Button>
+                    <Button Margin="2" Width="120" Height="20" Name="Option2" Click="OptionButton_Click">DIFF LOCK</Button>
                 </StackPanel>
                 <Label HorizontalAlignment="Center">Customization</Label>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

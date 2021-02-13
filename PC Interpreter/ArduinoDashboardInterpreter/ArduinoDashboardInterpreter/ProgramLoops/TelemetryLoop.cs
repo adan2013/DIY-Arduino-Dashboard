@@ -15,12 +15,16 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
         const int MAX_PSI_AIR_PRESSURE_GAUGE = 160;
         const double PSI_TO_BAR = 0.069;
         const int SHORT_DELIVERY_TIME = 120;
+        const int SPEED_LIMIT_ALERT_DELAY = 4;
+        const int SPEED_ALERT_BREAK = 6;
 
         NotificationsController nc;
         SCSSdkTelemetry sdk;
         SCSTelemetry telemetry;
         WorkingState state;
         DateTime lastStateSwitch;
+        DateTime speedLastSoundAlert = DateTime.Now;
+        NotificationsController.NotificationPriority soundNotificationPriority = NotificationsController.NotificationPriority.None;
 
         public enum WorkingState
         {
@@ -35,6 +39,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
         {
             nc = arduino.Screen.notifications;
             nc.ResetNotificationSystem();
+            nc.CurrentNotificationChanged += Nc_CurrentNotificationChanged;
             //RESET
             arduino.SetDefaultLedState(true);
             arduino.SetDefaultBacklightState(true);
@@ -60,6 +65,11 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             sdk.Fined += Sdk_Fined;
             sdk.Data += Telemetry_Data;
             if (sdk.Error != null) System.Windows.MessageBox.Show(sdk.Error.Message);
+        }
+
+        private void Nc_CurrentNotificationChanged(NotificationsController.NotificationType notification, NotificationsController.NotificationPriority priority)
+        {
+            if (notification != NotificationsController.NotificationType.Off) soundNotificationPriority = priority;
         }
 
         private bool AcceptSdkGameEvents() => GameIsRunning() && ElectricEnabled();
@@ -329,6 +339,34 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             }
         }
 
+        private void CheckSounds(ArduinoController arduino, Settings settings)
+        {
+            if (!settings.GetOptionValue(Settings.OptionType.Sound)) return;
+            //notifications
+            if(soundNotificationPriority != NotificationsController.NotificationPriority.None)
+            {
+                switch(soundNotificationPriority)
+                {
+                    case NotificationsController.NotificationPriority.Info: arduino.PlaySound(ArduinoController.SoundType.Single); break;
+                    case NotificationsController.NotificationPriority.Warning: arduino.PlaySound(ArduinoController.SoundType.Double); break;
+                    case NotificationsController.NotificationPriority.Alert: arduino.PlaySound(ArduinoController.SoundType.Triple); break;
+                }
+            }
+            //speed limit
+            if (settings.GetOptionValue(Settings.OptionType.SpeedLimitWarning))
+            {
+                int spdLimit = (int)telemetry.NavigationValues.SpeedLimit.Kph;
+                int curSpd = (int)telemetry.TruckValues.CurrentValues.DashboardValues.Speed.Kph;
+                if (spdLimit > 0
+                    && curSpd > spdLimit + SPEED_LIMIT_ALERT_DELAY
+                    && (DateTime.Now - speedLastSoundAlert).TotalSeconds >= SPEED_ALERT_BREAK)
+                {
+                    speedLastSoundAlert = DateTime.Now;
+                    arduino.PlaySound(ArduinoController.SoundType.Triple);
+                }
+            }
+        }
+
         public override void Loop(ComConnector serial, ArduinoController arduino, Settings settings)
         {
             AutoStateSwitch(arduino);
@@ -357,6 +395,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
                 arduino.SetGaugePosition(ArduinoController.GaugeType.Air, telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.AirPressure * 1000 / MAX_PSI_AIR_PRESSURE_GAUGE);
                 arduino.SetGaugePosition(ArduinoController.GaugeType.Engine, telemetry.TruckValues.CurrentValues.DashboardValues.RPM * 1000 / MAX_ENGINE_GAUGE);
                 CalculateNotifications();
+                CheckSounds(arduino, settings);
                 UpdateScreenData(arduino, settings);
                 arduino.Screen.Loop();
             }

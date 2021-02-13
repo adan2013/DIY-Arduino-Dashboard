@@ -44,11 +44,11 @@ namespace ArduinoDashboardInterpreter
             VehicleDamaged = 13,
             TrailerDamaged = 14,
             Fined = 15,
+            LowBrakePressure = 16,
             // ALERT
-            LowBrakePressure = 21,
-            BrakesLocked = 22,
-            RestTimeLimitExceeded = 23,
-            ReleaseHandbrake = 24
+            BrakesLocked = 21,
+            RestTimeLimitExceeded = 22,
+            ReleaseHandbrake = 23
         }
 
         public enum NotificationPriority
