@@ -204,6 +204,7 @@ void setup() {
   //LCD
   tft.begin();
   tft.setRotation(0);
+  tft.setTextSize(2);
   w = tft.width();
   h = tft.height();
   //LED CONTROLLER
