@@ -82,7 +82,6 @@
     <Compile Include="ScreenController.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="TelemetryReceiver.cs" />
     <Compile Include="WaitForKey.xaml.cs">
       <DependentUpon>WaitForKey.xaml</DependentUpon>
     </Compile>

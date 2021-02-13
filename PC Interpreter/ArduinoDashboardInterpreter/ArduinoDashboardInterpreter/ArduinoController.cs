@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Media;
 
 namespace ArduinoDashboardInterpreter
@@ -346,6 +347,44 @@ namespace ArduinoDashboardInterpreter
                 RegistryCModified[i] = true;
             }
             Screen.SwitchScreen(ScreenController.ScreenType.ClearBlack);
+        }
+        #endregion
+
+        #region "SOUND"
+
+        public enum SoundType
+        {
+            Single,
+            Double,
+            Triple
+        }
+
+        const int SOUND_FREQ = 4000;
+        Thread soundThread;
+
+        private static void ConsoleBeep(int[] durations)
+        {
+            for (int i = 0; i < durations.Length; i++) Console.Beep(SOUND_FREQ, durations[i]);
+        }
+
+        private static void SoundThreadFunc(object type)
+        {
+            switch ((SoundType)type)
+            {
+                case SoundType.Single: ConsoleBeep(new int[] { 500 }); break;
+                case SoundType.Double: ConsoleBeep(new int[] { 300, 300 }); break;
+                case SoundType.Triple: ConsoleBeep(new int[] { 400, 200, 200 }); break;
+            }
+        }
+
+        public void PlaySound(SoundType type)
+        {
+            if (soundThread is null || !soundThread.IsAlive)
+            {
+                soundThread = new Thread(new ParameterizedThreadStart(SoundThreadFunc));
+                soundThread.Start(type);
+            }
+            
         }
         #endregion
     }

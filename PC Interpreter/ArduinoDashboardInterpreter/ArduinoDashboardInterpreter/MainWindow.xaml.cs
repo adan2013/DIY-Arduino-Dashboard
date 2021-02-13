@@ -345,6 +345,7 @@ namespace ArduinoDashboardInterpreter
 
         private void ShortcutPressed(KeyboardShortcut shortcut)
         {
+            if (!settings.GetOptionValue(Settings.OptionType.KeyboardListener)) return;
             switch(shortcut.Target)
             {
                 case KeyboardShortcut.TargetType.DiffLock:
@@ -480,7 +481,7 @@ namespace ArduinoDashboardInterpreter
 
         private void LcdUpdate_Click(object sender, RoutedEventArgs e) => serial.SendUpdateLcdCommand();
 
-        private void SoundBeep_Click(object sender, RoutedEventArgs e) => System.Media.SystemSounds.Beep.Play();
+        private void SoundBeep_Click(object sender, RoutedEventArgs e) => arduino.PlaySound(ArduinoController.SoundType.Triple);
         #endregion
     }
 }
