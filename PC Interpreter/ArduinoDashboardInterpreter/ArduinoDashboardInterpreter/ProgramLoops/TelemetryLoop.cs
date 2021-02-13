@@ -16,7 +16,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
         const double PSI_TO_BAR = 0.069;
         const int SHORT_DELIVERY_TIME = 120;
         const int SPEED_LIMIT_ALERT_DELAY = 4;
-        const int SPEED_ALERT_BREAK = 6;
+        const int SPEED_ALERT_BREAK = 8;
 
         NotificationsController nc;
         SCSSdkTelemetry sdk;
@@ -67,10 +67,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             if (sdk.Error != null) System.Windows.MessageBox.Show(sdk.Error.Message);
         }
 
-        private void Nc_CurrentNotificationChanged(NotificationsController.NotificationType notification, NotificationsController.NotificationPriority priority)
-        {
-            if (notification != NotificationsController.NotificationType.Off) soundNotificationPriority = priority;
-        }
+        private void Nc_CurrentNotificationChanged(NotificationsController.NotificationType notification, NotificationsController.NotificationPriority priority) => soundNotificationPriority = priority;
 
         private bool AcceptSdkGameEvents() => GameIsRunning() && ElectricEnabled();
         private void Sdk_JobStarted(object sender, EventArgs e) => nc.TurnOnNotification(NotificationsController.NotificationType.NewJob, AcceptSdkGameEvents(), false);
@@ -351,6 +348,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
                     case NotificationsController.NotificationPriority.Warning: arduino.PlaySound(ArduinoController.SoundType.Double); break;
                     case NotificationsController.NotificationPriority.Alert: arduino.PlaySound(ArduinoController.SoundType.Triple); break;
                 }
+                soundNotificationPriority = NotificationsController.NotificationPriority.None;
             }
             //speed limit
             if (settings.GetOptionValue(Settings.OptionType.SpeedLimitWarning))
