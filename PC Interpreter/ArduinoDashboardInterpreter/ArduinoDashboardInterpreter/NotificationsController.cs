@@ -41,10 +41,9 @@ namespace ArduinoDashboardInterpreter
             // WARNING
             RestNeeded = 11,
             LowLevelOfFuel = 12,
-            VehicleDamaged = 13,
-            TrailerDamaged = 14,
-            Fined = 15,
-            LowBrakePressure = 16,
+            Fined = 13,
+            LowBrakePressure = 14,
+            GoToServiceStation = 15,
             // ALERT
             BrakesLocked = 21,
             RestTimeLimitExceeded = 22,

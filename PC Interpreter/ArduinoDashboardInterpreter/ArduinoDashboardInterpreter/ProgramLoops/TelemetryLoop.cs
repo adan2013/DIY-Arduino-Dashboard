@@ -236,25 +236,18 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             bool onJob = telemetry.JobValues.CityDestination != "";
             nc.TurnOnNotification(NotificationsController.NotificationType.ShortDeliveryTime, onJob && telemetry.JobValues.RemainingDeliveryTime.Value < SHORT_DELIVERY_TIME);
             nc.UnlockTheNotification(NotificationsController.NotificationType.ShortDeliveryTime, telemetry.JobValues.RemainingDeliveryTime.Value > SHORT_DELIVERY_TIME + 10);
-            //NewJob
-            //nc.TurnOnNotification(NotificationsController.NotificationType.NewJob, telemetry.SpecialEventsValues.OnJob);
-            //nc.UnlockTheNotification(NotificationsController.NotificationType.NewJob, !telemetry.SpecialEventsValues.OnJob);
-            //CargoDelivered
-            //nc.TurnOnNotification(NotificationsController.NotificationType.CargoDelivered, telemetry.SpecialEventsValues.JobDelivered);
-            //nc.UnlockTheNotification(NotificationsController.NotificationType.CargoDelivered, telemetry.SpecialEventsValues.JobDelivered);
             //RestNeeded
             nc.TurnOnNotification(NotificationsController.NotificationType.RestNeeded, RestNeeded());
             nc.UnlockTheNotification(NotificationsController.NotificationType.RestNeeded, !RestNeeded());
             //LowLevelOfFuel
             nc.TurnOnNotification(NotificationsController.NotificationType.LowLevelOfFuel, RunOfFuel());
             nc.UnlockTheNotification(NotificationsController.NotificationType.LowLevelOfFuel, !RunOfFuel());
-            //VehicleDamaged
-            //TODO vehicle damaged
-            //TrailerDamaged
-            //TODO trailer damaged
             //BrakeLowPressure
             nc.TurnOnNotification(NotificationsController.NotificationType.LowBrakePressure, LowBrakePressure());
             nc.UnlockTheNotification(NotificationsController.NotificationType.LowBrakePressure, !LowBrakePressure());
+            //GoToServiceStation
+            nc.TurnOnNotification(NotificationsController.NotificationType.GoToServiceStation, TruckIsDamaged());
+            nc.UnlockTheNotification(NotificationsController.NotificationType.GoToServiceStation, !TruckIsDamaged());
             //BrakesLocked
             nc.TurnOnNotification(NotificationsController.NotificationType.BrakesLocked, BrakesLocked());
             nc.UnlockTheNotification(NotificationsController.NotificationType.BrakesLocked, !BrakesLocked());
