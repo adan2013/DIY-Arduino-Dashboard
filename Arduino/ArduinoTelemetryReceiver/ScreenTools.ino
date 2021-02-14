@@ -60,7 +60,6 @@ String getAssistantType(String hexId) {
     case 10: return "Fuel left";
     case 11: return "Fuel AVG";
     case 12: return "Fuel range";
-    case 13: return "Current speed";
     default: return "";
   }
 }

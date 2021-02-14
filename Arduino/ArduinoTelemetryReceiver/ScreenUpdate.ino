@@ -166,13 +166,10 @@ void updateLcd(bool firstPrint) {
       printParam(6, "Lift axle", false);
       printParam(7, "Attached", false);
       tft.setTextColor(ILI9341_WHITE);
-      tft.setTextWrap(false);
-      printParam(3, regB[2], false);
-      tft.setTextWrap(true);
       printParam(4, regB[0] + "%", true);
-      printParam(5, regB[3], true);
+      printParam(5, regB[2], true);
       printParam(6, regB[1], true);
-      printParam(7, regB[4], true);
+      printParam(7, regB[3], true);
     }
       break;
     case 10: //MAIN MENU
