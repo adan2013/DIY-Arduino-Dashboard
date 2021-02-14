@@ -14,13 +14,16 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30px"/>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="40px"/>
+            <RowDefinition Height="45px"/>
         </Grid.RowDefinitions>
         <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             COM PORT MONITOR
         </Label>
         <TextBox FontFamily="Consolas" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="10 5" VerticalScrollBarVisibility="Visible" Name="MonitorConsole" TextChanged="MonitorConsole_TextChanged"/>
-        <CheckBox Grid.Column="0" Grid.Row="2" Margin="20 0" VerticalAlignment="Center" Name="AutoscrollChkBox" IsChecked="True">Autoscroll</CheckBox>
+        <StackPanel Grid.Column="0" Grid.Row="2" VerticalAlignment="Center">
+            <CheckBox Margin="20 1" VerticalAlignment="Center" Name="AutoscrollChkBox" IsChecked="True">Autoscroll</CheckBox>
+            <CheckBox Margin="20 1" VerticalAlignment="Center" Name="IgnoreGauCommandsChkBox" IsChecked="False">Ignore GAU commands</CheckBox>
+        </StackPanel>
         <Button Grid.Column="1" Grid.Row="2" Margin="20 0" Width="140" HorizontalAlignment="Right" VerticalAlignment="Center" Click="ClearLog_Click">Clear log</Button>
     </Grid>
 </Window>

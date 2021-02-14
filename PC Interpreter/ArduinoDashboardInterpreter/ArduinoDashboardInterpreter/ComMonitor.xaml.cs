@@ -31,6 +31,7 @@ namespace ArduinoDashboardInterpreter
 
         private void Connector_DataSended(string content)
         {
+            if ((bool)IgnoreGauCommandsChkBox.IsChecked && content.Contains("GAU")) return;
             MonitorConsole.Text += content + "\n";
         }
 
