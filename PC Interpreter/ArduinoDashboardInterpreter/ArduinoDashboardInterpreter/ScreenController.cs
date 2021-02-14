@@ -46,8 +46,7 @@ namespace ArduinoDashboardInterpreter
             Battery,
             FuelLeft,
             FuelAvg,
-            FuelRange,
-            CurrentSpeed
+            FuelRange
         }
 
         public enum InitialImageType
@@ -146,7 +145,6 @@ namespace ArduinoDashboardInterpreter
         public string damageWheels = "0";
         public string trailerDamage = "0";
         public string trailerLiftAxle = "0";
-        public string trailerName = "";
         public string trailerMass = "0 kg";
         public string trailerAttached = "No";
         public int menuCursorPosition = 0;
@@ -292,9 +290,8 @@ namespace ArduinoDashboardInterpreter
                 case ScreenType.Trailer:
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, trailerDamage);
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 1, trailerLiftAxle);
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, trailerName);
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, trailerMass);
-                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 4, trailerAttached);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 2, trailerMass);
+                    arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 3, trailerAttached);
                     break;
                 case ScreenType.MainMenu:
                     arduino.ChangeRegistryValue(ArduinoController.RegistryType.RegistryB, 0, menuCursorPosition.ToString());
@@ -506,7 +503,6 @@ namespace ArduinoDashboardInterpreter
                 case AssistantValueType.FuelLeft: return fuelLeft;
                 case AssistantValueType.FuelAvg: return fuelAvgConsumption;
                 case AssistantValueType.FuelRange: return fuelRange;
-                case AssistantValueType.CurrentSpeed: return currentSpeed.ToString();
                 default: return "";
             }
         }

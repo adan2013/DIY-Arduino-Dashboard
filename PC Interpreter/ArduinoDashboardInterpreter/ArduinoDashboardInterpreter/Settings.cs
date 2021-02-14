@@ -257,7 +257,6 @@ namespace ArduinoDashboardInterpreter
                 case ScreenController.AssistantValueType.FuelLeft: return "Fuel left";
                 case ScreenController.AssistantValueType.FuelAvg: return "Fuel average";
                 case ScreenController.AssistantValueType.FuelRange: return "Fuel range";
-                case ScreenController.AssistantValueType.CurrentSpeed: return "Current speed";
                 default: return "";
             }
         }
