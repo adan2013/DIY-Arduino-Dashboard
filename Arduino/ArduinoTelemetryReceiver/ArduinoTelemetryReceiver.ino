@@ -16,7 +16,7 @@
 #define BACKLIGHT_LCD 8
 
 #define MOTOR_BIG_STEPS 780
-#define MOTOR_SMALL_STEPS 250
+#define MOTOR_SMALL_STEPS 270
 
 #define MOTOR_A_1 38
 #define MOTOR_B_1 34
