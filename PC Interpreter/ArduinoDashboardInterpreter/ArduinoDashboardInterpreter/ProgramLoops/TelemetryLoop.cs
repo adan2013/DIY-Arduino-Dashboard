@@ -292,6 +292,7 @@ namespace ArduinoDashboardInterpreter.ProgramLoops
             arduino.Screen.retarderCurrent = (int)telemetry.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel;
             arduino.Screen.retarderMax = (int)telemetry.TruckValues.ConstantsValues.MotorValues.RetarderStepCount;
             arduino.Screen.speedLimit = (int)Math.Round(telemetry.NavigationValues.SpeedLimit.Kph);
+            if (arduino.Screen.speedLimit < 0) arduino.Screen.speedLimit = 0;
 
             //RARE REFRESH DATA
             if ((DateTime.Now - rareRefreshData).TotalMilliseconds >= RARE_REFRESH_DATA)
