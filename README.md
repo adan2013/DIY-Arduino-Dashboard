@@ -15,7 +15,9 @@ This is my first DIY project powered by Arduino. It is a handmade truck instrume
 
 ## Article
 
-More informations about this project you can find on my website [REDARK.pl](https://redark.pl) (article is currently only in polish). Use the link below to go to it:
+More informations about this project you can find on my website [REDARK.pl](https://redark.pl). Use the link below to go to it:
+
+EN: [DIY Arduino Dashboard for ETS/ATS game](https://redark.pl/diy-arduino-dashboard-ets-ats-eng)
 
 PL: [DIY Arduino Dashboard dla gier ETS/ATS](https://redark.pl/diy-arduino-dashboard-ets-ats)
 
@@ -23,6 +25,8 @@ PL: [DIY Arduino Dashboard dla gier ETS/ATS](https://redark.pl/diy-arduino-dashb
 
  1. Function presentation: https://youtu.be/KW6sZINNi9Y
  2. Example trip in Euro Truck Simulator 2: https://youtu.be/NMoZSP29ytk
+
+*(Polish and English subtitles available)*
 
 ## Gallery
 
